@@ -2,4 +2,15 @@
 
 {% block content %}
 <h1>Login</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ login_form }}
+    <div>
+    <button type="submit">Login</button>
+    </div>
+    <div>
+    <p><a href="#">Forgot my password</a></p>
+    </div>
+</form>
 {% endblock %}
