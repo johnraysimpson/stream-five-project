@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<h1>Hello, adminuser!</h1>
+
+<div>
+    <a href="{% url 'adminuser:add-centre' %}">Add Centre</a>
+</div>
+
+<div>
+    <a href="{% url 'adminuser:add-staff' %}">Add Staff User</a>
+</div>
+
+{% endblock %}

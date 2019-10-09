@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserLoginForm
+from adminuser.models import Centre
 
 # Create your views here.
 def home_view(request):
@@ -20,10 +21,12 @@ def about_view(request):
     
 def contact_view(request):
     """Renders contact page"""
-    page = {
-        'page_title': 'Contact'
+    centres = Centre.objects.all()
+    context = {
+        'page_title': 'Contact',
+        'centres': centres
     }
-    return render(request, 'contact.html', page)
+    return render(request, 'contact.html', context)
     
 @login_required
 def logout(request):
@@ -40,16 +43,15 @@ def login_view(request):
         if login_form.is_valid():
             user = auth.authenticate(username=request.POST['username'],
                                     password=request.POST['password'])
+            messages.success(request, "You have successfully logged in")
             if user:
                 auth.login(user=user, request=request)
-                messages.success(request, "You have successfully logged in")
-                return redirect(reverse('home'))
+                if user.is_superuser:
+                    return redirect(reverse('adminuser:dashboard'), {'user': user, "page_title": "admin"})
+                else:
+                    return redirect(reverse('home'))
             else:
                 login_form.add_error(None, "Your username or password is incorrect.")
     else:
         login_form = UserLoginForm()
-    context = {
-        'page_title': 'Login',
-        "login_form": login_form
-    }
-    return render(request, 'login.html', context)
+    return render(request, 'login.html', {"login_form": login_form, "page_title": "Login"})
