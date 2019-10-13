@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import CentreForm
+from .forms import CentreForm, StaffUserForm
 
 # Create your views here.
 
@@ -18,4 +18,11 @@ def add_centre_view(request):
     return render(request, "add-centre.html", context)
     
 def add_staff_view(request):
-    return render(request, "add-staff-user.html")
+    staff_user_form = StaffUserForm(request.POST or None)
+    if staff_user_form.is_valid():
+        staff_user_form.save()
+        staff_user_form = StaffUserForm()
+    context = {
+        'staff_user_form': staff_user_form
+    }
+    return render(request, "add-staff-user.html", context)

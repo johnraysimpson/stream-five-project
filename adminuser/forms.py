@@ -1,6 +1,6 @@
 from django import forms
-
 from .models import Centre
+from accounts.models import User
 
 class CentreForm(forms.ModelForm):
     address1 = forms.CharField(label='Address Line 1')
@@ -17,3 +17,9 @@ class CentreForm(forms.ModelForm):
             'email',
             'telephone',
             ]
+            
+class StaffUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        staff = forms.BooleanField(initial=True, widget=forms.HiddenInput)
+        fields= ('email', 'password')

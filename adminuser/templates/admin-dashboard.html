@@ -7,15 +7,21 @@
     <p>{{ message }}</p>
     {% endfor %}
 {% endif %}
-
-<h1>Hello, adminuser!</h1>
-
-<div>
-    <a href="{% url 'adminuser:add-centre' %}">Add Centre</a>
-</div>
-
-<div>
-    <a href="{% url 'adminuser:add-staff' %}">Add Staff User</a>
-</div>
-
+{% if user.is_authenticated %}
+    {% if user.is_admin %}
+        <h1>Hello, adminuser!</h1>
+        
+        <div>
+            <a href="{% url 'adminuser:add-centre' %}">Add Centre</a>
+        </div>
+        
+        <div>
+            <a href="{% url 'adminuser:add-staff' %}">Add Staff User</a>
+        </div>
+    {% else %}
+        <p>You do not have the permissions to view this page</p>
+    {% endif %}
+{% else %}
+    <p>You must be logged in to see this page</p>
+{% endif %}
 {% endblock %}

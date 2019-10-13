@@ -12,20 +12,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Centre',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('centre_name', models.CharField(max_length=30)),
-                ('address1', models.CharField(max_length=40)),
-                ('address2', models.CharField(blank=True, max_length=40, null=True)),
-                ('town_or_city', models.CharField(max_length=30)),
-                ('county', models.CharField(max_length=30)),
-                ('post_code', models.CharField(max_length=10)),
-                ('email', models.EmailField(max_length=254)),
-                ('telephone', models.CharField(max_length=11)),
-            ],
-        ),
-        migrations.CreateModel(
             name='User',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
