@@ -20,7 +20,9 @@ def add_centre_view(request):
 def add_staff_view(request):
     staff_user_form = StaffUserForm(request.POST or None)
     if staff_user_form.is_valid():
-        staff_user_form.save()
+        user = staff_user_form.save()
+        user.staff=True
+        user.save()
         staff_user_form = StaffUserForm()
     context = {
         'staff_user_form': staff_user_form

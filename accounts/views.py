@@ -25,6 +25,8 @@ def login_view(request):
                 messages.success(request, "You have successfully logged in")
                 if user.is_admin:
                     return redirect(reverse('adminuser:dashboard'), {'user': user, "page_title": "admin"})
+                elif user.is_staff:
+                    return redirect(reverse('staffuser:dashboard'), {'user': user, "page_title": "admin"})
                 else:
                     return redirect(reverse('home'))
             else:

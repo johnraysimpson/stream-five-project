@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'pages',
     'accounts',
     'adminuser',
+    'staffuser',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

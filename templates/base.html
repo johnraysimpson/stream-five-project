@@ -18,7 +18,7 @@
                 <li><a href="#">Change Password</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% elif user.is_staff %}
-                <li><a href="#">Dashboard</a></li>
+                <li><a href="{% url 'staffuser:dashboard' %}">Dashboard</a></li>
                 <li><a href="#">Change Password</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% elif user.is_tutor %}

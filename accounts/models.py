@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from adminuser.models import Centre
 
 # Create your models here.
 
@@ -58,6 +59,8 @@ class User(AbstractBaseUser):
     admin = models.BooleanField(default=False) # a superuser
     parent = models.BooleanField(default=False)
     tutor = models.BooleanField(default=False)
+    password_changed = models.BooleanField(default=False)
+    centre = models.ForeignKey(Centre, on_delete=models.CASCADE, default=None, null=True, blank=True)
     # notice the absence of a "Password field", that's built in.
 
     USERNAME_FIELD = 'email'
@@ -85,6 +88,16 @@ class User(AbstractBaseUser):
         return True
 
     @property
+    def is_parent(self):
+        "Is the user a member of staff?"
+        return self.parent
+    
+    @property
+    def is_tutor(self):
+        "Is the user a member of staff?"
+        return self.tutor
+    
+    @property
     def is_staff(self):
         "Is the user a member of staff?"
         return self.staff
@@ -100,3 +113,7 @@ class User(AbstractBaseUser):
         return self.active
         
     objects = UserManager()
+    
+#class ParentProfile(models.Model):
+    #user = models.OneToOneField(User, on_delete=models.CASCADE)
+    #first_name =

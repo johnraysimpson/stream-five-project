@@ -18,10 +18,12 @@ from django.urls import path, include
 from pages import urls as pages_urls
 from accounts import urls as accounts_urls
 from adminuser import urls as adminuser_urls
+from staffuser import urls as staff_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(pages_urls)),
     path('accounts/', include(accounts_urls)),
-    path('adminuser/', include(adminuser_urls))
+    path('adminuser/', include(adminuser_urls)),
+    path('staff/', include(staff_urls)),
 ]

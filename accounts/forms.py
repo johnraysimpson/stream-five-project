@@ -51,8 +51,4 @@ class UserAdminChangeForm(forms.ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
         
-class StaffUserForm(forms.ModelForm):
-    class Meta:
-        model = User
-        staff = forms.BooleanField(initial=True, widget=forms.HiddenInput())
-        fields= ('email', 'password')
+
