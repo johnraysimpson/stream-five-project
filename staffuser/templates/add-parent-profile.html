@@ -3,9 +3,9 @@
 {% block content %}
 
 <h1>Add Profile Information For User {{ parentuser.email }}</h1>
-
 <form method='POST'>
     {% csrf_token %}
+    {{ parent_profile_form.as_p }}
     <input type='submit' value='Save' />
 </form>
 

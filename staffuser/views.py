@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, reverse
-from .forms import ParentUserForm
+from django.contrib import messages
+from .forms import ParentUserForm, ParentProfileForm
 from accounts.models import User
+
 
 # Create your views here.
 def staff_dashboard_view(request):
@@ -8,9 +10,16 @@ def staff_dashboard_view(request):
     return render(request, "staff-dashboard.html", {"page_title": "staff"})
     
 def add_parent_profile_view(request, *args, **kwargs):
-    print(kwargs)
+    
     parentuser = User.objects.get(pk=kwargs["parentuser_id"])
-    return render(request, 'add-parent-profile.html', {'parentuser': parentuser})
+    parent_profile_form = ParentProfileForm(request.POST or None)
+    if parent_profile_form.is_valid():
+        parent_profile = parent_profile_form.save()
+        parent_profile.user = parentuser
+        parent_profile.save()
+        messages.success(request, "Parent successfully created")
+        return redirect(reverse('staffuser:dashboard'))
+    return render(request, 'add-parent-profile.html', {'parentuser': parentuser, "parent_profile_form": parent_profile_form})
 
 def add_parent_view(request):
     """Renders dashboard for admin user"""

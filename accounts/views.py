@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserLoginForm
+from accounts.models import User
 
 # Create your views here.
 
@@ -16,19 +17,23 @@ def login_view(request):
     """Renders login page"""
     if request.method == "POST":
         login_form = UserLoginForm(request.POST)
-        
         if login_form.is_valid():
-            user = auth.authenticate(email=request.POST['email'],
-                                    password=request.POST['password'])
-            if user:
-                auth.login(user=user, request=request)
-                messages.success(request, "You have successfully logged in")
-                if user.is_admin:
-                    return redirect(reverse('adminuser:dashboard'), {'user': user, "page_title": "admin"})
-                elif user.is_staff:
-                    return redirect(reverse('staffuser:dashboard'), {'user': user, "page_title": "admin"})
+            if User.objects.get(email=request.POST['email']):
+                if not User.objects.get(email=request.POST['email']).is_active:
+                    login_form.add_error(None, "Inactive.")
+                user = auth.authenticate(email=request.POST['email'],
+                                        password=request.POST['password'])
+                if user:
+                        auth.login(user=user, request=request)
+                        messages.success(request, "You have successfully logged in")
+                        if user.is_admin:
+                            return redirect(reverse('adminuser:dashboard'), {'user': user, "page_title": "admin"})
+                        elif user.is_staff:
+                            return redirect(reverse('staffuser:dashboard'), {'user': user, "page_title": "admin"})
+                        else:
+                            return redirect(reverse('home'))
                 else:
-                    return redirect(reverse('home'))
+                    login_form.add_error(None, "Your username or password is incorrect.")
             else:
                 login_form.add_error(None, "Your username or password is incorrect.")
     else:
