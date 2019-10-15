@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
+from django.core.mail import send_mail
 from .forms import ParentUserForm, ParentProfileForm
 from accounts.models import User
 
@@ -29,6 +30,12 @@ def add_parent_view(request):
         user.parent=True
         user.centre = request.user.centre
         user.save()
+        send_mail(
+                "Welcome to Zephyr Tuition",
+                "Hello parent user,\nYou have been registered to our website, your randomly generated password is\n"+user.password+"\nYou will be required to change your password when you first login with your email address.\nThank you for choosing us as a tutoring company.\nThe Zephyr Team",
+                'johnraysimpson92@gmail.com',
+                ['johnraysimpson92@gmail.com']
+                )
         return redirect(reverse('staffuser:add-parent-profile', kwargs={"parentuser_id":user.pk}))
     context = {
         'parent_user_form': parent_user_form

@@ -1,4 +1,8 @@
+import os
+if os.path.exists('env.py'):
+    import env
 from django import forms
+from django.core.mail import send_mail
 from accounts.models import User
 from .models import ParentProfile
 
@@ -12,6 +16,13 @@ class ParentUserForm(forms.ModelForm):
         user = super(ParentUserForm, self).save(commit=False)
         password = User.objects.make_random_password(length=10, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789')
         print(password) #delete this when email is set up
+        send_mail(
+                "Welcome to Zephyr Tuition",
+                ("Hello "+user.email+",\n\nYou have been registered to our website, your randomly generated password is\n\n"
+                +password+"\n\nYou will be required to change your password when you first login with your email address.\n\nThank you for choosing us as a tutoring company.\n\nThe Zephyr Team"),
+                os.environ.get('EMAIL_ADDRESS'),
+                [user.email]
+                )
         user.set_password(password)
         if commit:
             user.save()

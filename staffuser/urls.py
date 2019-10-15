@@ -6,5 +6,5 @@ urlpatterns = [
     path('', staff_dashboard_view),
     path('dashboard/', staff_dashboard_view, name="dashboard"),
     path('addparent/', add_parent_view, name="add-parent"),
-    path('addparent/<parentuser_id>', add_parent_profile_view, name="add-parent-profile"),
+    path('addparent/<parentuser_id>/', add_parent_profile_view, name="add-parent-profile"),
     ]
