@@ -8,21 +8,17 @@ from .forms import UserAdminCreationForm, UserAdminChangeForm
 from .models import User
 
 class UserAdmin(BaseUserAdmin):
-    # The forms to add and change user instances
+    """Forms for adding and changing a user within the admin panel"""
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
 
-    # The fields to be used in displaying the User model.
-    # These override the definitions on the base UserAdmin
-    # that reference specific fields on auth.User.
     list_display = ('email', 'admin','staff', 'active', 'parent', 'tutor', 'password_changed', 'centre')
     list_filter = ('admin','staff', 'active', 'parent', 'tutor')
     fieldsets = (
         (None, {'fields': ('email', 'password','password_changed', 'centre')}),
         ('Permissions', {'fields': ('admin','staff', 'active', 'parent', 'tutor')}),
     )
-    # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
-    # overrides get_fieldsets to use this attribute when creating a user.
+    
     add_fieldsets = (
         (None, {
             'classes': ('wide',),

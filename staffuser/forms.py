@@ -7,6 +7,7 @@ from accounts.models import User
 from .models import ParentProfile
 
 class ParentUserForm(forms.ModelForm):
+    """Form for creating a parent user. Assigns a random password and an email is sent to the user with this information"""
     class Meta:
         model = User
         fields = ('email',)
@@ -15,7 +16,6 @@ class ParentUserForm(forms.ModelForm):
         # Save the provided password in hashed format
         user = super(ParentUserForm, self).save(commit=False)
         password = User.objects.make_random_password(length=10, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789')
-        print(password) #delete this when email is set up
         send_mail(
                 "Welcome to Zephyr Tuition",
                 ("Hello "+user.email+",\n\nYou have been registered to our website, your randomly generated password is\n\n"
@@ -29,6 +29,7 @@ class ParentUserForm(forms.ModelForm):
         return user
         
 class ParentProfileForm(forms.ModelForm):
+    """A form for adding profile information for the parent user that had been created on the previous page"""
     address1 = forms.CharField(label='Address Line 1')
     address2 = forms.CharField(label='Address Line 2', required=False)
     class Meta:

@@ -3,6 +3,7 @@ from accounts.models import User
 
 # Create your models here.
 class ParentProfile(models.Model):
+    """Model for the profile of a parent user"""
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)

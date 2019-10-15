@@ -5,23 +5,13 @@ from adminuser.models import Centre
 # Create your views here.
 def home_view(request):
     """Renders home page"""
-    page = {
-        'page_title': 'Home'
-    }
-    return render(request, 'index.html', page)
+    return render(request, 'index.html')
     
 def about_view(request):
     """Renders about page"""
-    page = {
-        'page_title': 'About'
-    }
-    return render(request, 'about.html', page)
+    return render(request, 'about.html')
     
 def contact_view(request):
-    """Renders contact page"""
+    """Renders contact page and sends information about all centres in the database"""
     centres = Centre.objects.all()
-    context = {
-        'page_title': 'Contact',
-        'centres': centres
-    }
-    return render(request, 'contact.html', context)
+    return render(request, 'contact.html', {'centres': centres})

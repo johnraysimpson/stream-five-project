@@ -3,6 +3,7 @@ from .models import Centre
 from accounts.models import User
 
 class CentreForm(forms.ModelForm):
+    """A form for the details of a tutoring centre"""
     address1 = forms.CharField(label='Address Line 1')
     address2 = forms.CharField(label='Address Line 2', required=False)
     class Meta:
@@ -19,6 +20,7 @@ class CentreForm(forms.ModelForm):
             ]
             
 class StaffUserForm(forms.ModelForm):
+    """A form for registering a staff user which asks for password confirmation"""
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
     centre = forms.ModelChoiceField(queryset=Centre.objects.all(), empty_label="Choose Centre", to_field_name="centre_name", required=True)
