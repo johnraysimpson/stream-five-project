@@ -3,7 +3,9 @@ from .views import (staff_dashboard_view,
                     add_parent_view, 
                     add_parent_profile_view, 
                     add_tutor_view,
-                    add_tutor_profile_view,)
+                    add_tutor_profile_view,
+                    add_session_view,
+                    )
 
 app_name = 'staffuser'
 urlpatterns = [
@@ -13,4 +15,5 @@ urlpatterns = [
     path('addparent/<parentuser_id>/', add_parent_profile_view, name="add-parent-profile"),
     path('addtutor/', add_tutor_view, name="add-tutor"),
     path('addtutor/<tutoruser_id>/', add_tutor_profile_view, name="add-tutor-profile"),
+    path('addsession/', add_session_view, name='add-session')
     ]

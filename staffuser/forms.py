@@ -2,9 +2,10 @@ import os
 if os.path.exists('env.py'):
     import env
 from django import forms
+from datetime import datetime, date, timedelta
 from django.core.mail import send_mail
 from accounts.models import User
-from .models import ParentProfile, TutorProfile
+from .models import ParentProfile, TutorProfile, Session
 
 class ParentUserForm(forms.ModelForm):
     """Form for creating a parent user. Assigns a random password and an email is sent to the user with this information"""
@@ -16,6 +17,7 @@ class ParentUserForm(forms.ModelForm):
         # Save the provided password in hashed format
         user = super(ParentUserForm, self).save(commit=False)
         password = User.objects.make_random_password(length=10, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789')
+        print(password)
         send_mail(
                 "Welcome to Zephyr Tuition",
                 ("Hello "+user.email+",\n\nYou have been registered to our website, your randomly generated password is\n\n"
@@ -55,6 +57,7 @@ class TutorUserForm(forms.ModelForm):
         # Save the provided password in hashed format
         user = super(TutorUserForm, self).save(commit=False)
         password = User.objects.make_random_password(length=10, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789')
+        print(password)
         send_mail(
                 "Welcome to Zephyr Tuition",
                 ("Hello "+user.email+",\n\nYou have been registered to our website, your randomly generated password is\n\n"
@@ -85,3 +88,36 @@ class TutorProfileForm(forms.ModelForm):
             'telephone',
             'pay_per_hour',
             )
+            
+class SessionForm(forms.ModelForm):
+    """Form for creating a regular session"""
+    DAY_CHOICES = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday')]
+    SUBJECT_CHOICES = [('maths', 'Maths'), ('english', 'English'), ('science', 'Science')]
+    tutor = forms.ModelChoiceField(queryset=TutorProfile.objects.all(), empty_label="Choose Tutor", required=True)
+    day = forms.ChoiceField(choices=DAY_CHOICES)
+    subject = forms.ChoiceField(choices=SUBJECT_CHOICES)
+    time = forms.TimeField(widget=forms.TimeInput(format="%H:%M"))
+    date = forms.DateField(label="Start date",
+        widget=forms.DateInput(format='%d/%m/%Y'),
+        input_formats=('%d/%m/%Y', )
+        )
+    
+    class Meta:
+        model = Session
+        fields = (
+            'tutor',
+            'subject',
+            'day',
+            'time',
+            'date',
+            'duration'
+            )
+            
+    # def save(self, commit=True):
+    #     # Save the provided password in hashed format
+    #     session = super(SessionForm, self).save(commit=False)
+    #     start_date=self.cleaned_data['start_date']
+    #     while start_date < date(2020, 8, 1):
+    #         session.start_date=start_date
+            
+    #         start_date += timedelta(days=7)

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Session{% endblock %}
+
+{% block content %}
+
+<h1>Add Session</h1>
+<form method='POST'>
+    {% csrf_token %}
+    {{ session_form.as_p }}
+    <input type='submit' value='Save' />
+</form>
+
+{% endblock %}

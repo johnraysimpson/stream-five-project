@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
-from .forms import ParentUserForm, ParentProfileForm, TutorUserForm, TutorProfileForm
+from datetime import datetime, date, timedelta
+from .forms import ParentUserForm, ParentProfileForm, TutorUserForm, TutorProfileForm, SessionForm
 from accounts.models import User
+from .models import Session
 
 
 # Create your views here.
@@ -55,3 +57,19 @@ def add_tutor_profile_view(request, *args, **kwargs):
         messages.success(request, "Tutor successfully created")
         return redirect(reverse('staffuser:dashboard'))
     return render(request, 'add-tutor-profile.html', {'tutoruser': tutoruser, "tutor_profile_form": tutor_profile_form})
+    
+def add_session_view(request):
+    """Renders add session page with corresponding form"""
+    session_form = SessionForm(request.POST or None)
+    if session_form.is_valid():
+        start_date = session_form.cleaned_data['date']
+        while start_date < date(2020, 8, 1):
+            Session.objects.create(tutor=session_form.cleaned_data['tutor'], 
+                                    subject=session_form.cleaned_data['subject'], 
+                                    day=session_form.cleaned_data['day'], 
+                                    time=session_form.cleaned_data['time'], 
+                                    date=start_date, 
+                                    duration=session_form.cleaned_data['duration'])
+            start_date += timedelta(days=7)
+        session_form = SessionForm()
+    return render(request, 'add-session.html', {'session_form': session_form})
