@@ -17,3 +17,18 @@ class ParentProfile(models.Model):
     def __str__(self):
         return u'{0}, {1}'.format(self.last_name, self.first_name)
     
+class TutorProfile(models.Model):
+    """Model for the profile of a tutor"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    address1 = models.CharField(max_length=40)
+    address2 = models.CharField(max_length=40, blank=True, null=True)
+    town_or_city = models.CharField(max_length=30)
+    county = models.CharField(max_length=30)
+    post_code = models.CharField(max_length=10)
+    telephone = models.CharField(max_length=11)
+    pay_per_hour = models.DecimalField(max_digits=5, decimal_places=2)
+    
+    def __str__(self):
+        return u'{0} {1} ({2})'.format(self.first_name, self.last_name, self.user.centre)

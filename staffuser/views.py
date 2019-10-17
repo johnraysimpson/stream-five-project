@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
-from .forms import ParentUserForm, ParentProfileForm
+from .forms import ParentUserForm, ParentProfileForm, TutorUserForm, TutorProfileForm
 from accounts.models import User
 
 
@@ -31,3 +31,27 @@ def add_parent_view(request):
         user.save()
         return redirect(reverse('staffuser:add-parent-profile', kwargs={"parentuser_id":user.pk}))
     return render(request, "add-parent-user.html", {'parent_user_form': parent_user_form})
+    
+    
+def add_tutor_view(request):
+    """Renders add tutor page, creates form for registering a tutor user"""
+    tutor_user_form = TutorUserForm(request.POST or None)
+    if tutor_user_form.is_valid():
+        user = tutor_user_form.save()
+        user.tutor=True
+        user.centre = request.user.centre
+        user.save()
+        return redirect(reverse('staffuser:add-tutor-profile', kwargs={"tutoruser_id":user.pk}))
+    return render(request, "add-tutor-user.html", {'tutor_user_form': tutor_user_form})
+    
+def add_tutor_profile_view(request, *args, **kwargs):
+    """Renders page for parent profile information, using the user id to retrieve information about the parent user created"""
+    tutoruser = User.objects.get(pk=kwargs["tutoruser_id"])
+    tutor_profile_form = TutorProfileForm(request.POST or None)
+    if tutor_profile_form.is_valid():
+        tutor_profile = tutor_profile_form.save()
+        tutor_profile.user = tutoruser
+        tutor_profile.save()
+        messages.success(request, "Tutor successfully created")
+        return redirect(reverse('staffuser:dashboard'))
+    return render(request, 'add-tutor-profile.html', {'tutoruser': tutoruser, "tutor_profile_form": tutor_profile_form})
