@@ -41,7 +41,7 @@ class TutorProfile(models.Model):
 #     last_name = models.CharField(max_length=30)
 #       price_per_session = models.DecimalField(max_digits=4, decimal_places=2)
 
-class Session(models.Model):
+class TutorSession(models.Model):
     """Model for session information"""
     tutor = models.ForeignKey(TutorProfile, on_delete=models.CASCADE)
     subject = models.CharField(max_length=40)

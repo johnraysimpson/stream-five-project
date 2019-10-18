@@ -5,7 +5,7 @@ from django import forms
 from datetime import datetime, date, timedelta
 from django.core.mail import send_mail
 from accounts.models import User
-from .models import ParentProfile, TutorProfile, Session
+from .models import ParentProfile, TutorProfile, TutorSession
 
 class ParentUserForm(forms.ModelForm):
     """Form for creating a parent user. Assigns a random password and an email is sent to the user with this information"""
@@ -89,7 +89,7 @@ class TutorProfileForm(forms.ModelForm):
             'pay_per_hour',
             )
             
-class SessionForm(forms.ModelForm):
+class TutorSessionForm(forms.ModelForm):
     """Form for creating a regular session"""
     DAY_CHOICES = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday')]
     SUBJECT_CHOICES = [('maths', 'Maths'), ('english', 'English'), ('science', 'Science')]
@@ -103,7 +103,7 @@ class SessionForm(forms.ModelForm):
         )
     
     class Meta:
-        model = Session
+        model = TutorSession
         fields = (
             'tutor',
             'subject',
@@ -112,6 +112,12 @@ class SessionForm(forms.ModelForm):
             'date',
             'duration'
             )
+
+class TutorOccurrenceSessionForm(TutorSessionForm):
+    OCCURRENCE_CHOICES = [('one_off', 'One Off'), ('weekly', 'Weekly')]
+    occurrence = forms.ChoiceField(choices=OCCURRENCE_CHOICES, widget=forms.RadioSelect)
+    class Meta(TutorSessionForm.Meta):
+        fields = TutorSessionForm.Meta.fields + ('occurrence', )
             
     # def save(self, commit=True):
     #     # Save the provided password in hashed format

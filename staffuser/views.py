@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from datetime import datetime, date, timedelta
-from .forms import ParentUserForm, ParentProfileForm, TutorUserForm, TutorProfileForm, SessionForm
+from .forms import ParentUserForm, ParentProfileForm, TutorUserForm, TutorProfileForm, TutorOccurrenceSessionForm
 from accounts.models import User
-from .models import Session
+from .models import TutorSession
 
 
 # Create your views here.
@@ -58,18 +58,21 @@ def add_tutor_profile_view(request, *args, **kwargs):
         return redirect(reverse('staffuser:dashboard'))
     return render(request, 'add-tutor-profile.html', {'tutoruser': tutoruser, "tutor_profile_form": tutor_profile_form})
     
-def add_session_view(request):
+def add_tutor_session_view(request):
     """Renders add session page with corresponding form"""
-    session_form = SessionForm(request.POST or None)
-    if session_form.is_valid():
-        start_date = session_form.cleaned_data['date']
-        while start_date < date(2020, 8, 1):
-            Session.objects.create(tutor=session_form.cleaned_data['tutor'], 
-                                    subject=session_form.cleaned_data['subject'], 
-                                    day=session_form.cleaned_data['day'], 
-                                    time=session_form.cleaned_data['time'], 
-                                    date=start_date, 
-                                    duration=session_form.cleaned_data['duration'])
-            start_date += timedelta(days=7)
-        session_form = SessionForm()
-    return render(request, 'add-session.html', {'session_form': session_form})
+    tutor_session_form = TutorOccurrenceSessionForm(request.POST or None)
+    if tutor_session_form.is_valid():
+        if tutor_session_form.cleaned_data['occurrence'] == 'weekly':
+            start_date = tutor_session_form.cleaned_data['date']
+            while start_date < date(2020, 8, 1):
+                TutorSession.objects.create(tutor=tutor_session_form.cleaned_data['tutor'], 
+                                        subject=tutor_session_form.cleaned_data['subject'], 
+                                        day=tutor_session_form.cleaned_data['day'], 
+                                        time=tutor_session_form.cleaned_data['time'], 
+                                        date=start_date, 
+                                        duration=tutor_session_form.cleaned_data['duration'])
+                start_date += timedelta(days=7)
+        else:
+            tutor_session_form.save()
+        tutor_session_form = TutorOccurrenceSessionForm()
+    return render(request, 'add-tutor-session.html', {'tutor_session_form': tutor_session_form})
