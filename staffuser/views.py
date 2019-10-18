@@ -60,11 +60,21 @@ def add_tutor_profile_view(request, *args, **kwargs):
     
 def add_tutor_session_view(request):
     """Renders add session page with corresponding form"""
+    def get_next_august():
+        today = datetime.today()
+        year = today.year
+        month = today.month
+        if month >= 8:
+            year += 1
+    
+        return date(year, 8, 1)
+        
+        
     tutor_session_form = TutorOccurrenceSessionForm(request.POST or None)
     if tutor_session_form.is_valid():
         if tutor_session_form.cleaned_data['occurrence'] == 'weekly':
             start_date = tutor_session_form.cleaned_data['date']
-            while start_date < date(2020, 8, 1):
+            while start_date < get_next_august():
                 TutorSession.objects.create(tutor=tutor_session_form.cleaned_data['tutor'], 
                                         subject=tutor_session_form.cleaned_data['subject'], 
                                         day=tutor_session_form.cleaned_data['day'], 

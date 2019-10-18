@@ -90,7 +90,7 @@ class TutorProfileForm(forms.ModelForm):
             )
             
 class TutorSessionForm(forms.ModelForm):
-    """Form for creating a regular session"""
+    """Form for creating a tutor session"""
     DAY_CHOICES = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday')]
     SUBJECT_CHOICES = [('maths', 'Maths'), ('english', 'English'), ('science', 'Science')]
     tutor = forms.ModelChoiceField(queryset=TutorProfile.objects.all(), empty_label="Choose Tutor", required=True)
@@ -114,16 +114,8 @@ class TutorSessionForm(forms.ModelForm):
             )
 
 class TutorOccurrenceSessionForm(TutorSessionForm):
+    """Form that includes occurrence field to TutorSessionForm"""
     OCCURRENCE_CHOICES = [('one_off', 'One Off'), ('weekly', 'Weekly')]
     occurrence = forms.ChoiceField(choices=OCCURRENCE_CHOICES, widget=forms.RadioSelect)
     class Meta(TutorSessionForm.Meta):
         fields = TutorSessionForm.Meta.fields + ('occurrence', )
-            
-    # def save(self, commit=True):
-    #     # Save the provided password in hashed format
-    #     session = super(SessionForm, self).save(commit=False)
-    #     start_date=self.cleaned_data['start_date']
-    #     while start_date < date(2020, 8, 1):
-    #         session.start_date=start_date
-            
-    #         start_date += timedelta(days=7)
