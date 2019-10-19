@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from datetime import datetime, date, timedelta
-from .forms import ParentUserForm, ParentProfileForm, TutorUserForm, TutorProfileForm, TutorOccurrenceSessionForm
+from .forms import ParentUserForm, ParentProfileForm, TutorUserForm, TutorProfileForm, TutorOccurrenceSessionForm, StudentForm
 from accounts.models import User
 from .models import TutorSession
 
@@ -69,7 +69,6 @@ def add_tutor_session_view(request):
     
         return date(year, 8, 1)
         
-        
     tutor_session_form = TutorOccurrenceSessionForm(request.POST or None)
     if tutor_session_form.is_valid():
         if tutor_session_form.cleaned_data['occurrence'] == 'weekly':
@@ -86,3 +85,14 @@ def add_tutor_session_view(request):
             tutor_session_form.save()
         tutor_session_form = TutorOccurrenceSessionForm()
     return render(request, 'add-tutor-session.html', {'tutor_session_form': tutor_session_form})
+    
+def add_student_view(request):
+    """Renders add student page and form"""
+    if request.method == 'POST':
+        student_form = StudentForm(request.POST, request=request)
+        if student_form.is_valid():
+            student_form.save()
+            student_form = StudentForm(request=request)
+    else:
+        student_form = StudentForm(request=request)
+    return render(request, 'add-student.html', {'student_form': student_form})

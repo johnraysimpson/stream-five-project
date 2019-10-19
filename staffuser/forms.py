@@ -5,7 +5,7 @@ from django import forms
 from datetime import datetime, date, timedelta
 from django.core.mail import send_mail
 from accounts.models import User
-from .models import ParentProfile, TutorProfile, TutorSession
+from .models import ParentProfile, TutorProfile, TutorSession, Student
 
 class ParentUserForm(forms.ModelForm):
     """Form for creating a parent user. Assigns a random password and an email is sent to the user with this information"""
@@ -116,6 +116,22 @@ class TutorSessionForm(forms.ModelForm):
 class TutorOccurrenceSessionForm(TutorSessionForm):
     """Form that includes occurrence field to TutorSessionForm"""
     OCCURRENCE_CHOICES = [('one_off', 'One Off'), ('weekly', 'Weekly')]
-    occurrence = forms.ChoiceField(choices=OCCURRENCE_CHOICES, widget=forms.RadioSelect)
+    occurrence = forms.ChoiceField(choices=OCCURRENCE_CHOICES, widget=forms.RadioSelect())
     class Meta(TutorSessionForm.Meta):
         fields = TutorSessionForm.Meta.fields + ('occurrence', )
+        
+class StudentForm(forms.ModelForm):
+    """Form for creating a student"""
+    parent = forms.ModelChoiceField(queryset=None, empty_label="Choose parent user", required=True)
+    date_of_birth = forms.DateField(
+        widget=forms.DateInput(format='%d/%m/%Y'),
+        input_formats=('%d/%m/%Y', )
+        )
+    relationship = forms.CharField(label="Relationship to Student")
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super(StudentForm, self).__init__(*args, **kwargs)
+        self.fields["parent"].queryset = ParentProfile.objects.filter(user__centre = self.request.user.centre)
+    class Meta:
+        model = Student
+        fields = ('parent', 'relationship', 'first_name', 'last_name', 'date_of_birth', 'notes')
