@@ -2,36 +2,50 @@
 
 {% block title %}Staff Dashboard{% endblock %}
 
-{% block content %}
+{% block staff_content %}
 
 {% if messages %}
     {% for message in messages %}
     <p>{{ message }}</p>
     {% endfor %}
 {% endif %}
-{% if user.is_authenticated %}
-    {% if user.is_staff %}
-        <h1>Hello, staff member!</h1>
+
+<h1>Hello, staff member!</h1>
         
-        <div>
-            <a href="{% url 'staffuser:add-parent' %}">Add A Parent</a>
-        </div>
-        
-        <div>
-            <a href="{% url 'staffuser:add-tutor' %}">Add A Tutor</a>
-        </div>
-        
-        <div>
-            <a href="{% url 'staffuser:add-session' %}">Add A Session</a>
-        </div>
-        
-        <div>
-            <a href="{% url 'staffuser:add-student' %}">Add A Student</a>
-        </div>
-    {% else %}
-        <p>You do not have the permissions to view this page</p>
-    {% endif %}
-{% else %}
-    <p>You must be logged in to see this page</p>
-{% endif %}
+<div>
+    <a href="{% url 'staffuser:add-parent' %}">Add A Parent</a>
+</div>
+
+<div>
+    <a href="{% url 'staffuser:add-tutor' %}">Add A Tutor</a>
+</div>
+
+<div>
+    <a href="{% url 'staffuser:add-session' %}">Add A Session</a>
+</div>
+
+<div>
+    <a href="{% url 'staffuser:add-student' %}">Add A Student</a>
+</div>
+
+<div>
+    <a href="{% url 'staffuser:add-student-session' %}">Add Student Session</a>
+</div>
+
+{% endblock %}
+
+{% block admin_content %}
+<p>You do not have the permissions to view this page.</p>
+{% endblock %}
+
+{% block tutor_content %}
+<p>You do not have the permissions to view this page.</p>
+{% endblock %}
+
+{% block parent_content %}
+<p>You do not have the permissions to view this page.</p>
+{% endblock %}
+
+{% block not_user_content %}
+<p>You must be logged in to view this page.</p>
 {% endblock %}

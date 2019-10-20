@@ -5,7 +5,7 @@ from django import forms
 from datetime import datetime, date, timedelta
 from django.core.mail import send_mail
 from accounts.models import User
-from .models import ParentProfile, TutorProfile, TutorSession, Student
+from .models import ParentProfile, TutorProfile, Student
 
 class ParentUserForm(forms.ModelForm):
     """Form for creating a parent user. Assigns a random password and an email is sent to the user with this information"""
@@ -89,36 +89,6 @@ class TutorProfileForm(forms.ModelForm):
             'pay_per_hour',
             )
             
-class TutorSessionForm(forms.ModelForm):
-    """Form for creating a tutor session"""
-    DAY_CHOICES = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday')]
-    SUBJECT_CHOICES = [('maths', 'Maths'), ('english', 'English'), ('science', 'Science')]
-    tutor = forms.ModelChoiceField(queryset=TutorProfile.objects.all(), empty_label="Choose Tutor", required=True)
-    day = forms.ChoiceField(choices=DAY_CHOICES)
-    subject = forms.ChoiceField(choices=SUBJECT_CHOICES)
-    time = forms.TimeField(widget=forms.TimeInput(format="%H:%M"))
-    date = forms.DateField(label="Start date",
-        widget=forms.DateInput(format='%d/%m/%Y'),
-        input_formats=('%d/%m/%Y', )
-        )
-    
-    class Meta:
-        model = TutorSession
-        fields = (
-            'tutor',
-            'subject',
-            'day',
-            'time',
-            'date',
-            'duration'
-            )
-
-class TutorOccurrenceSessionForm(TutorSessionForm):
-    """Form that includes occurrence field to TutorSessionForm"""
-    OCCURRENCE_CHOICES = [('one_off', 'One Off'), ('weekly', 'Weekly')]
-    occurrence = forms.ChoiceField(choices=OCCURRENCE_CHOICES, widget=forms.RadioSelect())
-    class Meta(TutorSessionForm.Meta):
-        fields = TutorSessionForm.Meta.fields + ('occurrence', )
         
 class StudentForm(forms.ModelForm):
     """Form for creating a student"""
@@ -134,4 +104,4 @@ class StudentForm(forms.ModelForm):
         self.fields["parent"].queryset = ParentProfile.objects.filter(user__centre = self.request.user.centre)
     class Meta:
         model = Student
-        fields = ('parent', 'relationship', 'first_name', 'last_name', 'date_of_birth', 'notes')
+        fields = ('parent', 'relationship', 'first_name', 'last_name', 'date_of_birth', 'price_per_session', 'notes')

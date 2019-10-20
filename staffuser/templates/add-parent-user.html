@@ -2,7 +2,7 @@
 
 {% block title %}Add Parent User{% endblock %}
 
-{% block content %}
+{% block staff_content %}
 
 <h1>Add Parent User</h1>
 
@@ -12,4 +12,20 @@
     <input type='submit' value='Save' />
 </form>
 
+{% endblock %}
+
+{% block admin_content %}
+<p>You do not have the permissions to view this page.</p>
+{% endblock %}
+
+{% block tutor_content %}
+<p>You do not have the permissions to view this page.</p>
+{% endblock %}
+
+{% block parent_content %}
+<p>You do not have the permissions to view this page.</p>
+{% endblock %}
+
+{% block not_user_content %}
+<p>You must be logged in to view this page.</p>
 {% endblock %}

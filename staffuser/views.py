@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
+from django.db import IntegrityError
 from datetime import datetime, date, timedelta
-from .forms import ParentUserForm, ParentProfileForm, TutorUserForm, TutorProfileForm, TutorOccurrenceSessionForm, StudentForm
+from .forms import ParentUserForm, ParentProfileForm, TutorUserForm, TutorProfileForm, StudentForm
+from lessons.forms import TutorOccurrenceSessionForm, SessionMatchForm
 from accounts.models import User
-from .models import TutorSession
+from lessons.models import TutorSession, StudentSession
 
 
 # Create your views here.
@@ -57,18 +59,18 @@ def add_tutor_profile_view(request, *args, **kwargs):
         messages.success(request, "Tutor successfully created")
         return redirect(reverse('staffuser:dashboard'))
     return render(request, 'add-tutor-profile.html', {'tutoruser': tutoruser, "tutor_profile_form": tutor_profile_form})
-    
-def add_tutor_session_view(request):
-    """Renders add session page with corresponding form"""
-    def get_next_august():
+
+def get_next_august():
         today = datetime.today()
         year = today.year
         month = today.month
         if month >= 8:
             year += 1
     
-        return date(year, 8, 1)
-        
+        return date(year, 8, 1)    
+
+def add_tutor_session_view(request):
+    """Renders add session page with corresponding form"""
     tutor_session_form = TutorOccurrenceSessionForm(request.POST or None)
     if tutor_session_form.is_valid():
         if tutor_session_form.cleaned_data['occurrence'] == 'weekly':
@@ -96,3 +98,49 @@ def add_student_view(request):
     else:
         student_form = StudentForm(request=request)
     return render(request, 'add-student.html', {'student_form': student_form})
+    
+def add_student_session_view(request):
+    if request.method == "POST":
+        session_form = SessionMatchForm(request.POST, request=request)
+        if session_form.is_valid():
+            
+                start_date = session_form.cleaned_data['date']
+                matched_sessions = []
+                
+                while start_date < get_next_august():
+                    
+                    try: 
+                        matched_session = TutorSession.objects.get(tutor = session_form.cleaned_data['tutor'],
+                                                                day = session_form.cleaned_data['day'],
+                                                                time = session_form.cleaned_data['time'],
+                                                                subject = session_form.cleaned_data['subject'],
+                                                                date = start_date,
+                                                                )
+                    except TutorSession.DoesNotExist:
+                        matched_session = None
+                        
+                    if matched_session:
+                        matched_sessions.append(matched_session)
+                        
+                    if session_form.cleaned_data['occurrence'] == 'one_off':
+                        break
+                    
+                    elif session_form.cleaned_data['occurrence'] == 'weekly':
+                        start_date += timedelta(days=7)
+                        
+                    else:
+                        start_date += timedelta(days=14)
+                        
+                if not matched_sessions:
+                    session_form.add_error(None, 'Sessions do not exist')
+                else:
+                    session, created = StudentSession.objects.get_or_create(
+                        student = session_form.cleaned_data['student']
+                        )
+                    for newsession in matched_sessions:
+                        session.sessions.add(newsession)
+                    print(session.sessions.all())
+                    session_form = SessionMatchForm(request=request)
+    else:
+        session_form = SessionMatchForm(request=request)
+    return render(request, 'add-student-session.html', {'session_form': session_form})

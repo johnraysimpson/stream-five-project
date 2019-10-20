@@ -6,6 +6,7 @@ from .views import (staff_dashboard_view,
                     add_tutor_profile_view,
                     add_tutor_session_view,
                     add_student_view,
+                    add_student_session_view
                     )
 
 app_name = 'staffuser'
@@ -17,5 +18,6 @@ urlpatterns = [
     path('addtutor/', add_tutor_view, name="add-tutor"),
     path('addtutor/<tutoruser_id>/', add_tutor_profile_view, name="add-tutor-profile"),
     path('addtutorsession/', add_tutor_session_view, name='add-session'),
-    path('addstudent/', add_student_view, name='add-student')
+    path('addstudent/', add_student_view, name='add-student'),
+    path('addstudentsession/', add_student_session_view, name='add-student-session'),
     ]

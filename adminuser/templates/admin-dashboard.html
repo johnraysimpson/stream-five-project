@@ -2,28 +2,38 @@
 
 {% block title %}Admin Dashboard{% endblock %}
 
-{% block content %}
+{% block admin_content %}
 
 {% if messages %}
     {% for message in messages %}
     <p>{{ message }}</p>
     {% endfor %}
 {% endif %}
-{% if user.is_authenticated %}
-    {% if user.is_admin %}
-        <h1>Hello, adminuser!</h1>
+
+<h1>Hello, adminuser!</h1>
         
-        <div>
-            <a href="{% url 'adminuser:add-centre' %}">Add Centre</a>
-        </div>
-        
-        <div>
-            <a href="{% url 'adminuser:add-staff' %}">Add Staff User</a>
-        </div>
-    {% else %}
-        <p>You do not have the permissions to view this page</p>
-    {% endif %}
-{% else %}
-    <p>You must be logged in to see this page</p>
-{% endif %}
+<div>
+    <a href="{% url 'adminuser:add-centre' %}">Add Centre</a>
+</div>
+
+<div>
+    <a href="{% url 'adminuser:add-staff' %}">Add Staff User</a>
+</div>
+
+{% endblock %}
+
+{% block staff_content %}
+<p>You do not have the permissions to view this page.</p>
+{% endblock %}
+
+{% block tutor_content %}
+<p>You do not have the permissions to view this page.</p>
+{% endblock %}
+
+{% block parent_content %}
+<p>You do not have the permissions to view this page.</p>
+{% endblock %}
+
+{% block not_user_content %}
+<p>You must be logged in to view this page.</p>
 {% endblock %}

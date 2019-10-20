@@ -2,8 +2,7 @@
 
 {% block title %}Add Centre{% endblock %}
 
-{% block content %}
-
+{% block admin_content %}
 <h1>Add New Centre</h1>
 
 <form method='POST'>
@@ -11,5 +10,20 @@
     {{ centre_form.as_p }}
     <input type='submit' value='Save' />
 </form>
+{% endblock %}
 
+{% block staff_content %}
+<p>You do not have the permissions to view this page.</p>
+{% endblock %}
+
+{% block tutor_content %}
+<p>You do not have the permissions to view this page.</p>
+{% endblock %}
+
+{% block parent_content %}
+<p>You do not have the permissions to view this page.</p>
+{% endblock %}
+
+{% block not_user_content %}
+<p>You must be logged in to view this page.</p>
 {% endblock %}

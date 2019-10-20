@@ -32,18 +32,6 @@ class TutorProfile(models.Model):
     
     def __str__(self):
         return u'{0} {1} ({2})'.format(self.first_name, self.last_name, self.user.centre)
-        
-class TutorSession(models.Model):
-    """Model for session information"""
-    tutor = models.ForeignKey(TutorProfile, on_delete=models.CASCADE)
-    subject = models.CharField(max_length=40)
-    day = models.CharField(max_length=10)
-    time = models.TimeField()
-    date = models.DateField()
-    duration = models.DurationField()
-    
-    def __str__(self):
-        return u'{0}, {1}, {2}, {3}, {4}, {5}'.format(self.subject, self.tutor.first_name, self.tutor.user.centre.centre_name, self.day, self.time, self.date)
     
 class Student(models.Model):
     """Model for student information"""
@@ -52,4 +40,8 @@ class Student(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     date_of_birth = models.DateField()
+    price_per_session = models.DecimalField(max_digits=4, decimal_places=2)
     notes = models.TextField()
+    
+    def __str__(self):
+        return u'{0}, {1}'.format(self.last_name, self.first_name)
