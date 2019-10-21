@@ -1,6 +1,9 @@
 from django.contrib import admin
 from .models import TutorSession, StudentSession
 
-# Register your models here.
-admin.site.register(TutorSession)
+class TutorSessionAdmin(admin.ModelAdmin):
+    list_display=('tutor', 'centre', 'subject', 'day', 'time', 'date',)
+
+
+admin.site.register(TutorSession, TutorSessionAdmin)
 admin.site.register(StudentSession)

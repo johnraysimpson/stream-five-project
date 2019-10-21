@@ -1,6 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.auth.forms import ReadOnlyPasswordHashField, SetPasswordForm
 from .models import User
+from collections import OrderedDict
 
 class UserLoginForm(forms.Form):
     """Form for logging in users"""
@@ -51,4 +52,17 @@ class UserAdminChangeForm(forms.ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
         
+class FirstPasswordChangeForm(SetPasswordForm):
+    """
+    A form that makes user change their password on their first time logging in
+    """
+    def __init__(self, *args, **kwargs):
+        super(FirstPasswordChangeForm, self).__init__(*args, **kwargs)
 
+        for fieldname in ['new_password1', 'new_password2']:
+            self.fields[fieldname].help_text = None
+
+FirstPasswordChangeForm.base_fields = OrderedDict(
+    (k, FirstPasswordChangeForm.base_fields[k])
+    for k in ['new_password1', 'new_password2']
+)

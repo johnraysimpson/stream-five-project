@@ -1,38 +1,36 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.db import IntegrityError
+from django.http import HttpResponse
 from datetime import datetime, date, timedelta
 from .forms import ParentUserForm, ParentProfileForm, TutorUserForm, TutorProfileForm, StudentForm
 from lessons.forms import TutorOccurrenceSessionForm, SessionMatchForm
 from accounts.models import User
 from lessons.models import TutorSession, StudentSession
+from .models import ParentProfile, TutorProfile
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 def staff_test(user):
+    """Test to check if current user is solely a staff user"""
     return (user.is_staff and not user.is_admin)
+    
+def get_next_august():
+    """Function that returns the date of the next time it is August"""
+    today = datetime.today()
+    year = today.year
+    month = today.month
+    if month >= 8:
+        year += 1
+    return date(year, 8, 1)    
 
-@login_required()
+@login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def staff_dashboard_view(request):
     """Renders dashboard for staff user"""
     return render(request, "staff-dashboard.html")
 
-@login_required()
-@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def add_parent_profile_view(request, *args, **kwargs):
-    """Renders page for parent profile information, using the user id to retrieve information about the parent user created"""
-    parentuser = User.objects.get(pk=kwargs["parentuser_id"])
-    parent_profile_form = ParentProfileForm(request.POST or None)
-    if parent_profile_form.is_valid():
-        parent_profile = parent_profile_form.save()
-        parent_profile.user = parentuser
-        parent_profile.save()
-        messages.success(request, "Parent successfully created")
-        return redirect(reverse('staffuser:dashboard'))
-    return render(request, 'add-parent-profile.html', {'parentuser': parentuser, "parent_profile_form": parent_profile_form})
-
-@login_required()
+@login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_parent_view(request):
     """Renders add parent page, creates form for registering a parent user"""
@@ -42,10 +40,28 @@ def add_parent_view(request):
         user.parent=True
         user.centre = request.user.centre
         user.save()
-        return redirect(reverse('staffuser:add-parent-profile', kwargs={"parentuser_id":user.pk}))
+        return redirect('staffuser:add-parent-profile', parentuser_id=user.pk)
     return render(request, "add-parent-user.html", {'parent_user_form': parent_user_form})
     
-@login_required()
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def add_parent_profile_view(request, parentuser_id):
+    """Renders page for parent profile information, using the user id to retrieve information about the parent user created"""
+    parentuser = User.objects.get(pk=parentuser_id)
+    try:
+        ParentProfile.objects.get(user=parentuser)
+        return HttpResponse('This user already has a profile')
+    except ParentProfile.DoesNotExist:
+        parent_profile_form = ParentProfileForm(request.POST or None)
+        if parent_profile_form.is_valid():
+            parent_profile = parent_profile_form.save()
+            parent_profile.user = parentuser
+            parent_profile.save()
+            messages.success(request, "Parent successfully created")
+            return redirect(reverse('staffuser:dashboard'))
+        return render(request, 'add-parent-profile.html', {'parentuser': parentuser, "parent_profile_form": parent_profile_form})
+    
+@login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_tutor_view(request):
     """Renders add tutor page, creates form for registering a tutor user"""
@@ -55,33 +71,29 @@ def add_tutor_view(request):
         user.tutor=True
         user.centre = request.user.centre
         user.save()
-        return redirect(reverse('staffuser:add-tutor-profile', kwargs={"tutoruser_id":user.pk}))
+        return redirect('staffuser:add-tutor-profile', tutoruser_id=user.pk)
     return render(request, "add-tutor-user.html", {'tutor_user_form': tutor_user_form})
     
-@login_required()
+@login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def add_tutor_profile_view(request, *args, **kwargs):
+def add_tutor_profile_view(request, tutoruser_id):
     """Renders page for parent profile information, using the user id to retrieve information about the parent user created"""
-    tutoruser = User.objects.get(pk=kwargs["tutoruser_id"])
-    tutor_profile_form = TutorProfileForm(request.POST or None)
-    if tutor_profile_form.is_valid():
-        tutor_profile = tutor_profile_form.save()
-        tutor_profile.user = tutoruser
-        tutor_profile.save()
-        messages.success(request, "Tutor successfully created")
-        return redirect(reverse('staffuser:dashboard'))
-    return render(request, 'add-tutor-profile.html', {'tutoruser': tutoruser, "tutor_profile_form": tutor_profile_form})
+    tutoruser = User.objects.get(pk=tutoruser_id)
+    try:
+        TutorProfile.objects.get(user=tutoruser)
+    except TutorProfile.DoesNotExist:
+        tutor_profile_form = TutorProfileForm(request.POST or None)
+        if tutor_profile_form.is_valid():
+            tutor_profile = tutor_profile_form.save()
+            tutor_profile.user = tutoruser
+            tutor_profile.save()
+            messages.success(request, "Tutor successfully created")
+            return redirect(reverse('staffuser:dashboard'))
+        return render(request, 'add-tutor-profile.html', {'tutoruser': tutoruser, "tutor_profile_form": tutor_profile_form})
 
-def get_next_august():
-        today = datetime.today()
-        year = today.year
-        month = today.month
-        if month >= 8:
-            year += 1
-    
-        return date(year, 8, 1)    
 
-@login_required()
+
+@login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_tutor_session_view(request):
     """Renders add session page with corresponding form"""
@@ -95,14 +107,17 @@ def add_tutor_session_view(request):
                                         day=tutor_session_form.cleaned_data['day'], 
                                         time=tutor_session_form.cleaned_data['time'], 
                                         date=start_date, 
-                                        duration=tutor_session_form.cleaned_data['duration'])
+                                        duration=tutor_session_form.cleaned_data['duration'],
+                                        centre=request.user.centre)
                 start_date += timedelta(days=7)
         else:
-            tutor_session_form.save()
+            tutor_session = tutor_session_form.save()
+            tutor_session.centre = request.user.centre
+            tutor_session.save()
         tutor_session_form = TutorOccurrenceSessionForm()
     return render(request, 'add-tutor-session.html', {'tutor_session_form': tutor_session_form})
     
-@login_required()
+@login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_student_view(request):
     """Renders add student page and form"""
@@ -115,7 +130,7 @@ def add_student_view(request):
         student_form = StudentForm(request=request)
     return render(request, 'add-student.html', {'student_form': student_form})
     
-@login_required()
+@login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_student_session_view(request):
     if request.method == "POST":

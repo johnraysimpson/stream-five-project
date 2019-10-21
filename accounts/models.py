@@ -76,7 +76,7 @@ class User(AbstractBaseUser):
     def __str__(self):
         return self.email
 
-    def has_perms(self, perm, obj=None):
+    def has_perm(self, perm, obj=None):
         """Function for determining if a user has a permission"""
         "Does the user have a specific permission?"
         # Simplest possible answer: Yes, always
