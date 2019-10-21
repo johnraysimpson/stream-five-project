@@ -2,7 +2,7 @@
 
 {% block title %}Staff Dashboard{% endblock %}
 
-{% block staff_content %}
+{% block content %}
 
 {% if messages %}
     {% for message in messages %}
@@ -32,20 +32,4 @@
     <a href="{% url 'staffuser:add-student-session' %}">Add Student Session</a>
 </div>
 
-{% endblock %}
-
-{% block admin_content %}
-<p>You do not have the permissions to view this page.</p>
-{% endblock %}
-
-{% block tutor_content %}
-<p>You do not have the permissions to view this page.</p>
-{% endblock %}
-
-{% block parent_content %}
-<p>You do not have the permissions to view this page.</p>
-{% endblock %}
-
-{% block not_user_content %}
-<p>You must be logged in to view this page.</p>
 {% endblock %}

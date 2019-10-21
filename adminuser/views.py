@@ -1,12 +1,18 @@
 from django.shortcuts import render
 from .forms import CentreForm, StaffUserForm
+from django.contrib.auth.decorators import login_required, user_passes_test
 
-# Create your views here.
+def admin_test(user):
+    return user.is_admin
 
+@login_required()
+@user_passes_test(admin_test, redirect_field_name=None, login_url='/oops/')
 def admin_dashboard_view(request):
     """Renders dashboard for admin user"""
     return render(request, "admin-dashboard.html")
-    
+
+@login_required()
+@user_passes_test(admin_test, redirect_field_name=None, login_url='/oops/')
 def add_centre_view(request):
     """Renders the page for adding a centre with its corresponding form"""
     centre_form = CentreForm(request.POST or None)
@@ -14,7 +20,9 @@ def add_centre_view(request):
         centre_form.save()
         centre_form = CentreForm()
     return render(request, "add-centre.html", {'centre_form': centre_form})
-    
+ 
+@login_required()
+@user_passes_test(admin_test, redirect_field_name=None, login_url='/oops/')
 def add_staff_view(request):
     """Renders add staff page with corresponding form"""
     staff_user_form = StaffUserForm(request.POST or None)

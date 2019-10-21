@@ -3,7 +3,7 @@
 {% block title %}Add Parent Profile{% endblock %}
 
 
-{% block staff_content %}
+{% block content %}
 
 <h1>Add Profile Information For User {{ parentuser.email }}</h1>
 <form method='POST'>
@@ -12,20 +12,4 @@
     <input type='submit' value='Save' />
 </form>
 
-{% endblock %}
-
-{% block admin_content %}
-<p>You do not have the permissions to view this page.</p>
-{% endblock %}
-
-{% block tutor_content %}
-<p>You do not have the permissions to view this page.</p>
-{% endblock %}
-
-{% block parent_content %}
-<p>You do not have the permissions to view this page.</p>
-{% endblock %}
-
-{% block not_user_content %}
-<p>You must be logged in to view this page.</p>
 {% endblock %}

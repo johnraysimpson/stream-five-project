@@ -2,7 +2,7 @@
 
 {% block title %}Admin Dashboard{% endblock %}
 
-{% block admin_content %}
+{% block content %}
 
 {% if messages %}
     {% for message in messages %}
@@ -20,20 +20,4 @@
     <a href="{% url 'adminuser:add-staff' %}">Add Staff User</a>
 </div>
 
-{% endblock %}
-
-{% block staff_content %}
-<p>You do not have the permissions to view this page.</p>
-{% endblock %}
-
-{% block tutor_content %}
-<p>You do not have the permissions to view this page.</p>
-{% endblock %}
-
-{% block parent_content %}
-<p>You do not have the permissions to view this page.</p>
-{% endblock %}
-
-{% block not_user_content %}
-<p>You must be logged in to view this page.</p>
 {% endblock %}

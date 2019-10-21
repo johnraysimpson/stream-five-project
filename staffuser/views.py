@@ -6,13 +6,20 @@ from .forms import ParentUserForm, ParentProfileForm, TutorUserForm, TutorProfil
 from lessons.forms import TutorOccurrenceSessionForm, SessionMatchForm
 from accounts.models import User
 from lessons.models import TutorSession, StudentSession
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 
-# Create your views here.
+def staff_test(user):
+    return (user.is_staff and not user.is_admin)
+
+@login_required()
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def staff_dashboard_view(request):
     """Renders dashboard for staff user"""
     return render(request, "staff-dashboard.html")
-    
+
+@login_required()
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_parent_profile_view(request, *args, **kwargs):
     """Renders page for parent profile information, using the user id to retrieve information about the parent user created"""
     parentuser = User.objects.get(pk=kwargs["parentuser_id"])
@@ -25,6 +32,8 @@ def add_parent_profile_view(request, *args, **kwargs):
         return redirect(reverse('staffuser:dashboard'))
     return render(request, 'add-parent-profile.html', {'parentuser': parentuser, "parent_profile_form": parent_profile_form})
 
+@login_required()
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_parent_view(request):
     """Renders add parent page, creates form for registering a parent user"""
     parent_user_form = ParentUserForm(request.POST or None)
@@ -36,7 +45,8 @@ def add_parent_view(request):
         return redirect(reverse('staffuser:add-parent-profile', kwargs={"parentuser_id":user.pk}))
     return render(request, "add-parent-user.html", {'parent_user_form': parent_user_form})
     
-    
+@login_required()
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_tutor_view(request):
     """Renders add tutor page, creates form for registering a tutor user"""
     tutor_user_form = TutorUserForm(request.POST or None)
@@ -48,6 +58,8 @@ def add_tutor_view(request):
         return redirect(reverse('staffuser:add-tutor-profile', kwargs={"tutoruser_id":user.pk}))
     return render(request, "add-tutor-user.html", {'tutor_user_form': tutor_user_form})
     
+@login_required()
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_tutor_profile_view(request, *args, **kwargs):
     """Renders page for parent profile information, using the user id to retrieve information about the parent user created"""
     tutoruser = User.objects.get(pk=kwargs["tutoruser_id"])
@@ -69,6 +81,8 @@ def get_next_august():
     
         return date(year, 8, 1)    
 
+@login_required()
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_tutor_session_view(request):
     """Renders add session page with corresponding form"""
     tutor_session_form = TutorOccurrenceSessionForm(request.POST or None)
@@ -88,6 +102,8 @@ def add_tutor_session_view(request):
         tutor_session_form = TutorOccurrenceSessionForm()
     return render(request, 'add-tutor-session.html', {'tutor_session_form': tutor_session_form})
     
+@login_required()
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_student_view(request):
     """Renders add student page and form"""
     if request.method == 'POST':
@@ -99,6 +115,8 @@ def add_student_view(request):
         student_form = StudentForm(request=request)
     return render(request, 'add-student.html', {'student_form': student_form})
     
+@login_required()
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_student_session_view(request):
     if request.method == "POST":
         session_form = SessionMatchForm(request.POST, request=request)

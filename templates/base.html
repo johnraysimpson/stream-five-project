@@ -37,24 +37,6 @@
             {% endif %}
         </ul>
     </nav>
-    {% if user.is_authenticated %}
-        {% if user.is_admin %}
-            {% block admin_content %}
-            {% endblock %}
-        {% elif user.is_admin == False and user.is_staff %}
-            {% block staff_content %}
-            {% endblock %}
-        {% elif user.is_tutor %}
-            {% block tutor_content %}
-            {% endblock %}
-        {% elif user.is_parent %}
-            {% block parent_content %}
-            {% endblock %}
-        {% endif %}
-    {% else %}
-        {% block not_user_content %}
-        {% endblock %}
-    {% endif %}
     {% block content %}
     {% endblock %}
 </body>
