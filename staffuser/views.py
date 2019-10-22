@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.db import IntegrityError
 from django.http import HttpResponse
 from datetime import datetime, date, timedelta
-from .forms import ParentUserForm, ParentProfileForm, TutorUserForm, TutorProfileForm, StudentForm
+from .forms import CreateUserForm, ParentProfileForm, TutorProfileForm, StudentForm
 from lessons.forms import TutorOccurrenceSessionForm, SessionMatchForm
 from accounts.models import User
 from lessons.models import TutorSession, StudentSession
@@ -40,7 +40,7 @@ def staff_dashboard_view(request):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_parent_view(request):
     """Renders add parent page, creates form for registering a parent user"""
-    parent_user_form = ParentUserForm(request.POST or None)
+    parent_user_form = CreateUserForm(request.POST or None)
     if parent_user_form.is_valid():
         user = parent_user_form.save()
         user.parent=True
@@ -71,7 +71,7 @@ def add_parent_profile_view(request, parentuser_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_tutor_view(request):
     """Renders add tutor page, creates form for registering a tutor user"""
-    tutor_user_form = TutorUserForm(request.POST or None)
+    tutor_user_form = CreateUserForm(request.POST or None)
     if tutor_user_form.is_valid():
         user = tutor_user_form.save()
         user.tutor=True

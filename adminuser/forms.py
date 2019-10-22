@@ -19,6 +19,33 @@ class CentreForm(forms.ModelForm):
             'telephone',
             ]
             
+    def clean_centre_name(self):
+        return self.cleaned_data['centre_name'].lower().capitalize()
+        
+    def clean_address1(self):
+        return self.cleaned_data['address1'].lower().title()
+        
+    def clean_address2(self):
+        return self.cleaned_data['address2'].lower().title()
+        
+    def clean_town_or_city(self):
+        return self.cleaned_data['town_or_city'].lower().title()
+        
+    def clean_county(self):
+        return self.cleaned_data['county'].lower().title()
+        
+    def clean_post_code(self):
+        return self.cleaned_data['post_code'].upper()
+        
+    def clean_email(self):
+        return self.cleaned_data['email'].lower()
+        
+    def clean_telephone(self):
+        telephone = self.cleaned_data['telephone']
+        if not telephone.isdigit():
+            raise forms.ValidationError("Telephone numbers should only contain numbers")
+        return telephone
+            
 class StaffUserForm(forms.ModelForm):
     """A form for registering a staff user which asks for password confirmation"""
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)

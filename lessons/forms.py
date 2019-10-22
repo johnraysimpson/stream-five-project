@@ -38,7 +38,10 @@ class TutorSessionForm(forms.ModelForm):
             raise forms.ValidationError(input_date.strftime("%d-%m-%Y")+" does not fall on a "+input_day.capitalize()+".")
         elif input_date < datetime.date.today():
             raise forms.ValidationError("Can not create a lesson in the past.")
-        return input_day
+        return input_date
+        
+    def clean_subject(self):
+        return self.cleaned_data['subject'].lower().title()
 
 class TutorOccurrenceSessionForm(TutorSessionForm):
     """Form that includes occurrence field to TutorSessionForm"""
