@@ -48,7 +48,7 @@ class ParentProfileForm(forms.ModelForm):
             )
             
 class TutorUserForm(forms.ModelForm):
-    """Form for creating a parent user. Assigns a random password and an email is sent to the user with this information"""
+    """Form for creating a tutor user. Assigns a random password and an email is sent to the user with this information"""
     class Meta:
         model = User
         fields = ('email',)

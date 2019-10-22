@@ -22,13 +22,19 @@ def get_next_august():
     month = today.month
     if month >= 8:
         year += 1
-    return date(year, 8, 1)    
+    return date(year, 8, 1)
+    
+def get_mondays_date():
+    todays_date=date.today()
+    mondays_date=todays_date - timedelta(days=todays_date.weekday())
+    return mondays_date
 
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def staff_dashboard_view(request):
     """Renders dashboard for staff user"""
-    return render(request, "staff-dashboard.html")
+    mondays_date = get_mondays_date()
+    return render(request, "staff-dashboard.html", {'mondays_date': mondays_date})
 
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
@@ -177,3 +183,29 @@ def add_student_session_view(request):
     else:
         session_form = SessionMatchForm(request=request)
     return render(request, 'add-student-session.html', {'session_form': session_form})
+    
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def get_lessons_view(request, mondays_date):
+    """View to retrieve sessions on a weekly basis"""
+    try:
+        view_date = datetime.strptime(mondays_date, "%Y-%m-%d")
+        if view_date.weekday() == 0:
+            sundays_date = view_date + timedelta(days=6)
+            this_weeks_lessons = TutorSession.objects.filter(date__gte=mondays_date,
+                                                                date__lt=sundays_date)
+            days_of_the_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+            next_week = (view_date + timedelta(days=7)).date
+            previous_week = (view_date - timedelta(days=7)).date
+            print(view_date.strftime("%A"))
+            return render(request, 'get-sessions.html', {'lessons': this_weeks_lessons, 
+                                                        'days_of_the_week': days_of_the_week, 
+                                                        'view_date': view_date, 
+                                                        'next_week': next_week, 
+                                                        'previous_week': previous_week}
+                                                        )
+        else:
+            return render(request, 'get-sessions.html', {"wrong_view_date": True})
+    except:
+        return render(request, 'get-sessions.html', {"wrong_view_date": True})
+    

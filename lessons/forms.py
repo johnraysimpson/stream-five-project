@@ -1,6 +1,7 @@
 from django import forms
 from .models import TutorSession, StudentSession
 from staffuser.models import TutorProfile, Student
+import datetime
 
 
 
@@ -27,6 +28,17 @@ class TutorSessionForm(forms.ModelForm):
             'date',
             'duration'
             )
+            
+    def clean_date(self):
+        input_day = self.cleaned_data.get('day')
+        input_date = self.cleaned_data.get('date')
+        print(input_date)
+        print(input_day)
+        if input_date.strftime("%A").lower() != input_day:
+            raise forms.ValidationError(input_date.strftime("%d-%m-%Y")+" does not fall on a "+input_day.capitalize()+".")
+        elif input_date < datetime.date.today():
+            raise forms.ValidationError("Can not create a lesson in the past.")
+        return input_day
 
 class TutorOccurrenceSessionForm(TutorSessionForm):
     """Form that includes occurrence field to TutorSessionForm"""

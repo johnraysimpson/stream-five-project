@@ -41,7 +41,7 @@ class Student(models.Model):
     last_name = models.CharField(max_length=30)
     date_of_birth = models.DateField()
     price_per_session = models.DecimalField(max_digits=4, decimal_places=2)
-    notes = models.TextField()
+    notes = models.TextField(blank=True, null=True)
     
     def __str__(self):
         return u'{0}, {1}'.format(self.last_name, self.first_name)

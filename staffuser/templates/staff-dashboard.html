@@ -32,4 +32,8 @@
     <a href="{% url 'staffuser:add-student-session' %}">Add Student Session</a>
 </div>
 
+<div>
+    <a href="{% url 'staffuser:get-lessons' mondays_date=mondays_date %}">View sessions</a>
+</div>
+
 {% endblock %}
