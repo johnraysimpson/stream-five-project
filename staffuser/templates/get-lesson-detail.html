@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Lesson details</h1>
+
+<p>{{ lesson.tutor }}</p>
+<p>{{ lesson.subject }}</p>
+<p>{{ lesson.date }}</p>
+<p>{{ lesson.time }}</p>
+
+<p><a href="{% url 'staffuser:update-lesson-detail' lesson_id=lesson.id %}">Edit Lesson</a></p>
+
+{% for student in lesson.studentsession_set.all %}
+    <p><a href="#">{{ student.student.get_long_name }}</a></p>
+    <p><a href="{% url 'staffuser:remove-student-from-session-confirm' lesson_id=lesson.id student_id=student.student.id %}">Remove Student</a></p>
+{% endfor %}
+
+<p><a href="{% url 'staffuser:delete-lesson-confirm' lesson_id=lesson.id %}">Delete Lesson</a></p>
+
+{% endblock %}

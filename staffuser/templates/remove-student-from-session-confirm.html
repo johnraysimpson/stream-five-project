@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Confirm Remove Student</h1>
+
+<p>Are you sure you want to delete</p>
+
+<p>{{ student }}</p>
+
+<p>from the lesson</p>
+
+<p>{{ lesson }}</p>
+
+<span><a href="{% url 'staffuser:remove-student-from-session' lesson_id=lesson.id student_id=student.id %}">Yes</a><a href="{% url 'staffuser:get-lesson-detail' lesson_id=lesson.id %}">No</a></span>
+
+{% endblock %}

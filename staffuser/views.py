@@ -4,10 +4,10 @@ from django.db import IntegrityError
 from django.http import HttpResponse
 from datetime import datetime, date, timedelta
 from .forms import CreateUserForm, ParentProfileForm, TutorProfileForm, StudentForm
-from lessons.forms import TutorOccurrenceSessionForm, SessionMatchForm
+from lessons.forms import TutorOccurrenceSessionForm, SessionMatchForm, TutorSessionForm
 from accounts.models import User
 from lessons.models import TutorSession, StudentSession
-from .models import ParentProfile, TutorProfile
+from .models import ParentProfile, TutorProfile, Student
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 
@@ -123,6 +123,28 @@ def add_tutor_session_view(request):
         tutor_session_form = TutorOccurrenceSessionForm()
     return render(request, 'add-tutor-session.html', {'tutor_session_form': tutor_session_form})
     
+def update_tutor_session_view(request, lesson_id):
+    """"""
+    lesson = TutorSession.objects.get(pk=lesson_id)
+    if request.method == 'POST':
+        update_lesson_form = TutorSessionForm(request.POST, instance=lesson)
+        if update_lesson_form.is_valid():
+            update_lesson_form.save()
+            return redirect('staffuser:get-lesson-detail', lesson_id=lesson_id)
+    else:
+        update_lesson_form = TutorSessionForm(instance=lesson)
+    return render(request, 'update-lesson-detail.html', {'update_lesson_form': update_lesson_form})
+    
+def delete_tutor_session_confirm_view(request, lesson_id):
+    """"""
+    lesson = TutorSession.objects.get(pk=lesson_id)
+    return render(request, 'delete-lesson-confirm.html', {'lesson': lesson})
+    
+def delete_tutor_session_view(request, lesson_id):
+    TutorSession.objects.get(pk=lesson_id).delete()
+    messages.success(request, "Lesson deleted")
+    return redirect('staffuser:dashboard')
+    
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_student_view(request):
@@ -184,6 +206,18 @@ def add_student_session_view(request):
         session_form = SessionMatchForm(request=request)
     return render(request, 'add-student-session.html', {'session_form': session_form})
     
+def remove_student_from_session_confirm_view(request, lesson_id, student_id):
+    student = Student.objects.get(pk=student_id)
+    lesson = TutorSession.objects.get(pk=lesson_id)
+    return render(request, 'remove-student-from-session-confirm.html', {'student': student, 'lesson': lesson})
+    
+def remove_student_from_session_view(request, lesson_id, student_id):
+    student = Student.objects.get(pk=student_id)
+    student_lesson = StudentSession.objects.get(student=student)
+    lesson = TutorSession.objects.get(pk=lesson_id)
+    student_lesson.sessions.remove(lesson)
+    return redirect('staffuser:get-lesson-detail', lesson_id=lesson_id)
+    
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def get_lessons_view(request, mondays_date):
@@ -197,15 +231,18 @@ def get_lessons_view(request, mondays_date):
             days_of_the_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
             next_week = (view_date + timedelta(days=7)).date
             previous_week = (view_date - timedelta(days=7)).date
-            print(view_date.strftime("%A"))
-            return render(request, 'get-sessions.html', {'lessons': this_weeks_lessons, 
+            return render(request, 'get-lessons.html', {'lessons': this_weeks_lessons, 
                                                         'days_of_the_week': days_of_the_week, 
                                                         'view_date': view_date, 
                                                         'next_week': next_week, 
                                                         'previous_week': previous_week}
                                                         )
         else:
-            return render(request, 'get-sessions.html', {"wrong_view_date": True})
+            return render(request, 'get-lessons.html', {"wrong_view_date": True})
     except:
-        return render(request, 'get-sessions.html', {"wrong_view_date": True})
-    
+        return render(request, 'get-lessons.html', {"wrong_view_date": True})
+        
+def get_lesson_details_view(request, lesson_id):
+    """View for retrieving a lesson and displaying details"""
+    lesson = TutorSession.objects.get(pk=lesson_id)
+    return render(request, 'get-lesson-detail.html', {'lesson': lesson})

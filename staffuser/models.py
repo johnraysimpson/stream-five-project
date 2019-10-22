@@ -45,3 +45,6 @@ class Student(models.Model):
     
     def __str__(self):
         return u'{0}, {1}'.format(self.last_name, self.first_name)
+        
+    def get_long_name(self):
+        return u'{0} {1}'.format(self.first_name, self.last_name)
