@@ -14,8 +14,11 @@ def add_parent_profile_view(request, parentuser_id):
     """Renders page for parent profile information, using the user id to retrieve information about the parent user created"""
     parentuser = User.objects.get(pk=parentuser_id)
     try:
-        ParentProfile.objects.get(user=parentuser)
-        return HttpResponse('This user already has a profile')
+        if parentuser.is_parent:
+            ParentProfile.objects.get(user=parentuser)
+            return render(request, 'add-parent-profile.html', {'parentuser': parentuser, "parent_profile_exists": True})
+        else:
+            return redirect('staffuser:dashboard')
     except ParentProfile.DoesNotExist:
         parent_profile_form = ParentProfileForm(request.POST or None)
         if parent_profile_form.is_valid():
@@ -32,7 +35,11 @@ def add_tutor_profile_view(request, tutoruser_id):
     """Renders page for parent profile information, using the user id to retrieve information about the parent user created"""
     tutoruser = User.objects.get(pk=tutoruser_id)
     try:
-        TutorProfile.objects.get(user=tutoruser)
+        if tutoruser.is_tutor:
+            TutorProfile.objects.get(user=tutoruser)
+            return render(request, 'add-tutor-profile.html', {'tutoruser': tutoruser, "tutor_profile_exists": True})
+        else:
+            return redirect('staffuser:dashboard')
     except TutorProfile.DoesNotExist:
         tutor_profile_form = TutorProfileForm(request.POST or None)
         if tutor_profile_form.is_valid():
