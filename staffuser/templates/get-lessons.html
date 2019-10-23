@@ -13,8 +13,8 @@
             {% if lesson.day == day %}
                 <p>{{ lesson.tutor }} - {{ lesson.subject.capitalize }}</p>
                 <h4>Students</h4>
-                {% for student in lesson.studentsession_set.all %}
-                <p>{{ student.student.first_name }}</p>
+                {% for student in lesson.student_set.all %}
+                <p>{{ student.first_name }}</p>
                 {% endfor %}
                 <p><a href="{% url 'staffuser:get-lesson-detail' lesson_id=lesson.id %}">View/Edit Lesson</a></p>
             {% endif %}

@@ -11,9 +11,9 @@
 
 <p><a href="{% url 'staffuser:update-lesson-detail' lesson_id=lesson.id %}">Edit Lesson</a></p>
 
-{% for student in lesson.studentsession_set.all %}
-    <p><a href="#">{{ student.student.get_long_name }}</a></p>
-    <p><a href="{% url 'staffuser:remove-student-from-session-confirm' lesson_id=lesson.id student_id=student.student.id %}">Remove Student</a></p>
+{% for student in lesson.student_set.all %}
+    <p><a href="#">{{ student.get_long_name }}</a></p>
+    <p><a href="{% url 'staffuser:remove-student-from-lesson-confirm' lesson_id=lesson.id student_id=student.id %}">Remove Student</a></p>
 {% endfor %}
 
 <p><a href="{% url 'staffuser:delete-lesson-confirm' lesson_id=lesson.id %}">Delete Lesson</a></p>

@@ -12,6 +12,6 @@
 
 <p>{{ lesson }}</p>
 
-<span><a href="{% url 'staffuser:remove-student-from-session' lesson_id=lesson.id student_id=student.id %}">Yes</a><a href="{% url 'staffuser:get-lesson-detail' lesson_id=lesson.id %}">No</a></span>
+<span><a href="{% url 'staffuser:remove-student-from-lesson' lesson_id=lesson.id student_id=student.id %}">Yes</a><a href="{% url 'staffuser:get-lesson-detail' lesson_id=lesson.id %}">No</a></span>
 
 {% endblock %}

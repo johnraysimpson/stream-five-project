@@ -1,12 +1,12 @@
 from django import forms
-from .models import TutorSession, StudentSession
-from staffuser.models import TutorProfile, Student
+from .models import Lesson
+from profiles.models import TutorProfile, Student
 import datetime
 
 
 
-class TutorSessionForm(forms.ModelForm):
-    """Form for creating a tutor session"""
+class LessonForm(forms.ModelForm):
+    """Form for creating a tutor lesson"""
     DAY_CHOICES = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday')]
     SUBJECT_CHOICES = [('maths', 'Maths'), ('english', 'English'), ('science', 'Science')]
     tutor = forms.ModelChoiceField(queryset=TutorProfile.objects.all(), empty_label="Choose Tutor", required=True)
@@ -19,7 +19,7 @@ class TutorSessionForm(forms.ModelForm):
         )
     
     class Meta:
-        model = TutorSession
+        model = Lesson
         fields = (
             'tutor',
             'subject',
@@ -43,29 +43,29 @@ class TutorSessionForm(forms.ModelForm):
     def clean_subject(self):
         return self.cleaned_data['subject'].lower().title()
 
-class TutorOccurrenceSessionForm(TutorSessionForm):
+class LessonOccurrenceForm(LessonForm):
     """Form that includes occurrence field to TutorSessionForm"""
     OCCURRENCE_CHOICES = [('one_off', 'One Off'), ('weekly', 'Weekly')]
     occurrence = forms.ChoiceField(choices=OCCURRENCE_CHOICES, widget=forms.RadioSelect())
-    class Meta(TutorSessionForm.Meta):
-        fields = TutorSessionForm.Meta.fields + ('occurrence', )
+    class Meta(LessonForm.Meta):
+        fields = LessonForm.Meta.fields + ('occurrence', )
         
         
-class StudentSessionForm(forms.ModelForm):
+class StudentLessonForm(forms.ModelForm):
     """Form for creating a student session"""
     student = forms.ModelChoiceField(queryset=None, empty_label="Choose student", required=True)
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
-        super(StudentSessionForm, self).__init__(*args, **kwargs)
+        super(StudentLessonForm, self).__init__(*args, **kwargs)
         self.fields["student"].queryset = Student.objects.filter(parent__user__centre = self.request.user.centre)
     class Meta:
-        model = StudentSession
+        model = Student
         fields = ('student',)
         
-class SessionMatchForm(StudentSessionForm):
+class LessonMatchForm(StudentLessonForm):
     """extends student session form to find corresponding tutor sessions"""
     DAY_CHOICES = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday')]
-    SUBJECT_CHOICES = [('maths', 'Maths'), ('english', 'English'), ('science', 'Science')]
+    SUBJECT_CHOICES = [('Maths', 'Maths'), ('English', 'English'), ('Science', 'Science')]
     OCCURRENCE_CHOICES = [('one_off', 'One Off'), ('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')]
     tutor = forms.ModelChoiceField(queryset=TutorProfile.objects.all(), empty_label="Choose Tutor", required=True)
     day = forms.ChoiceField(choices=DAY_CHOICES)
@@ -76,5 +76,5 @@ class SessionMatchForm(StudentSessionForm):
         input_formats=('%d/%m/%Y', )
         )
     occurrence = forms.ChoiceField(choices=OCCURRENCE_CHOICES, widget=forms.RadioSelect())
-    class Meta(StudentSessionForm.Meta):
-        fields = StudentSessionForm.Meta.fields + ('tutor', 'day', 'subject', 'time', 'date', 'occurrence')
+    class Meta(StudentLessonForm.Meta):
+        fields = StudentLessonForm.Meta.fields + ('tutor', 'day', 'subject', 'time', 'date', 'occurrence')

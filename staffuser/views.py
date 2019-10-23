@@ -3,11 +3,11 @@ from django.contrib import messages
 from django.db import IntegrityError
 from django.http import HttpResponse
 from datetime import datetime, date, timedelta
-from .forms import CreateUserForm, ParentProfileForm, TutorProfileForm, StudentForm
-from lessons.forms import TutorOccurrenceSessionForm, SessionMatchForm, TutorSessionForm
+from .forms import CreateUserForm
+from lessons.forms import LessonOccurrenceForm, LessonMatchForm, LessonForm
 from accounts.models import User
-from lessons.models import TutorSession, StudentSession
-from .models import ParentProfile, TutorProfile, Student
+from lessons.models import Lesson
+from profiles.models import ParentProfile, TutorProfile, Student
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 
@@ -51,24 +51,6 @@ def add_parent_view(request):
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def add_parent_profile_view(request, parentuser_id):
-    """Renders page for parent profile information, using the user id to retrieve information about the parent user created"""
-    parentuser = User.objects.get(pk=parentuser_id)
-    try:
-        ParentProfile.objects.get(user=parentuser)
-        return HttpResponse('This user already has a profile')
-    except ParentProfile.DoesNotExist:
-        parent_profile_form = ParentProfileForm(request.POST or None)
-        if parent_profile_form.is_valid():
-            parent_profile = parent_profile_form.save()
-            parent_profile.user = parentuser
-            parent_profile.save()
-            messages.success(request, "Parent successfully created")
-            return redirect(reverse('staffuser:dashboard'))
-        return render(request, 'add-parent-profile.html', {'parentuser': parentuser, "parent_profile_form": parent_profile_form})
-    
-@login_required
-@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_tutor_view(request):
     """Renders add tutor page, creates form for registering a tutor user"""
     tutor_user_form = CreateUserForm(request.POST or None)
@@ -79,143 +61,107 @@ def add_tutor_view(request):
         user.save()
         return redirect('staffuser:add-tutor-profile', tutoruser_id=user.pk)
     return render(request, "add-tutor-user.html", {'tutor_user_form': tutor_user_form})
-    
-@login_required
-@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def add_tutor_profile_view(request, tutoruser_id):
-    """Renders page for parent profile information, using the user id to retrieve information about the parent user created"""
-    tutoruser = User.objects.get(pk=tutoruser_id)
-    try:
-        TutorProfile.objects.get(user=tutoruser)
-    except TutorProfile.DoesNotExist:
-        tutor_profile_form = TutorProfileForm(request.POST or None)
-        if tutor_profile_form.is_valid():
-            tutor_profile = tutor_profile_form.save()
-            tutor_profile.user = tutoruser
-            tutor_profile.save()
-            messages.success(request, "Tutor successfully created")
-            return redirect(reverse('staffuser:dashboard'))
-        return render(request, 'add-tutor-profile.html', {'tutoruser': tutoruser, "tutor_profile_form": tutor_profile_form})
-
-
 
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def add_tutor_session_view(request):
+def add_lesson_view(request):
     """Renders add session page with corresponding form"""
-    tutor_session_form = TutorOccurrenceSessionForm(request.POST or None)
-    if tutor_session_form.is_valid():
-        if tutor_session_form.cleaned_data['occurrence'] == 'weekly':
-            start_date = tutor_session_form.cleaned_data['date']
+    lesson_form = LessonOccurrenceForm(request.POST or None)
+    if lesson_form.is_valid():
+        if lesson_form.cleaned_data['occurrence'] == 'weekly':
+            start_date = lesson_form.cleaned_data['date']
             while start_date < get_next_august():
-                TutorSession.objects.create(tutor=tutor_session_form.cleaned_data['tutor'], 
-                                        subject=tutor_session_form.cleaned_data['subject'], 
-                                        day=tutor_session_form.cleaned_data['day'], 
-                                        time=tutor_session_form.cleaned_data['time'], 
+                Lesson.objects.create(tutor=lesson_form.cleaned_data['tutor'], 
+                                        subject=lesson_form.cleaned_data['subject'], 
+                                        day=lesson_form.cleaned_data['day'], 
+                                        time=lesson_form.cleaned_data['time'], 
                                         date=start_date, 
-                                        duration=tutor_session_form.cleaned_data['duration'],
+                                        duration=lesson_form.cleaned_data['duration'],
                                         centre=request.user.centre)
                 start_date += timedelta(days=7)
         else:
-            tutor_session = tutor_session_form.save()
-            tutor_session.centre = request.user.centre
-            tutor_session.save()
-        tutor_session_form = TutorOccurrenceSessionForm()
-    return render(request, 'add-tutor-session.html', {'tutor_session_form': tutor_session_form})
+            lesson = lesson_form.save()
+            lesson.centre = request.user.centre
+            lesson.save()
+        lesson_form = LessonOccurrenceForm()
+    return render(request, 'add-lesson.html', {'lesson_form': lesson_form})
     
-def update_tutor_session_view(request, lesson_id):
+def update_lesson_view(request, lesson_id):
     """"""
-    lesson = TutorSession.objects.get(pk=lesson_id)
+    lesson = Lesson.objects.get(pk=lesson_id)
     if request.method == 'POST':
-        update_lesson_form = TutorSessionForm(request.POST, instance=lesson)
+        update_lesson_form = LessonForm(request.POST, instance=lesson)
         if update_lesson_form.is_valid():
             update_lesson_form.save()
             return redirect('staffuser:get-lesson-detail', lesson_id=lesson_id)
     else:
-        update_lesson_form = TutorSessionForm(instance=lesson)
+        update_lesson_form = LessonForm(instance=lesson)
     return render(request, 'update-lesson-detail.html', {'update_lesson_form': update_lesson_form})
     
-def delete_tutor_session_confirm_view(request, lesson_id):
+def delete_lesson_confirm_view(request, lesson_id):
     """"""
-    lesson = TutorSession.objects.get(pk=lesson_id)
+    lesson = Lesson.objects.get(pk=lesson_id)
     return render(request, 'delete-lesson-confirm.html', {'lesson': lesson})
     
-def delete_tutor_session_view(request, lesson_id):
-    TutorSession.objects.get(pk=lesson_id).delete()
+def delete_lesson_view(request, lesson_id):
+    Lesson.objects.get(pk=lesson_id).delete()
     messages.success(request, "Lesson deleted")
     return redirect('staffuser:dashboard')
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def add_student_view(request):
-    """Renders add student page and form"""
-    if request.method == 'POST':
-        student_form = StudentForm(request.POST, request=request)
-        if student_form.is_valid():
-            student_form.save()
-            student_form = StudentForm(request=request)
-    else:
-        student_form = StudentForm(request=request)
-    return render(request, 'add-student.html', {'student_form': student_form})
-    
-@login_required
-@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def add_student_session_view(request):
+def add_student_lesson_view(request):
     if request.method == "POST":
-        session_form = SessionMatchForm(request.POST, request=request)
-        if session_form.is_valid():
+        lesson_form = LessonMatchForm(request.POST, request=request)
+        if lesson_form.is_valid():
             
-                start_date = session_form.cleaned_data['date']
-                matched_sessions = []
+                start_date = lesson_form.cleaned_data['date']
+                matched_lessons = []
                 
                 while start_date < get_next_august():
                     
                     try: 
-                        matched_session = TutorSession.objects.get(tutor = session_form.cleaned_data['tutor'],
-                                                                day = session_form.cleaned_data['day'],
-                                                                time = session_form.cleaned_data['time'],
-                                                                subject = session_form.cleaned_data['subject'],
+                        matched_lesson = Lesson.objects.get(tutor = lesson_form.cleaned_data['tutor'],
+                                                                day = lesson_form.cleaned_data['day'],
+                                                                time = lesson_form.cleaned_data['time'],
+                                                                subject = lesson_form.cleaned_data['subject'],
                                                                 date = start_date,
                                                                 )
-                    except TutorSession.DoesNotExist:
-                        matched_session = None
+                    except Lesson.DoesNotExist:
+                        matched_lesson = None
                         
-                    if matched_session:
-                        matched_sessions.append(matched_session)
+                    if matched_lesson:
+                        matched_lessons.append(matched_lesson)
                         
-                    if session_form.cleaned_data['occurrence'] == 'one_off':
+                    if lesson_form.cleaned_data['occurrence'] == 'one_off':
                         break
                     
-                    elif session_form.cleaned_data['occurrence'] == 'weekly':
+                    elif lesson_form.cleaned_data['occurrence'] == 'weekly':
                         start_date += timedelta(days=7)
                         
                     else:
                         start_date += timedelta(days=14)
-                        
-                if not matched_sessions:
-                    session_form.add_error(None, 'Sessions do not exist')
+                print(matched_lessons) 
+                if not matched_lessons:
+                    lesson_form.add_error(None, 'lessons do not exist')
                 else:
-                    session, created = StudentSession.objects.get_or_create(
-                        student = session_form.cleaned_data['student']
-                        )
-                    for newsession in matched_sessions:
-                        session.sessions.add(newsession)
-                    print(session.sessions.all())
-                    session_form = SessionMatchForm(request=request)
+                    student = Student.objects.get(pk=lesson_form.cleaned_data['student'].id)
+                    for lesson in matched_lessons:
+                        student.lessons.add(lesson)
+                    lesson_form = LessonMatchForm(request=request)
     else:
-        session_form = SessionMatchForm(request=request)
-    return render(request, 'add-student-session.html', {'session_form': session_form})
+        lesson_form = LessonMatchForm(request=request)
+    return render(request, 'add-student-lesson.html', {'lesson_form': lesson_form})
     
-def remove_student_from_session_confirm_view(request, lesson_id, student_id):
+def remove_student_from_lesson_confirm_view(request, lesson_id, student_id):
     student = Student.objects.get(pk=student_id)
-    lesson = TutorSession.objects.get(pk=lesson_id)
-    return render(request, 'remove-student-from-session-confirm.html', {'student': student, 'lesson': lesson})
+    lesson = Lesson.objects.get(pk=lesson_id)
+    return render(request, 'remove-student-from-lesson-confirm.html', {'student': student, 'lesson': lesson})
     
-def remove_student_from_session_view(request, lesson_id, student_id):
+def remove_student_from_lesson_view(request, lesson_id, student_id):
     student = Student.objects.get(pk=student_id)
-    student_lesson = StudentSession.objects.get(student=student)
-    lesson = TutorSession.objects.get(pk=lesson_id)
-    student_lesson.sessions.remove(lesson)
+    lesson = Lesson.objects.get(pk=lesson_id)
+    student.sessions.remove(lesson)
     return redirect('staffuser:get-lesson-detail', lesson_id=lesson_id)
     
 @login_required
@@ -226,7 +172,7 @@ def get_lessons_view(request, mondays_date):
         view_date = datetime.strptime(mondays_date, "%Y-%m-%d")
         if view_date.weekday() == 0:
             sundays_date = view_date + timedelta(days=6)
-            this_weeks_lessons = TutorSession.objects.filter(date__gte=mondays_date,
+            this_weeks_lessons = Lesson.objects.filter(date__gte=mondays_date,
                                                                 date__lt=sundays_date)
             days_of_the_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
             next_week = (view_date + timedelta(days=7)).date
@@ -244,5 +190,5 @@ def get_lessons_view(request, mondays_date):
         
 def get_lesson_details_view(request, lesson_id):
     """View for retrieving a lesson and displaying details"""
-    lesson = TutorSession.objects.get(pk=lesson_id)
+    lesson = Lesson.objects.get(pk=lesson_id)
     return render(request, 'get-lesson-detail.html', {'lesson': lesson})
