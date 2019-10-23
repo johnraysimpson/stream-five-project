@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import auth, messages
-from django.contrib.auth.decorators import login_required
-from .forms import UserLoginForm, FirstPasswordChangeForm
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .forms import UserLoginForm, FirstPasswordChangeForm, CreateUserForm
 from .models import User
+from staffuser.views import staff_test
 
 # Create your views here.
 
@@ -64,3 +65,30 @@ def first_password_change(request):
     return render(request, 'first_password_change.html', {
         'form': form
     })
+    
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def add_parent_view(request):
+    """Renders add parent page, creates form for registering a parent user"""
+    parent_user_form = CreateUserForm(request.POST or None)
+    if parent_user_form.is_valid():
+        user = parent_user_form.save()
+        user.parent=True
+        user.centre = request.user.centre
+        user.save()
+        return redirect('staffuser:add-parent-profile', parentuser_id=user.pk)
+    return render(request, "add-parent-user.html", {'parent_user_form': parent_user_form})
+  
+#accounts 
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def add_tutor_view(request):
+    """Renders add tutor page, creates form for registering a tutor user"""
+    tutor_user_form = CreateUserForm(request.POST or None)
+    if tutor_user_form.is_valid():
+        user = tutor_user_form.save()
+        user.tutor=True
+        user.centre = request.user.centre
+        user.save()
+        return redirect('staffuser:add-tutor-profile', tutoruser_id=user.pk)
+    return render(request, "add-tutor-user.html", {'tutor_user_form': tutor_user_form})

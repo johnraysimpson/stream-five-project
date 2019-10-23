@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path
 from .views import (add_parent_profile_view,
                     add_tutor_profile_view,
                     add_student_view,

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Parents{% endblock %}
+
+{% block content %}
+
+<h1>Parent Search</h1>
+ 
+
+<div>
+    <form action="{% url 'staffuser:search-parent' %}" method="get">
+                <input type="text" name="q">
+                <button type="submit">Search</button>
+            </form>
+</div>
+{% for parent in parents %}
+<div>
+    <p>{{ parent }}</p>
+</div>
+{% endfor %}
+
+
+{% endblock %}

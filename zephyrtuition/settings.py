@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'staffuser',
     'lessons',
     'profiles',
+    'search',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
