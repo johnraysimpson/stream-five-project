@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Parent User{% endblock %}
+
+{% block content %}
+
+<h1>Deactivate User</h1>
+
+<p>Are you sure you want to deactivate {{ parent_profile }}?</p>
+
+<p>Doing so will remove all lessons from any related students.</p>
+
+<a href="{% url 'staffuser:deactivate-user-confirm' user_id=parent_user.id %}">Deactivate</a>
+
+<a href="{% url 'staffuser:parents' %}">Cancel</a>
+
+{% endblock %}

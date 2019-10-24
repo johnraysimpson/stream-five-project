@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import search_parent
+from .views import add_or_search_parent_view
 
 urlpatterns = [
-    path('parent/search', search_parent, name="search-parent")
+    path('parent/search/', add_or_search_parent_view, name="parents")
     ]

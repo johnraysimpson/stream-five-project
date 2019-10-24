@@ -62,3 +62,24 @@ def add_student_view(request):
     else:
         student_form = StudentForm(request=request)
     return render(request, 'add-student.html', {'student_form': student_form})
+    
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def get_parent_profile_view(request, parent_id):
+    """Renders page for displaying profile information about a parent user"""
+    parent = ParentProfile.objects.get(id=parent_id)
+    return render(request, 'get-parent-profile.html', {'parent': parent})
+    
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def update_parent_profile_view(request, parent_id):
+    """Renders page for displaying profile information about a parent user"""
+    parentprofile = ParentProfile.objects.get(id=parent_id)
+    if request.method == 'POST':
+        parent_profile_form = ParentProfileForm(request.POST, instance=parentprofile)
+        if parent_profile_form.is_valid():
+            parent_profile_form.save()
+            return redirect('staffuser:parent-profile', parent_id=parent_id)
+    else:
+        parent_profile_form = ParentProfileForm(instance=parentprofile)
+    return render(request, 'update-parent-profile.html', {'parent_profile_form': parent_profile_form})

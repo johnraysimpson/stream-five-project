@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Parents{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<h1>Parents</h1>
+
+<div>
+    <a href="{% url 'staffuser:add-parent' %}">Add a new parent</a>
+</div>
+ 
+
+<div>
+    <p>Search parent by name</p>
+    <form action="{% url 'staffuser:parents' %}" method="get">
+                <input type="text" name="q">
+                <button type="submit">Search</button>
+            </form>
+</div>
+{% for parent in parents %}
+<div>
+    <p>{{ parent }}</p>
+    <p><a href="{% url 'staffuser:parent-profile' parent_id=parent.id %}">View Profile</a></p>
+    {% if parent.user.is_active %}
+    <p><a href="{% url 'staffuser:deactivate-user' user_id=parent.user.id %}">Deactivate User</a></p>
+    {% else %}
+    <p><a href="{% url 'staffuser:reactivate-user-confirm' user_id=parent.user.id %}">Reactivate User</a></p>
+    {% endif %}
+    <p><a href="{% url 'staffuser:delete-user' user_id=parent.user.id %}">Delete User</a></p>
+</div>
+
+{% endfor %}
+
+
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from datetime import datetime, date, timedelta
-from .forms import CreateUserForm
+from accounts.forms import CreateUserForm
 from accounts.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 
@@ -22,8 +22,3 @@ def staff_dashboard_view(request):
     mondays_date = get_mondays_date()
     return render(request, "staff-dashboard.html", {'mondays_date': mondays_date})
     
-@login_required
-@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def parents_view(request):
-    """Renders page for parents where staff user can either add a new parent or look one up"""
-    return render(request, "parents.html")

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Parent Profile{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<h1>Profile of {{ parent }}</h1>
+
+<p><b>Email: </b>{{ parent.user.email }}</p>
+<p><b>Address: </b>{{ parent.address1 }}</p>
+
+{% if user.is_staff %}
+<a href="{% url 'staffuser:update-parent-profile' parent_id=parent.id %}">Edit Profile</a>
+{% endif %}
+
+{% endblock %}

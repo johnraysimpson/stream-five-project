@@ -3,6 +3,7 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import UserLoginForm, FirstPasswordChangeForm, CreateUserForm
 from .models import User
+from profiles.models import ParentProfile, Student
 from staffuser.views import staff_test
 
 # Create your views here.
@@ -92,3 +93,47 @@ def add_tutor_view(request):
         user.save()
         return redirect('staffuser:add-tutor-profile', tutoruser_id=user.pk)
     return render(request, "add-tutor-user.html", {'tutor_user_form': tutor_user_form})
+    
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def deactivate_user_view(request, user_id):
+    parent_user = User.objects.get(pk=user_id)
+    parent_profile = ParentProfile.objects.get(user=parent_user)
+    return render(request, 'deactivate-user.html', {'parent_user': parent_user, 'parent_profile': parent_profile})
+    
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def deactivate_user_confirm_view(request, user_id):
+    user = User.objects.get(pk=user_id)
+    parent_profile = parent_profile = ParentProfile.objects.get(user=user)
+    user.active=False
+    user.save()
+    students = Student.objects.filter(parent=parent_profile)
+    for student in students:
+        student.lessons.clear()
+    messages.success(request, 'User '+parent_profile.first_name+' '+parent_profile.last_name+' has been deactivated.')
+    return redirect('staffuser:parents')
+    
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def reactivate_user_confirm_view(request, user_id):
+    user = User.objects.get(pk=user_id)
+    parent_profile = parent_profile = ParentProfile.objects.get(user=user)
+    user.active=True
+    user.save()
+    messages.success(request, 'This user has been reactivated.')
+    return redirect('staffuser:parent-profile', parent_id=parent_profile.id)
+    
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def delete_user_view(request, user_id):
+    parent_user = User.objects.get(pk=user_id)
+    parent_profile = ParentProfile.objects.get(user=parent_user)
+    return render(request, 'delete-user.html', {'parent_user': parent_user, 'parent_profile': parent_profile})
+
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def delete_user_confirm_view(request, user_id):
+    User.objects.get(pk=user_id).delete()
+    messages.success(request, 'The user was permenantly deleted.')
+    return redirect('staffuser:parents')

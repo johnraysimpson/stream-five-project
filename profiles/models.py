@@ -15,7 +15,7 @@ class ParentProfile(models.Model):
     telephone = models.CharField(max_length=11)
     
     def __str__(self):
-        return u'{0}, {1}'.format(self.last_name, self.first_name)
+        return u'{0} {1}'.format(self.first_name, self.last_name)
     
 class TutorProfile(models.Model):
     """Model for the profile of a tutor"""
@@ -45,7 +45,7 @@ class Student(models.Model):
     lessons = models.ManyToManyField('lessons.Lesson', blank=True)
     
     def __str__(self):
-        return u'{0}, {1}'.format(self.last_name, self.first_name)
+        return u'{0} {1}'.format(self.first_name, self.last_name)
         
     def get_long_name(self):
         return u'{0} {1}'.format(self.first_name, self.last_name)
