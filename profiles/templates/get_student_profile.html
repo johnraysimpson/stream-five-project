@@ -18,12 +18,12 @@
     <p><b>Notes: </b>{{ student.notes }}</p>
 {% endif %}
 {% if user.is_staff %}
-<a href="{% url 'staffuser:update-student' student_id=student.id %}">Edit Profile</a>
+<a href="{% url 'staffuser:update_student' student_id=student.id %}">Edit Profile</a>
 {% endif %}
 
 <h3>Parent Information</h3>
-<p><a href="{% url 'staffuser:parent-profile' parent_id=parent.id %}">{{ parent }}</a> - {{ student.relationship }}</p>
+<p><a href="{% url 'staffuser:parent_profile' parent_id=parent.id %}">{{ parent }}</a> - {{ student.relationship }}</p>
 
-<p><a href="{% url 'staffuser:delete-student' student_id=student.id %}">Delete Student</a></p>
+<p><a href="{% url 'staffuser:delete_student' student_id=student.id %}">Delete Student</a></p>
 
 {% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Parent Profile{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<h1>Profile of {{ tutor }}</h1>
+
+<p><b>Email: </b>{{ tutor.user.email }}</p>
+<p><b>Address: </b>{{ tutor.address1 }}</p>
+
+{% if user.is_staff %}
+<a href="#">Edit Profile</a>
+{% endif %}
+
+
+{% endblock %}

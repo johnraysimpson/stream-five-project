@@ -9,9 +9,9 @@ from search import urls as search_urls
 app_name = 'staffuser'
 urlpatterns = [
     path('', staff_dashboard_view),
+    path('dashboard/', staff_dashboard_view, name="dashboard"),
     path('', include(profile_urls)),
     path('', include(lesson_urls)),
     path('', include(user_urls)),
-    path('dashboard/', staff_dashboard_view, name="dashboard"),
     path('', include(search_urls)),
     ]

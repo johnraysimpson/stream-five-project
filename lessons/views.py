@@ -40,7 +40,7 @@ def add_lesson_view(request):
             lesson.centre = request.user.centre
             lesson.save()
         lesson_form = LessonOccurrenceForm()
-    return render(request, 'add-lesson.html', {'lesson_form': lesson_form})
+    return render(request, 'add_lesson.html', {'lesson_form': lesson_form})
 
 
 
@@ -51,15 +51,15 @@ def update_lesson_view(request, lesson_id):
         update_lesson_form = LessonForm(request.POST, instance=lesson)
         if update_lesson_form.is_valid():
             update_lesson_form.save()
-            return redirect('staffuser:get-lesson-detail', lesson_id=lesson_id)
+            return redirect('staffuser:get_lesson_detail', lesson_id=lesson_id)
     else:
         update_lesson_form = LessonForm(instance=lesson)
-    return render(request, 'update-lesson-detail.html', {'update_lesson_form': update_lesson_form})
+    return render(request, 'update_lesson_detail.html', {'update_lesson_form': update_lesson_form})
     
 def delete_lesson_confirm_view(request, lesson_id):
     """"""
     lesson = Lesson.objects.get(pk=lesson_id)
-    return render(request, 'delete-lesson-confirm.html', {'lesson': lesson})
+    return render(request, 'delete_lesson_confirm.html', {'lesson': lesson})
     
 def delete_lesson_view(request, lesson_id):
     Lesson.objects.get(pk=lesson_id).delete()
@@ -110,7 +110,7 @@ def relate_via_student_view(request, student_id):
                     lesson_form = LessonToStudentForm()
     else:
         lesson_form = LessonToStudentForm()
-    return render(request, 'add-student-lesson.html', {'lesson_form': lesson_form, 'student': student})
+    return render(request, 'add_student_lesson.html', {'lesson_form': lesson_form, 'student': student})
 
 def relate_via_lesson_view(request, lesson_id):
     lesson = Lesson.objects.get(pk=lesson_id)
@@ -151,19 +151,19 @@ def relate_via_lesson_view(request, lesson_id):
                 student_lesson_form = StudentToLessonForm(request=request)
     else:
         student_lesson_form = StudentToLessonForm(request=request)
-    return render(request, 'add-student-to-lesson.html', {'lesson': lesson, 'student_lesson_form': student_lesson_form})
+    return render(request, 'add_student_to_lesson.html', {'lesson': lesson, 'student_lesson_form': student_lesson_form})
 
 def remove_student_from_lesson_confirm_view(request, lesson_id, student_id):
     student = Student.objects.get(pk=student_id)
     lesson = Lesson.objects.get(pk=lesson_id)
-    return render(request, 'remove-student-from-lesson-confirm.html', {'student': student, 'lesson': lesson})
+    return render(request, 'remove_student_from_lesson_confirm.html', {'student': student, 'lesson': lesson})
     
 
 def remove_student_from_lesson_view(request, lesson_id, student_id):
     student = Student.objects.get(pk=student_id)
     lesson = Lesson.objects.get(pk=lesson_id)
     student.sessions.remove(lesson)
-    return redirect('staffuser:get-lesson-detail', lesson_id=lesson_id)
+    return redirect('staffuser:get_lesson_detail', lesson_id=lesson_id)
 
    
 @login_required
@@ -179,18 +179,18 @@ def get_lessons_view(request, mondays_date):
             days_of_the_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
             next_week = (view_date + timedelta(days=7)).date
             previous_week = (view_date - timedelta(days=7)).date
-            return render(request, 'get-lessons.html', {'lessons': this_weeks_lessons, 
+            return render(request, 'get_lessons.html', {'lessons': this_weeks_lessons, 
                                                         'days_of_the_week': days_of_the_week, 
                                                         'view_date': view_date, 
                                                         'next_week': next_week, 
                                                         'previous_week': previous_week}
                                                         )
         else:
-            return render(request, 'get-lessons.html', {"wrong_view_date": True})
+            return render(request, 'get_lessons.html', {"wrong_view_date": True})
     except:
-        return render(request, 'get-lessons.html', {"wrong_view_date": True})
+        return render(request, 'get_lessons.html', {"wrong_view_date": True})
         
 def get_lesson_details_view(request, lesson_id):
     """View for retrieving a lesson and displaying details"""
     lesson = Lesson.objects.get(pk=lesson_id)
-    return render(request, 'get-lesson-detail.html', {'lesson': lesson})
+    return render(request, 'get_lesson_detail.html', {'lesson': lesson})

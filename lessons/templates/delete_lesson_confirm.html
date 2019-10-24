@@ -8,6 +8,7 @@
 
 <p>{{ lesson }}</p>
 
-<span><a href="{% url 'staffuser:delete-lesson' lesson_id=lesson.id %}">Yes</a><a href="{% url 'staffuser:get-lesson-detail' lesson_id=lesson.id %}">No</a></span>
+<p><span><a href="{% url 'staffuser:delete_lesson' lesson_id=lesson.id %}">Yes</a></p>
+<p><a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">No</a></p>
 
 {% endblock %}

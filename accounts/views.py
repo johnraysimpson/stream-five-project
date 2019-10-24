@@ -77,8 +77,8 @@ def add_parent_view(request):
         user.parent=True
         user.centre = request.user.centre
         user.save()
-        return redirect('staffuser:add-parent-profile', parentuser_id=user.pk)
-    return render(request, "add-parent-user.html", {'parent_user_form': parent_user_form})
+        return redirect('staffuser:add_parent_profile', parentuser_id=user.pk)
+    return render(request, "add_parent_user.html", {'parent_user_form': parent_user_form})
   
 #accounts 
 @login_required
@@ -91,15 +91,15 @@ def add_tutor_view(request):
         user.tutor=True
         user.centre = request.user.centre
         user.save()
-        return redirect('staffuser:add-tutor-profile', tutoruser_id=user.pk)
-    return render(request, "add-tutor-user.html", {'tutor_user_form': tutor_user_form})
+        return redirect('staffuser:add_tutor_profile', tutoruser_id=user.pk)
+    return render(request, "add_tutor_user.html", {'tutor_user_form': tutor_user_form})
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def deactivate_user_view(request, user_id):
     parent_user = User.objects.get(pk=user_id)
     parent_profile = ParentProfile.objects.get(user=parent_user)
-    return render(request, 'deactivate-user.html', {'parent_user': parent_user, 'parent_profile': parent_profile})
+    return render(request, 'deactivate_user.html', {'parent_user': parent_user, 'parent_profile': parent_profile})
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
@@ -122,14 +122,14 @@ def reactivate_user_confirm_view(request, user_id):
     user.active=True
     user.save()
     messages.success(request, 'This user has been reactivated.')
-    return redirect('staffuser:parent-profile', parent_id=parent_profile.id)
+    return redirect('staffuser:parent_profile', parent_id=parent_profile.id)
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def delete_user_view(request, user_id):
     parent_user = User.objects.get(pk=user_id)
     parent_profile = ParentProfile.objects.get(user=parent_user)
-    return render(request, 'delete-user.html', {'parent_user': parent_user, 'parent_profile': parent_profile})
+    return render(request, 'delete_user.html', {'parent_user': parent_user, 'parent_profile': parent_profile})
 
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')

@@ -7,7 +7,7 @@
 <h1>Delete Student</h1>
 <p>Are you sure you want to permenantly delete {{ student }}?</p>
 
-<p><a href="{% url 'staffuser:delete-student-confirm' student_id=student.id %}">Delete</a></p>
-<p><a href="{% url 'staffuser:student-profile' student_id=student.id %}">Cancel</a></p>
+<p><a href="{% url 'staffuser:delete_student_confirm' student_id=student.id %}">Delete</a></p>
+<p><a href="{% url 'staffuser:student_profile' student_id=student.id %}">Cancel</a></p>
 
 {% endblock %}

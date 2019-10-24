@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h1>Update Student Profile</h1>
+<h1>Update {{ student }}'s Profile</h1>
 <form method='POST'>
     <p><b>Parent: </b>{{ parent }}</p>
     {% csrf_token %}

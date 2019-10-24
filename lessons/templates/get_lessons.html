@@ -6,7 +6,7 @@
     <h2>Whoops...</h2>
     <p>View date entered was either an invalid date or not a Monday.</p>
     {% else %}
-    <p><a href="{% url 'staffuser:add-lesson' %}">Create New Lesson</a></p>
+    <p><a href="{% url 'staffuser:add_lesson' %}">Create New Lesson</a></p>
     <h2>Week commencing {{ view_date|date:"d F Y" }}</h2>
     {% for day in days_of_the_week %}
     <h1>{{ day.capitalize }}</h1>
@@ -17,11 +17,11 @@
                 {% for student in lesson.student_set.all %}
                 <p>{{ student.first_name }}</p>
                 {% endfor %}
-                <p><a href="{% url 'staffuser:get-lesson-detail' lesson_id=lesson.id %}">View/Edit Lesson</a></p>
+                <p><a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">View/Edit Lesson</a></p>
             {% endif %}
         {% endfor %}
     {% endfor %}
-    <a href="{% url 'staffuser:get-lessons' mondays_date=previous_week %}">Previous Week</a>
-    <a href="{% url 'staffuser:get-lessons' mondays_date=next_week %}">Next Week</a>
+    <a href="{% url 'staffuser:get_lessons' mondays_date=previous_week %}">Previous Week</a>
+    <a href="{% url 'staffuser:get_lessons' mondays_date=next_week %}">Next Week</a>
     {% endif %}
 {% endblock %}

@@ -13,14 +13,14 @@ from .views import (
                     )
                     
 urlpatterns = [
-    path('addlesson/', add_lesson_view, name='add-lesson'),
-    path('addlessontostudent/<student_id>', relate_via_student_view, name='add-student-lesson'),
-    re_path(r'^viewlessons/(?P<mondays_date>\d{4}-\d{2}-\d{2})/$', get_lessons_view, name='get-lessons'),
-    path('viewlesson/<int:lesson_id>/', get_lesson_details_view, name='get-lesson-detail'),
-    path('updatelesson/<int:lesson_id>/', update_lesson_view, name='update-lesson-detail'),
-    path('deletelesson/<int:lesson_id>/', delete_lesson_confirm_view, name='delete-lesson-confirm'),
-    path('lessondeleted/<int:lesson_id>/', delete_lesson_view, name='delete-lesson'),
-    path('addstudenttolesson/<int:lesson_id>/', relate_via_lesson_view, name='add-student-to-lesson'),
-    path('removestudent/<int:lesson_id>/<int:student_id>', remove_student_from_lesson_confirm_view, name='remove-student-from-lesson-confirm'),
-    path('studentremoved/<int:lesson_id>/<int:student_id>', remove_student_from_lesson_view, name='remove-student-from-lesson')
+    path('add_lesson/', add_lesson_view, name='add_lesson'),
+    path('add_lesson_to_student/<student_id>', relate_via_student_view, name='add_student_lesson'),
+    re_path(r'^viewlessons/(?P<mondays_date>\d{4}-\d{2}-\d{2})/$', get_lessons_view, name='get_lessons'),
+    path('view_lesson/<int:lesson_id>/', get_lesson_details_view, name='get_lesson_detail'),
+    path('update_lesson/<int:lesson_id>/', update_lesson_view, name='update_lesson_detail'),
+    path('delete_lesson/<int:lesson_id>/', delete_lesson_confirm_view, name='delete_lesson_confirm'),
+    path('lesson_deleted/<int:lesson_id>/', delete_lesson_view, name='delete_lesson'),
+    path('add_student_to_lesson/<int:lesson_id>/', relate_via_lesson_view, name='add_student_to_lesson'),
+    path('remove_student/<int:lesson_id>/<int:student_id>', remove_student_from_lesson_confirm_view, name='remove_student_from_lesson_confirm'),
+    path('student_removed/<int:lesson_id>/<int:student_id>', remove_student_from_lesson_view, name='remove_student_from_lesson')
     ]
