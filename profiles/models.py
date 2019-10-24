@@ -35,7 +35,7 @@ class TutorProfile(models.Model):
     
 class Student(models.Model):
     """Model for student information"""
-    parent = models.ForeignKey(ParentProfile, on_delete=models.CASCADE)
+    parent = models.ForeignKey(ParentProfile, on_delete=models.CASCADE, null=True)
     relationship = models.CharField(max_length=30)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)

@@ -15,6 +15,7 @@
     <p><a href="#">{{ student.get_long_name }}</a></p>
     <p><a href="{% url 'staffuser:remove-student-from-lesson-confirm' lesson_id=lesson.id student_id=student.id %}">Remove Student</a></p>
 {% endfor %}
+<p><a href="{% url 'staffuser:add-student-to-lesson' lesson_id=lesson.id %}">Add student to this lesson</a></p>
 
 <p><a href="{% url 'staffuser:delete-lesson-confirm' lesson_id=lesson.id %}">Delete Lesson</a></p>
 

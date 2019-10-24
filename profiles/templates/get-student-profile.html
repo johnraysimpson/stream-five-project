@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Parent Profile{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<h1>Profile of {{ student }}</h1>
+
+<p><b>Date of birth: </b>{{ student.date_of_birth }}</p>
+<p><b>Year: </b>{{ year_group }}</p>
+{% if student.notes %}
+    <p><b>Notes: </b>{{ student.notes }}</p>
+{% endif %}
+{% if user.is_staff %}
+<a href="{% url 'staffuser:update-student' student_id=student.id %}">Edit Profile</a>
+{% endif %}
+
+<h3>Parent Information</h3>
+<p><a href="{% url 'staffuser:parent-profile' parent_id=parent.id %}">{{ parent }}</a> - {{ student.relationship }}</p>
+
+<p><a href="{% url 'staffuser:delete-student' student_id=student.id %}">Delete Student</a></p>
+
+{% endblock %}

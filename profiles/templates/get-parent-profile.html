@@ -19,4 +19,10 @@
 <a href="{% url 'staffuser:update-parent-profile' parent_id=parent.id %}">Edit Profile</a>
 {% endif %}
 
+<h3>Students</h3>
+{% for student in students %}
+<p><a href="{% url 'staffuser:student-profile' student_id=student.id %}">{{ student }}</a></p>
+{% endfor %}
+<p><a href="{% url 'staffuser:add-student' parent_id=parent.id %}">Create a student</a></p>
+
 {% endblock %}

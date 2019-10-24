@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}Add Student{% endblock %}
+{% block title %}Add Lesson to Student{% endblock %}
 
 {% block content %}
 
-<h1>Add student to Parent</h1>
+<h1>Add Student to Lesson</h1>
+<p>{{ lesson }}</p>
 <form method='POST'>
-    <p><b>Parent: </b>{{ parent }}</p>
     {% csrf_token %}
-    {{ student_form.as_p }}
+    {{ student_lesson_form.as_p }}
     <input type='submit' value='Save' />
 </form>
 

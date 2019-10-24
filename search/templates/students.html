@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Students{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<h1>Students</h1>
+
+<div>
+    <p>Search student by name</p>
+    <form action="{% url 'staffuser:students' %}" method="get">
+                <input type="text" name="q">
+                <button type="submit">Search</button>
+            </form>
+</div>
+{% for student in students %}
+<div>
+    <p>{{ student }}</p>
+    <p><a href="{% url 'staffuser:student-profile' student_id=student.id %}">View Profile</a></p>
+    <p><a href="{% url 'staffuser:add-student-lesson' student_id=student.id %}">Add Lesson to Student</a></p>
+    <p><a href="#">Delete Student</a></p>
+</div>
+
+{% endfor %}
+
+
+{% endblock %}

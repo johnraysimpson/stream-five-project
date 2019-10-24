@@ -3,7 +3,11 @@ from .models import Lesson
 from profiles.models import TutorProfile, Student
 import datetime
 
-
+def occurrence_choices():
+    OCCURRENCE_CHOICES = [('one_off', 'One Off'), ('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')]
+    occurrence = forms.ChoiceField(choices=OCCURRENCE_CHOICES, widget=forms.RadioSelect())
+    return occurrence
+    
 
 class LessonForm(forms.ModelForm):
     """Form for creating a tutor lesson"""
@@ -51,18 +55,19 @@ class LessonOccurrenceForm(LessonForm):
         fields = LessonForm.Meta.fields + ('occurrence', )
         
         
-class StudentLessonForm(forms.ModelForm):
+class StudentToLessonForm(forms.ModelForm):
     """Form for creating a student session"""
-    student = forms.ModelChoiceField(queryset=None, empty_label="Choose student", required=True)
+    student = forms.ModelChoiceField(queryset=None, empty_label="Select student", required=True)
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
-        super(StudentLessonForm, self).__init__(*args, **kwargs)
+        super(StudentToLessonForm, self).__init__(*args, **kwargs)
         self.fields["student"].queryset = Student.objects.filter(parent__user__centre = self.request.user.centre)
+    occurrence = occurrence_choices()
     class Meta:
         model = Student
-        fields = ('student',)
+        fields = ('student', 'occurrence')
         
-class LessonMatchForm(StudentLessonForm):
+class LessonToStudentForm(forms.ModelForm):
     """extends student session form to find corresponding tutor sessions"""
     DAY_CHOICES = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday')]
     SUBJECT_CHOICES = [('Maths', 'Maths'), ('English', 'English'), ('Science', 'Science')]
@@ -76,5 +81,6 @@ class LessonMatchForm(StudentLessonForm):
         input_formats=('%d/%m/%Y', )
         )
     occurrence = forms.ChoiceField(choices=OCCURRENCE_CHOICES, widget=forms.RadioSelect())
-    class Meta(StudentLessonForm.Meta):
-        fields = StudentLessonForm.Meta.fields + ('tutor', 'day', 'subject', 'time', 'date', 'occurrence')
+    class Meta():
+        model = Student
+        fields = ('tutor', 'day', 'subject', 'time', 'date', 'occurrence')

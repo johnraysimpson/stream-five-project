@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from staffuser.views import staff_test
-from .forms import LessonOccurrenceForm, LessonForm, LessonMatchForm
+from .forms import LessonOccurrenceForm, LessonForm, LessonToStudentForm, StudentToLessonForm
 from datetime import datetime, date, timedelta
 from .models import Lesson
 from profiles.models import Student
@@ -69,9 +69,10 @@ def delete_lesson_view(request, lesson_id):
   
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def add_student_lesson_view(request):
+def relate_via_student_view(request, student_id):
+    student = Student.objects.get(pk=student_id)
     if request.method == "POST":
-        lesson_form = LessonMatchForm(request.POST, request=request)
+        lesson_form = LessonToStudentForm(request.POST)
         if lesson_form.is_valid():
             
                 start_date = lesson_form.cleaned_data['date']
@@ -102,17 +103,56 @@ def add_student_lesson_view(request):
                         start_date += timedelta(days=14)
                 print(matched_lessons) 
                 if not matched_lessons:
-                    lesson_form.add_error(None, 'lessons do not exist')
+                    lesson_form.add_error(None, 'lesson(s) do not exist')
                 else:
-                    student = Student.objects.get(pk=lesson_form.cleaned_data['student'].id)
                     for lesson in matched_lessons:
                         student.lessons.add(lesson)
-                    lesson_form = LessonMatchForm(request=request)
+                    lesson_form = LessonToStudentForm()
     else:
-        lesson_form = LessonMatchForm(request=request)
-    return render(request, 'add-student-lesson.html', {'lesson_form': lesson_form})
+        lesson_form = LessonToStudentForm()
+    return render(request, 'add-student-lesson.html', {'lesson_form': lesson_form, 'student': student})
 
-    
+def relate_via_lesson_view(request, lesson_id):
+    lesson = Lesson.objects.get(pk=lesson_id)
+    if request.method == "POST":
+        student_lesson_form = StudentToLessonForm(request.POST, request=request)
+        if student_lesson_form.is_valid():
+            
+                start_date = lesson.date
+                matched_lessons = []
+                
+                while start_date < get_next_august():
+                    
+                    try:
+                        matched_lesson = Lesson.objects.get(tutor = lesson.tutor,
+                                                                day = lesson.day,
+                                                                time = lesson.time,
+                                                                subject = lesson.subject,
+                                                                date = start_date,
+                                                                )
+                    except Lesson.DoesNotExist:
+                        matched_lesson = None
+                        
+                    if matched_lesson:
+                        matched_lessons.append(matched_lesson)
+                        
+                    if student_lesson_form.cleaned_data['occurrence'] == 'one_off':
+                        break
+                    
+                    elif student_lesson_form.cleaned_data['occurrence'] == 'weekly':
+                        start_date += timedelta(days=7)
+                        
+                    else:
+                        start_date += timedelta(days=14)
+                
+                student = student_lesson_form.cleaned_data['student']
+                for lesson in matched_lessons:
+                    student.lessons.add(lesson)
+                student_lesson_form = StudentToLessonForm(request=request)
+    else:
+        student_lesson_form = StudentToLessonForm(request=request)
+    return render(request, 'add-student-to-lesson.html', {'lesson': lesson, 'student_lesson_form': student_lesson_form})
+
 def remove_student_from_lesson_confirm_view(request, lesson_id, student_id):
     student = Student.objects.get(pk=student_id)
     lesson = Lesson.objects.get(pk=lesson_id)

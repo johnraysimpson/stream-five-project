@@ -93,19 +93,14 @@ class TutorProfileForm(forms.ModelForm):
         
 class StudentForm(forms.ModelForm):
     """Form for creating a student"""
-    parent = forms.ModelChoiceField(queryset=None, empty_label="Choose parent user", required=True)
     date_of_birth = forms.DateField(
         widget=forms.DateInput(format='%d/%m/%Y'),
         input_formats=('%d/%m/%Y', )
         )
     relationship = forms.CharField(label="Relationship to Student")
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request')
-        super(StudentForm, self).__init__(*args, **kwargs)
-        self.fields["parent"].queryset = ParentProfile.objects.filter(user__centre = self.request.user.centre)
     class Meta:
         model = Student
-        fields = ('parent', 'relationship', 'first_name', 'last_name', 'date_of_birth', 'price_per_lesson', 'notes')
+        fields = ('relationship', 'first_name', 'last_name', 'date_of_birth', 'price_per_lesson', 'notes')
         
     def clean_relationship(self):
         return self.cleaned_data['relationship'].lower().capitalize()
