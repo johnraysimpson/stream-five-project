@@ -6,8 +6,6 @@ from profiles.models import TutorProfile
 def earnings_period(month):
     today = datetime.today()
     year = today.year
-    # month = 1
-    # year = 2020
     if month == 1:
         prev_month = 12
         return [(date(year-1, prev_month, 21)), (date(year, month, 21))]
@@ -17,8 +15,6 @@ def earnings_period(month):
 
 
 # Create your views here.
-def payments_view(request):
-    return render(request, 'payments.html')
 
 def tutor_earnings_view(request, tutor_id, request_date):
     tutor = TutorProfile.objects.get(id=tutor_id)

@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'profiles',
     'search',
     'payments',
+    'parentuser',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

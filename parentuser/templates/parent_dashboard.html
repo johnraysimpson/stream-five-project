@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Staff Dashboard{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<h1>Hello, {{ parent }}!</h1>
+ 
+
+<div>
+    <a href="#">View Lessons</a>
+</div>
+
+<div>
+    <a href="#">Pay for a Lesson</a>
+</div>
+
+<div>
+    <a href="#">View Profile</a>
+</div>
+
+{% endblock %}

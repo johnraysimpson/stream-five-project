@@ -19,6 +19,7 @@ from pages import urls as pages_urls
 from accounts import urls as accounts_urls
 from adminuser import urls as adminuser_urls
 from staffuser import urls as staff_urls
+from parentuser import urls as parent_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +27,5 @@ urlpatterns = [
     path('accounts/', include(accounts_urls)),
     path('admin_user/', include(adminuser_urls)),
     path('staff/', include(staff_urls)),
+    path('parent/', include(parent_urls)),
 ]

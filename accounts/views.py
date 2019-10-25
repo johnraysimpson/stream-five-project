@@ -37,7 +37,7 @@ def login_view(request):
                                     return redirect('staffuser:dashboard')
                                 elif user.is_parent:
                                     if user.password_changed:
-                                        return redirect('home')
+                                        return redirect('parentuser:dashboard')
                                     else:
                                         return redirect('first_password_change')
                     else:
@@ -58,7 +58,7 @@ def first_password_change(request):
             user.password_changed=True
             user.save()
             messages.success(request, 'Your password was successfully updated!')
-            return redirect('home')
+            return redirect('parentuser:dashboard')
         else:
             messages.error(request, 'Please correct the error below.')
     else:
