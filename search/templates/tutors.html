@@ -27,8 +27,8 @@
 {% for tutor in tutors %}
 <div>
     <p>{{ tutor }}</p>
-    <!--<p><a href="#">View Profile</a></p>-->
-    <!--<p><a href="#">Delete User</a></p>-->
+    <p><a href="{% url 'staffuser:tutor_profile' tutor_id=tutor.id %}">View Profile</a></p>
+    <p><a href="{% url 'staffuser:delete_user' user_id=tutor.user.id %}">Delete User</a></p>
 </div>
 
 {% endfor %}

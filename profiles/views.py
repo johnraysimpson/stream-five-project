@@ -23,8 +23,13 @@ def get_year_group(date):
     year_group = int(age - 5)
     print(year_group)
     return year_group
+    
+def get_todays_date():
+    todays_date=date.today()
+    mondays_date=todays_date - timedelta(days=todays_date.weekday())
+    return mondays_date
 
-# Create your views here.
+# PARENT BASED VIEWS
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_parent_profile_view(request, parentuser_id):
@@ -67,29 +72,8 @@ def update_parent_profile_view(request, parent_id):
     else:
         parent_profile_form = ParentProfileForm(instance=parent)
     return render(request, 'update_parent_profile.html', {'parent_profile_form': parent_profile_form, 'parent': parent})
-    
-@login_required
-@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def get_student_profile_view(request, student_id):
-    """Renders page for displaying profile information about a parent user"""
-    student = Student.objects.get(id=student_id)
-    parent = ParentProfile.objects.get(student=student)
-    year_group = get_year_group(student.date_of_birth)
-    return render(request, 'get_student_profile.html', {'parent': parent, 'student': student, 'year_group': year_group})
-    
-@login_required
-@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def delete_student_view(request, student_id):
-    student = Student.objects.get(id=student_id)
-    return render(request, 'delete_student.html', {'student': student})
-    
-@login_required
-@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def delete_student_confirm_view(request, student_id):
-    Student.objects.get(pk=student_id).delete()
-    messages.success(request, 'The student was permenantly deleted.')
-    return redirect('staffuser:students')
-    
+
+# STUDENT BASED VIEWS    
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_student_view(request, parent_id):
@@ -122,6 +106,29 @@ def update_student_view(request, student_id):
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def get_student_profile_view(request, student_id):
+    """Renders page for displaying profile information about a parent user"""
+    student = Student.objects.get(id=student_id)
+    parent = ParentProfile.objects.get(student=student)
+    year_group = get_year_group(student.date_of_birth)
+    return render(request, 'get_student_profile.html', {'parent': parent, 'student': student, 'year_group': year_group})
+    
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def delete_student_view(request, student_id):
+    student = Student.objects.get(id=student_id)
+    return render(request, 'delete_student.html', {'student': student})
+    
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def delete_student_confirm_view(request, student_id):
+    Student.objects.get(pk=student_id).delete()
+    messages.success(request, 'The student was permenantly deleted.')
+    return redirect('staffuser:students')
+
+# TUTOR BASED VIEWS
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_tutor_profile_view(request, tutoruser_id):
     """Renders page for parent profile information, using the user id to retrieve information about the parent user created"""
     tutoruser = User.objects.get(pk=tutoruser_id)
@@ -140,3 +147,25 @@ def add_tutor_profile_view(request, tutoruser_id):
             messages.success(request, "Tutor successfully created")
             return redirect(reverse('staffuser:dashboard'))
         return render(request, 'add_tutor_profile.html', {'tutoruser': tutoruser, "tutor_profile_form": tutor_profile_form})
+        
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def get_tutor_profile_view(request, tutor_id):
+    """Renders page for displaying profile information about a parent user"""
+    tutor = TutorProfile.objects.get(id=tutor_id)
+    todays_date = date.today()
+    return render(request, 'get_tutor_profile.html', {'tutor': tutor, 'todays_date': todays_date})
+    
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def update_tutor_profile_view(request, tutor_id):
+    """Renders page for displaying profile information about a parent user"""
+    tutor = TutorProfile.objects.get(id=tutor_id)
+    if request.method == 'POST':
+        tutor_profile_form = TutorProfileForm(request.POST, instance=tutor)
+        if tutor_profile_form.is_valid():
+            tutor_profile_form.save()
+            return redirect('staffuser:tutor_profile', tutor_id=tutor_id)
+    else:
+        tutor_profile_form = TutorProfileForm(instance=tutor)
+    return render(request, 'update_tutor_profile.html', {'tutor_profile_form': tutor_profile_form, 'tutor': tutor})

@@ -10,7 +10,8 @@ class Lesson(models.Model):
     time = models.TimeField()
     date = models.DateField()
     duration = models.DurationField()
-    centre = models.ForeignKey(Centre, on_delete=models.CASCADE)
+    centre = models.ForeignKey(Centre, on_delete=models.CASCADE, null=True)
+    earning = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     
     def __str__(self):
         return u'{0}, {1}, {2}, {3}, {4}'.format(self.subject, self.centre.centre_name, self.day, self.time, self.date)

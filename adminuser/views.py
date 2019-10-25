@@ -9,7 +9,7 @@ def admin_test(user):
 @user_passes_test(admin_test, redirect_field_name=None, login_url='/oops/')
 def admin_dashboard_view(request):
     """Renders dashboard for admin user"""
-    return render(request, "admin-dashboard.html")
+    return render(request, "admin_dashboard.html")
 
 @login_required()
 @user_passes_test(admin_test, redirect_field_name=None, login_url='/oops/')
@@ -19,7 +19,7 @@ def add_centre_view(request):
     if centre_form.is_valid():
         centre_form.save()
         centre_form = CentreForm()
-    return render(request, "add-centre.html", {'centre_form': centre_form})
+    return render(request, "add_centre.html", {'centre_form': centre_form})
  
 @login_required()
 @user_passes_test(admin_test, redirect_field_name=None, login_url='/oops/')
@@ -31,4 +31,4 @@ def add_staff_view(request):
         user.staff=True
         user.save()
         staff_user_form = StaffUserForm()
-    return render(request, "add-staff-user.html", {'staff_user_form': staff_user_form})
+    return render(request, "add_staff_user.html", {'staff_user_form': staff_user_form})

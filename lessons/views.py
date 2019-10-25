@@ -24,20 +24,25 @@ def add_lesson_view(request):
     """Renders add session page with corresponding form"""
     lesson_form = LessonOccurrenceForm(request.POST or None)
     if lesson_form.is_valid():
+        tutor = lesson_form.cleaned_data['tutor']
+        earning = (lesson_form.cleaned_data['duration'].total_seconds() / 60) * float(tutor.pay_per_hour)
         if lesson_form.cleaned_data['occurrence'] == 'weekly':
             start_date = lesson_form.cleaned_data['date']
             while start_date < get_next_august():
-                Lesson.objects.create(tutor=lesson_form.cleaned_data['tutor'], 
+                Lesson.objects.create(tutor=tutor, 
                                         subject=lesson_form.cleaned_data['subject'], 
                                         day=lesson_form.cleaned_data['day'], 
                                         time=lesson_form.cleaned_data['time'], 
                                         date=start_date, 
                                         duration=lesson_form.cleaned_data['duration'],
-                                        centre=request.user.centre)
+                                        centre=request.user.centre,
+                                        earning=earning
+                                        )
                 start_date += timedelta(days=7)
         else:
             lesson = lesson_form.save()
             lesson.centre = request.user.centre
+            lesson.earning = earning
             lesson.save()
         lesson_form = LessonOccurrenceForm()
     return render(request, 'add_lesson.html', {'lesson_form': lesson_form})

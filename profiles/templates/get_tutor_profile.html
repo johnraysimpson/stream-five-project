@@ -16,8 +16,9 @@
 <p><b>Address: </b>{{ tutor.address1 }}</p>
 
 {% if user.is_staff %}
-<a href="#">Edit Profile</a>
+<a href="{% url 'staffuser:update_tutor_profile' tutor_id=tutor.id  %}">Edit Profile</a>
 {% endif %}
 
+<p><a href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=todays_date %}">Earnings</a></p>
 
 {% endblock %}

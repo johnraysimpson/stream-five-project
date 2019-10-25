@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}tutors{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<h1>Tutor earnings</h1>
+<h3>{{ current_month_name }}</h3>
+<h3>£{{ rounded_earnings }}</h3>
+{% for lesson in lessons %}
+<p>{{ lesson }} - £{{ lesson.earning }}</p>
+{% endfor %}
+<p><a href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=last_month %}">Last Month</a></p>
+<p><a href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=next_month %}">Next Month</a></p>
+
+
+{% endblock %}

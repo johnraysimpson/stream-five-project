@@ -3,7 +3,7 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import UserLoginForm, FirstPasswordChangeForm, CreateUserForm
 from .models import User
-from profiles.models import ParentProfile, Student
+from profiles.models import ParentProfile, Student, TutorProfile
 from staffuser.views import staff_test
 
 # Create your views here.
@@ -127,9 +127,12 @@ def reactivate_user_confirm_view(request, user_id):
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def delete_user_view(request, user_id):
-    parent_user = User.objects.get(pk=user_id)
-    parent_profile = ParentProfile.objects.get(user=parent_user)
-    return render(request, 'delete_user.html', {'parent_user': parent_user, 'parent_profile': parent_profile})
+    user_for_deletion = User.objects.get(pk=user_id)
+    try:
+        user_profile = ParentProfile.objects.get(user=user_for_deletion)
+    except ParentProfile.DoesNotExist:
+        user_profile = TutorProfile.objects.get(user=user_for_deletion)
+    return render(request, 'delete_user.html', {'user_for_deletion': user_for_deletion, 'user_profile': user_profile})
 
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')

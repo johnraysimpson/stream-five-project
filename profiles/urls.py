@@ -7,7 +7,9 @@ from .views import (add_parent_profile_view,
                     get_student_profile_view,
                     update_student_view,
                     delete_student_view,
-                    delete_student_confirm_view
+                    delete_student_confirm_view,
+                    get_tutor_profile_view,
+                    update_tutor_profile_view,
                     )
 
 urlpatterns = [
@@ -22,4 +24,6 @@ urlpatterns = [
     path('delete_student_confirm/<student_id>', delete_student_confirm_view, name='delete_student_confirm'),
     
     path('add_tutor/<tutoruser_id>/', add_tutor_profile_view, name="add_tutor_profile"),
+    path('tutor_profile/<tutor_id>/', get_tutor_profile_view, name="tutor_profile"),
+    path('tutor_profile/update/<int:tutor_id>', update_tutor_profile_view, name='update_tutor_profile'),
     ]

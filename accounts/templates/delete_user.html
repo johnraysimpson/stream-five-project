@@ -1,17 +1,22 @@
 {% extends 'base.html' %}
 
-{% block title %}Add Parent User{% endblock %}
+{% block title %}Delete User{% endblock %}
 
 {% block content %}
 
 <h1>Delete User</h1>
 
-<p>Are you sure you want to permenantly delete {{ parent_profile }}?</p>
+
+<p>Are you sure you want to permenantly delete {{ user_profile }}?</p>
 
 <p>Doing so will remove the users profile and any related students.</p>
 
-<a href="{% url 'staffuser:delete_user_confirm' user_id=parent_user.id %}">Delete</a>
-
-<a href="{% url 'staffuser:parents' %}">Cancel</a>
+<a href="{% url 'staffuser:delete_user_confirm' user_id=user_for_deletion.id %}">Delete</a>
+    
+{% if user_for_deletion.is_parent %}
+    <a href="{% url 'staffuser:parents' %}">Cancel</a>
+{% else %}
+    <a href="{% url 'staffuser:tutors' %}">Cancel</a>
+{% endif %}
 
 {% endblock %}
