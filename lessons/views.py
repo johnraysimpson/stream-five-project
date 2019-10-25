@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from staffuser.views import staff_test
+from parentuser.views import parent_test
 from .forms import LessonOccurrenceForm, LessonForm, LessonToStudentForm, StudentToLessonForm
 from datetime import datetime, date, timedelta
 from .models import Lesson
-from profiles.models import Student
-
+from profiles.models import Student, ParentProfile
+from operator import attrgetter
 
 def get_next_august():
     """Function that returns the date of the next time it is August"""
@@ -199,3 +200,18 @@ def get_lesson_details_view(request, lesson_id):
     """View for retrieving a lesson and displaying details"""
     lesson = Lesson.objects.get(pk=lesson_id)
     return render(request, 'get_lesson_detail.html', {'lesson': lesson})
+    
+@login_required
+@user_passes_test(parent_test, redirect_field_name=None, login_url='/oops/')
+def get_student_lessons_view(request):
+    """View for retrieving lessons that a parent's students are attending"""
+    todays_date = date.today()
+    parent = ParentProfile.objects.get(user=request.user)
+    students = Student.objects.filter(parent=parent)
+    queryset = Lesson.objects.none()
+    for student in students:
+        lessons = student.lessons.filter(student=student, date__gte=todays_date)
+        queryset |= lessons
+    print(queryset)
+    student_lessons = queryset.order_by('date')
+    return render(request, 'get_student_lessons.html', {'student_lessons': student_lessons, 'students': students})

@@ -14,15 +14,15 @@
  
 
 <div>
-    <a href="#">View Lessons</a>
+    <a href="{% url 'parentuser:get_student_lessons' %}">View Lessons</a>
 </div>
 
 <div>
-    <a href="#">Pay for a Lesson</a>
+    <a href="#">Paid Lessons</a>
 </div>
 
 <div>
-    <a href="#">View Profile</a>
+    <a href="{% url 'parentuser:parent_profile' %}">View Profile</a>
 </div>
 
 {% endblock %}

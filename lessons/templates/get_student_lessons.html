@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}View Lessons{% endblock %}
+
+{% block content %}
+
+<h1>Upcoming Lessons</h1>
+
+{% for lesson in student_lessons %}
+{% for student in students %}
+{% if student in lesson.student_set.all %}
+<p>{{ lesson }}</p>
+<p>{{ student }}</p>
+<p>{{ student.price_per_lesson }}</p>
+<p><a href="#">Pay for Lesson</a></p>
+<p><a href='#'>Cancel Lesson</a></p>
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+{% endblock %}

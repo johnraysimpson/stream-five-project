@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from staffuser.views import staff_test
+from parentuser.views import parent_test
 from lessons.views import get_next_august
 from accounts.models import User
 from .models import Student, ParentProfile, TutorProfile
@@ -169,3 +170,23 @@ def update_tutor_profile_view(request, tutor_id):
     else:
         tutor_profile_form = TutorProfileForm(instance=tutor)
     return render(request, 'update_tutor_profile.html', {'tutor_profile_form': tutor_profile_form, 'tutor': tutor})
+    
+@login_required
+@user_passes_test(parent_test, redirect_field_name=None, login_url='/oops/')
+def get_parentuser_profile(request):
+    parent = ParentProfile.objects.get(user=request.user)
+    students = Student.objects.filter(parent=parent)
+    return render(request, 'get_parent_profile.html', {'parent': parent, 'students': students})
+    
+@login_required
+@user_passes_test(parent_test, redirect_field_name=None, login_url='/oops/')
+def get_parents_student_profile_view(request, student_id):
+    """Renders page for displaying profile information about a parent user"""
+    student = Student.objects.get(id=student_id)
+    parent = ParentProfile.objects.get(student=student)
+    parentuser = ParentProfile.objects.get(user=request.user)
+    year_group = get_year_group(student.date_of_birth)
+    if parent == parentuser:
+        return render(request, 'get_student_profile.html', {'parent': parent, 'student': student, 'year_group': year_group})
+    else:
+        return redirect('/oops/')

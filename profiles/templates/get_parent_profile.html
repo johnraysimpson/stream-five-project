@@ -17,12 +17,20 @@
 
 {% if user.is_staff %}
 <a href="{% url 'staffuser:update_parent_profile' parent_id=parent.id %}">Edit Profile</a>
+{% else %}
+<p>If any information is incorrect or needs changing, please contact a member of staff.</p>
+
 {% endif %}
 
 <h3>Students</h3>
 {% for student in students %}
+{% if user.is_staff %}
 <p><a href="{% url 'staffuser:student_profile' student_id=student.id %}">{{ student }}</a></p>
+{% else %}
+<p><a href="{% url 'parentuser:student_profile' student_id=student.id %}">{{ student }}</a></p>
+{% endif %}
 {% endfor %}
+{% if user.is_staff %}
 <p><a href="{% url 'staffuser:add_student' parent_id=parent.id %}">Create a student</a></p>
-
+{% endif %}
 {% endblock %}
