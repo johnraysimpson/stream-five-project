@@ -4,6 +4,7 @@ from profiles.models import TutorProfile, Student
 import datetime
 
 def occurrence_choices():
+    """Function to generate how often a lesson is required"""
     OCCURRENCE_CHOICES = [('one_off', 'One Off'), ('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')]
     occurrence = forms.ChoiceField(choices=OCCURRENCE_CHOICES, widget=forms.RadioSelect())
     return occurrence
@@ -34,6 +35,7 @@ class LessonForm(forms.ModelForm):
             )
             
     def clean_date(self):
+        """Validation to check if the day and date matches, and if the date is not in the past"""
         input_day = self.cleaned_data.get('day')
         input_date = self.cleaned_data.get('date')
         print(input_date)
@@ -56,7 +58,7 @@ class LessonOccurrenceForm(LessonForm):
         
         
 class StudentToLessonForm(forms.ModelForm):
-    """Form for creating a student session"""
+    """Form for relating a student and a lesson via the lesson"""
     student = forms.ModelChoiceField(queryset=None, empty_label="Select student", required=True)
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
@@ -68,7 +70,7 @@ class StudentToLessonForm(forms.ModelForm):
         fields = ('student', 'occurrence')
         
 class LessonToStudentForm(forms.ModelForm):
-    """extends student session form to find corresponding tutor sessions"""
+    """Form for relating a student and a lesson via the student"""
     DAY_CHOICES = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday')]
     SUBJECT_CHOICES = [('Maths', 'Maths'), ('English', 'English'), ('Science', 'Science')]
     OCCURRENCE_CHOICES = [('one_off', 'One Off'), ('weekly', 'Weekly'), ('fortnightly', 'Fortnightly')]

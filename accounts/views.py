@@ -6,7 +6,6 @@ from .models import User
 from profiles.models import ParentProfile, Student, TutorProfile
 from staffuser.views import staff_test
 
-# Create your views here.
 
 @login_required
 def logout(request):
@@ -50,6 +49,7 @@ def login_view(request):
         
         
 def first_password_change(request):
+    """View to render a password change form for new parent or tutor users"""
     if request.method == 'POST':
         form = FirstPasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -97,6 +97,7 @@ def add_tutor_view(request):
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def deactivate_user_view(request, user_id):
+    """View to render a confirmation page to deactivate a parent user"""
     parent_user = User.objects.get(pk=user_id)
     parent_profile = ParentProfile.objects.get(user=parent_user)
     return render(request, 'deactivate_user.html', {'parent_user': parent_user, 'parent_profile': parent_profile})
@@ -104,6 +105,7 @@ def deactivate_user_view(request, user_id):
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def deactivate_user_confirm_view(request, user_id):
+    """View which deactivates a parent user and removes all lessons from students"""
     user = User.objects.get(pk=user_id)
     parent_profile = parent_profile = ParentProfile.objects.get(user=user)
     user.active=False
@@ -117,6 +119,7 @@ def deactivate_user_confirm_view(request, user_id):
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def reactivate_user_confirm_view(request, user_id):
+    """View which reactivates a parent user"""
     user = User.objects.get(pk=user_id)
     parent_profile = parent_profile = ParentProfile.objects.get(user=user)
     user.active=True
@@ -127,6 +130,7 @@ def reactivate_user_confirm_view(request, user_id):
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def delete_user_view(request, user_id):
+    """View to render a confirmation page to permenantly delete a parent user"""
     user_for_deletion = User.objects.get(pk=user_id)
     try:
         user_profile = ParentProfile.objects.get(user=user_for_deletion)
@@ -137,6 +141,7 @@ def delete_user_view(request, user_id):
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def delete_user_confirm_view(request, user_id):
+    """View which permenantly deletes a parent user"""
     User.objects.get(pk=user_id).delete()
     messages.success(request, 'The user was permenantly deleted.')
     return redirect('staffuser:parents')

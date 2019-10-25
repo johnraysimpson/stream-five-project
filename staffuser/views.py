@@ -10,6 +10,7 @@ def staff_test(user):
     return (user.is_staff and not user.is_admin)
     
 def get_mondays_date():
+    """Function to find the date of the most recent Monday"""
     todays_date=date.today()
     mondays_date=todays_date - timedelta(days=todays_date.weekday())
     return mondays_date

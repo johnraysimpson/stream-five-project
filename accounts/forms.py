@@ -40,10 +40,7 @@ class UserAdminCreationForm(forms.ModelForm):
 
 
 class UserAdminChangeForm(forms.ModelForm):
-    """A form for updating users. Includes all the fields on
-    the user, but replaces the password field with admin's
-    password hash display field.
-    """
+    """A form for updating users. Includes all the fields on the user, but replaces the password field with admin's password hash display field."""
     password = ReadOnlyPasswordHashField()
 
     class Meta:
@@ -57,9 +54,7 @@ class UserAdminChangeForm(forms.ModelForm):
         return self.initial["password"]
         
 class FirstPasswordChangeForm(SetPasswordForm):
-    """
-    A form that makes user change their password on their first time logging in
-    """
+    """A form that makes user change their password on their first time logging in"""
     def __init__(self, *args, **kwargs):
         super(FirstPasswordChangeForm, self).__init__(*args, **kwargs)
 

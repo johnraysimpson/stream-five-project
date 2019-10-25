@@ -51,7 +51,7 @@ def add_lesson_view(request):
 
 
 def update_lesson_view(request, lesson_id):
-    """"""
+    """View that renders an instance of the lesson form that has already been created for editing"""
     lesson = Lesson.objects.get(pk=lesson_id)
     if request.method == 'POST':
         update_lesson_form = LessonForm(request.POST, instance=lesson)
@@ -76,6 +76,7 @@ def delete_lesson_view(request, lesson_id):
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def relate_via_student_view(request, student_id):
+    """View to render page and more for creating relationship between lesson and student via the student"""
     student = Student.objects.get(pk=student_id)
     if request.method == "POST":
         lesson_form = LessonToStudentForm(request.POST)
@@ -119,6 +120,7 @@ def relate_via_student_view(request, student_id):
     return render(request, 'add_student_lesson.html', {'lesson_form': lesson_form, 'student': student})
 
 def relate_via_lesson_view(request, lesson_id):
+    """View to render page and more for creating relationship between lesson and student via the lesson"""
     lesson = Lesson.objects.get(pk=lesson_id)
     if request.method == "POST":
         student_lesson_form = StudentToLessonForm(request.POST, request=request)
@@ -160,12 +162,14 @@ def relate_via_lesson_view(request, lesson_id):
     return render(request, 'add_student_to_lesson.html', {'lesson': lesson, 'student_lesson_form': student_lesson_form})
 
 def remove_student_from_lesson_confirm_view(request, lesson_id, student_id):
+    """View to render a confirmation page for removing the relationship between a lesson and a student"""
     student = Student.objects.get(pk=student_id)
     lesson = Lesson.objects.get(pk=lesson_id)
     return render(request, 'remove_student_from_lesson_confirm.html', {'student': student, 'lesson': lesson})
     
 
 def remove_student_from_lesson_view(request, lesson_id, student_id):
+    """View that removes the relationship between a lesson and a student"""
     student = Student.objects.get(pk=student_id)
     lesson = Lesson.objects.get(pk=lesson_id)
     student.sessions.remove(lesson)

@@ -12,7 +12,7 @@ def about_view(request):
     return render(request, 'about.html')
     
 def contact_view(request):
-    """Renders contact page and sends information about all centres in the database"""
+    """Renders contact page and retrieves information about all centres in the database"""
     centres = Centre.objects.all()
     return render(request, 'contact.html', {'centres': centres})
     
