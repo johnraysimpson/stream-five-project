@@ -2,9 +2,13 @@
 
 {% block content %}
 
+{% if user.is_staff %}
 <h1>Confirm Remove Student</h1>
+{% elif user.is_parent %}
+<h1>Cancel Lesson</h1>
+{% endif %}
 
-<p>Are you sure you want to delete</p>
+<p>Are you sure you want to remove</p>
 
 <p>{{ student }}</p>
 
@@ -12,7 +16,13 @@
 
 <p>{{ lesson }}</p>
 
+
+{% if user.is_staff %}
 <p><a href="{% url 'staffuser:remove_student_from_lesson' lesson_id=lesson.id student_id=student.id %}">Remove</a></p>
 <p><a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">Cancel</a></p>
+{% elif user.is_parent %}
+<p><a href="{% url 'parentuser:remove_student_from_lesson' lesson_id=lesson.id student_id=student.id %}">Cancel Lesson</a></p>
+<p><a href="{% url 'parentuser:get_student_lessons' %}">Go Back</a></p>
+{% endif %}
 
 {% endblock %}

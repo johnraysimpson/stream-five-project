@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from staffuser.views import staff_test
-from parentuser.views import parent_test
+from parentuser.views import parent_test, staff_or_parent_test
 from .forms import LessonOccurrenceForm, LessonForm, LessonToStudentForm, StudentToLessonForm
 from datetime import datetime, date, timedelta
 from .models import Lesson
@@ -49,7 +49,8 @@ def add_lesson_view(request):
     return render(request, 'add_lesson.html', {'lesson_form': lesson_form})
 
 
-
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def update_lesson_view(request, lesson_id):
     """View that renders an instance of the lesson form that has already been created for editing"""
     lesson = Lesson.objects.get(pk=lesson_id)
@@ -63,11 +64,12 @@ def update_lesson_view(request, lesson_id):
     return render(request, 'update_lesson_detail.html', {'update_lesson_form': update_lesson_form})
     
 def delete_lesson_confirm_view(request, lesson_id):
-    """"""
+    """View to render page confirming deletion particular lesson"""
     lesson = Lesson.objects.get(pk=lesson_id)
     return render(request, 'delete_lesson_confirm.html', {'lesson': lesson})
     
 def delete_lesson_view(request, lesson_id):
+    """View to delete particular lesson"""
     Lesson.objects.get(pk=lesson_id).delete()
     messages.success(request, "Lesson deleted")
     return redirect('staffuser:dashboard')
@@ -119,6 +121,8 @@ def relate_via_student_view(request, student_id):
         lesson_form = LessonToStudentForm()
     return render(request, 'add_student_lesson.html', {'lesson_form': lesson_form, 'student': student})
 
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def relate_via_lesson_view(request, lesson_id):
     """View to render page and more for creating relationship between lesson and student via the lesson"""
     lesson = Lesson.objects.get(pk=lesson_id)
@@ -161,18 +165,35 @@ def relate_via_lesson_view(request, lesson_id):
         student_lesson_form = StudentToLessonForm(request=request)
     return render(request, 'add_student_to_lesson.html', {'lesson': lesson, 'student_lesson_form': student_lesson_form})
 
+@login_required
+@user_passes_test(staff_or_parent_test, redirect_field_name=None, login_url='/oops/')
 def remove_student_from_lesson_confirm_view(request, lesson_id, student_id):
     """View to render a confirmation page for removing the relationship between a lesson and a student"""
     student = Student.objects.get(pk=student_id)
     lesson = Lesson.objects.get(pk=lesson_id)
+    if request.user.is_parent:
+        parent = ParentProfile.objects.get(user=request.user)
+        #print(parent)
+        #print(student.parent)
+        if student.parent != parent:
+            return redirect('/oops/')
     return render(request, 'remove_student_from_lesson_confirm.html', {'student': student, 'lesson': lesson})
     
-
+@login_required
+@user_passes_test(staff_or_parent_test, redirect_field_name=None, login_url='/oops/')
 def remove_student_from_lesson_view(request, lesson_id, student_id):
     """View that removes the relationship between a lesson and a student"""
     student = Student.objects.get(pk=student_id)
     lesson = Lesson.objects.get(pk=lesson_id)
-    student.sessions.remove(lesson)
+    student.lessons.remove(lesson)
+    if request.user.is_parent:
+        parent = ParentProfile.objects.get(user=request.user)
+        print(parent)
+        print(student.parent)
+        if student.parent != parent:
+            return redirect('/oops/')
+        else:
+            return redirect('parentuser:get_student_lessons')
     return redirect('staffuser:get_lesson_detail', lesson_id=lesson_id)
 
    
@@ -199,7 +220,9 @@ def get_lessons_view(request, mondays_date):
             return render(request, 'get_lessons.html', {"wrong_view_date": True})
     except:
         return render(request, 'get_lessons.html', {"wrong_view_date": True})
-        
+
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')    
 def get_lesson_details_view(request, lesson_id):
     """View for retrieving a lesson and displaying details"""
     lesson = Lesson.objects.get(pk=lesson_id)
@@ -219,3 +242,4 @@ def get_student_lessons_view(request):
     print(queryset)
     student_lessons = queryset.order_by('date')
     return render(request, 'get_student_lessons.html', {'student_lessons': student_lessons, 'students': students})
+    
