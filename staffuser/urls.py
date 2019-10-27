@@ -1,11 +1,11 @@
 from django.urls import path, re_path, include
 from .views import (staff_dashboard_view,
                     )
-from profiles import urls as profile_urls
-from lessons import urls as lesson_urls
+from profiles import staff_urls as profile_urls
+from lessons import staff_urls as lesson_urls
 from accounts import urls_users as user_urls
-from search import urls as search_urls
-from payments import urls as payments_urls
+from search import staff_urls as search_urls
+from payments import staff_urls as payments_urls
 
 app_name = 'staffuser'
 urlpatterns = [

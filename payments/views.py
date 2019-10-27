@@ -9,6 +9,7 @@ from profiles.models import TutorProfile, ParentProfile, Student
 from parentuser.views import parent_test
 from staffuser.views import staff_test
 from tutoruser.views import tutor_test
+from adminuser.views import admin_test
 from django.conf import settings
 import stripe
 
@@ -34,19 +35,27 @@ def intake_period(month):
     else:
         return [(date(year, month, 1)), (date(year, month+1, 1))]
         
+def get_next_month(request_date, month):
+    if month == 12:
+        next_month = date(request_date.year + 1, 1, 1)
+    else:
+        next_month = date(request_date.year, month + 1, 1)
+    return next_month
+    
+def get_last_month(request_date, month):
+    if month == 1:
+        last_month = date(request_date.year - 1, 12, 28)
+    else:
+        last_month = date(request_date.year, month - 1, 28)
+    return last_month
+        
 def get_earnings(request_date, tutor):
     view_date = datetime.strptime(request_date, "%Y-%m-%d")
     view_month = view_date.month
     print(view_month)
     payment_month = earnings_period(view_month)
-    if view_month == 12:
-        next_month = date(view_date.year + 1, 1, 1)
-    else:
-        next_month = date(view_date.year, view_month + 1, 1)
-    if view_month == 1:
-        last_month = date(view_date.year - 1, 12, 28)
-    else:
-        last_month = date(view_date.year, view_month - 1, 28)
+    next_month = get_next_month(view_date, view_month)
+    last_month = get_last_month(view_date, view_month)
     current_month_name = view_date.strftime("%B")
     lessons = Lesson.objects.filter(date__gt=payment_month[0], date__lte=payment_month[1])
     earnings = 0
@@ -58,7 +67,16 @@ def get_earnings(request_date, tutor):
     rounded_earnings = '{0:.2f}'.format(earnings)
     return {'tutor': tutor, "current_month_name": current_month_name, 'lessons': lessons, 'rounded_earnings': rounded_earnings, 'last_month': last_month, 'next_month': next_month}
 
-# Create your views here.
+
+def get_intake(payments):
+    intake = 0
+    for payment in payments:
+        paid_amount = float(payment.amount_paid)
+        intake += paid_amount
+        print(intake)
+    rounded_intake = '{0:.2f}'.format(intake)
+    return rounded_intake
+
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def intake_view(request, request_date):
@@ -66,25 +84,25 @@ def intake_view(request, request_date):
     view_month = view_date.month
     print(view_month)
     intake_month = intake_period(view_month)
-    if view_month == 12:
-        next_month = date(view_date.year + 1, 1, 1)
-    else:
-        next_month = date(view_date.year, view_month + 1, 1)
-    if view_month == 1:
-        last_month = date(view_date.year - 1, 12, 28)
-    else:
-        last_month = date(view_date.year, view_month - 1, 28)
+    next_month = get_next_month(view_date, view_month)
+    last_month = get_last_month(view_date, view_month)
     current_month_name = view_date.strftime("%B")
-    if request.user.is_admin:
-        payments = Payment.objects.filter(date_paid__gte=intake_month[0], date_paid__lt=intake_month[1])
-    else:
-        payments = Payment.objects.filter(date_paid__gte=intake_month[0], date_paid__lt=intake_month[1], centre_name=request.user.centre.centre_name)
-    intake = 0
-    for payment in payments:
-        paid_amount = float(payment.amount_paid)
-        intake += paid_amount
-        print(intake)
-    rounded_intake = '{0:.2f}'.format(intake)
+    payments = Payment.objects.filter(date_paid__gte=intake_month[0], date_paid__lt=intake_month[1], centre_name=request.user.centre.centre_name)
+    rounded_intake = get_intake(payments)
+    return render(request, 'get_intake.html', {"current_month_name": current_month_name, 'payments': payments, 'rounded_intake': rounded_intake, 'last_month': last_month, 'next_month': next_month})
+    
+@login_required
+@user_passes_test(admin_test, redirect_field_name=None, login_url='/oops/')
+def whole_intake_view(request, request_date):
+    view_date = datetime.strptime(request_date, "%Y-%m-%d")
+    view_month = view_date.month
+    print(view_month)
+    intake_month = intake_period(view_month)
+    next_month = get_next_month(view_date, view_month)
+    last_month = get_last_month(view_date, view_month)
+    current_month_name = view_date.strftime("%B")
+    payments = Payment.objects.filter(date_paid__gte=intake_month[0], date_paid__lt=intake_month[1])
+    rounded_intake = get_intake(payments)
     return render(request, 'get_intake.html', {"current_month_name": current_month_name, 'payments': payments, 'rounded_intake': rounded_intake, 'last_month': last_month, 'next_month': next_month})
     
 @login_required
