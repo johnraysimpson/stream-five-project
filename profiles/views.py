@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from staffuser.views import staff_test
@@ -31,13 +31,13 @@ def get_year_group(date):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_parent_profile_view(request, parentuser_id):
     """Renders page and form for adding profile information of a parent user"""
-    parentuser = User.objects.get(pk=parentuser_id)
+    parentuser = get_object_or_404(User, pk=parentuser_id)
     try:
         if parentuser.is_parent:
             ParentProfile.objects.get(user=parentuser)
             return render(request, 'add_parent_profile.html', {'parentuser': parentuser, "parent_profile_exists": True})
         else:
-            return redirect('staffuser:dashboard')
+            return redirect('/oops/')
     except ParentProfile.DoesNotExist:
         parent_profile_form = ParentProfileForm(request.POST or None)
         if parent_profile_form.is_valid():
@@ -52,7 +52,7 @@ def add_parent_profile_view(request, parentuser_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def get_parent_profile_view(request, parent_id):
     """Renders page for displaying profile information about a parent user"""
-    parent = ParentProfile.objects.get(id=parent_id)
+    parent = get_object_or_404(ParentProfile, id=parent_id)
     students = Student.objects.filter(parent=parent)
     return render(request, 'get_parent_profile.html', {'parent': parent, 'students': students})
     
@@ -60,7 +60,7 @@ def get_parent_profile_view(request, parent_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def update_parent_profile_view(request, parent_id):
     """Renders page and form for updating an instance of a parent profile"""
-    parent = ParentProfile.objects.get(id=parent_id)
+    parent = get_object_or_404(ParentProfile, id=parent_id)
     if request.method == 'POST':
         parent_profile_form = ParentProfileForm(request.POST, instance=parent)
         if parent_profile_form.is_valid():
@@ -75,7 +75,7 @@ def update_parent_profile_view(request, parent_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_student_view(request, parent_id):
     """Renders add student page and form"""
-    parent = ParentProfile.objects.get(id=parent_id)
+    parent = get_object_or_404(ParentProfile, id=parent_id)
     if request.method == 'POST':
         student_form = StudentForm(request.POST)
         if student_form.is_valid():
@@ -91,7 +91,7 @@ def add_student_view(request, parent_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def update_student_view(request, student_id):
     """Renders page and form for updating an instance of a student"""
-    student = Student.objects.get(id=student_id)
+    student = get_object_or_404(Student, id=student_id)
     if request.method == 'POST':
         student_form = StudentForm(request.POST, instance=student)
         if student_form.is_valid():
@@ -105,7 +105,7 @@ def update_student_view(request, student_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def get_student_profile_view(request, student_id):
     """Renders page for displaying profile information about a student"""
-    student = Student.objects.get(id=student_id)
+    student = get_object_or_404(Student, id=student_id)
     parent = ParentProfile.objects.get(student=student)
     year_group = get_year_group(student.date_of_birth)
     return render(request, 'get_student_profile.html', {'parent': parent, 'student': student, 'year_group': year_group})
@@ -114,14 +114,14 @@ def get_student_profile_view(request, student_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def delete_student_view(request, student_id):
     """View that renders a confirmation page to permenantly deletes a student"""
-    student = Student.objects.get(id=student_id)
+    student = get_object_or_404(Student, id=student_id)
     return render(request, 'delete_student.html', {'student': student})
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def delete_student_confirm_view(request, student_id):
     """View that permenantly deletes a student"""
-    Student.objects.get(pk=student_id).delete()
+    get_object_or_404(Student, pk=student_id).delete()
     messages.success(request, 'The student was permenantly deleted.')
     return redirect('staffuser:students')
 
@@ -130,13 +130,13 @@ def delete_student_confirm_view(request, student_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_tutor_profile_view(request, tutoruser_id):
     """Renders page and form for adding profile information of a tutor user"""
-    tutoruser = User.objects.get(pk=tutoruser_id)
+    tutoruser = get_object_or_404(User, pk=tutoruser_id)
     try:
         if tutoruser.is_tutor:
             TutorProfile.objects.get(user=tutoruser)
             return render(request, 'add_tutor_profile.html', {'tutoruser': tutoruser, "tutor_profile_exists": True})
         else:
-            return redirect('staffuser:dashboard')
+            return redirect('/oops/')
     except TutorProfile.DoesNotExist:
         tutor_profile_form = TutorProfileForm(request.POST or None)
         if tutor_profile_form.is_valid():
@@ -151,7 +151,7 @@ def add_tutor_profile_view(request, tutoruser_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def get_tutor_profile_view(request, tutor_id):
     """Renders page for displaying profile information about a parent user"""
-    tutor = TutorProfile.objects.get(id=tutor_id)
+    tutor = get_object_or_404(TutorProfile, id=tutor_id)
     todays_date = date.today()
     return render(request, 'get_tutor_profile.html', {'tutor': tutor, 'todays_date': todays_date})
     
@@ -159,7 +159,7 @@ def get_tutor_profile_view(request, tutor_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def update_tutor_profile_view(request, tutor_id):
     """Renders page for updating an instance of a tutor profile"""
-    tutor = TutorProfile.objects.get(id=tutor_id)
+    tutor = get_object_or_404(TutorProfile, id=tutor_id)
     if request.method == 'POST':
         tutor_profile_form = TutorProfileForm(request.POST, instance=tutor)
         if tutor_profile_form.is_valid():
@@ -174,7 +174,7 @@ def update_tutor_profile_view(request, tutor_id):
 @user_passes_test(parent_test, redirect_field_name=None, login_url='/oops/')
 def get_parentuser_profile(request):
     """Renders page for displaying a logged in parent's profile information"""
-    parent = ParentProfile.objects.get(user=request.user)
+    parent = get_object_or_404(ParentProfile, user=request.user)
     students = Student.objects.filter(parent=parent)
     return render(request, 'get_parent_profile.html', {'parent': parent, 'students': students})
     
@@ -182,7 +182,7 @@ def get_parentuser_profile(request):
 @user_passes_test(parent_test, redirect_field_name=None, login_url='/oops/')
 def get_parents_student_profile_view(request, student_id):
     """Renders page for displaying a specific parent's student profile information"""
-    student = Student.objects.get(id=student_id)
+    student = get_object_or_404(Student, id=student_id)
     parent = ParentProfile.objects.get(student=student)
     parentuser = ParentProfile.objects.get(user=request.user)
     year_group = get_year_group(student.date_of_birth)

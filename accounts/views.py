@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import UserLoginForm, FirstPasswordChangeForm, CreateUserForm
@@ -98,16 +98,16 @@ def add_tutor_view(request):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def deactivate_user_view(request, user_id):
     """View to render a confirmation page to deactivate a parent user"""
-    parent_user = User.objects.get(pk=user_id)
-    parent_profile = ParentProfile.objects.get(user=parent_user)
+    parent_user = get_object_or_404(User, pk=user_id)
+    parent_profile = get_object_or_404(ParentProfile, user=parent_user)
     return render(request, 'deactivate_user.html', {'parent_user': parent_user, 'parent_profile': parent_profile})
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def deactivate_user_confirm_view(request, user_id):
     """View which deactivates a parent user and removes all lessons from students"""
-    user = User.objects.get(pk=user_id)
-    parent_profile = parent_profile = ParentProfile.objects.get(user=user)
+    user = get_object_or_404(User, pk=user_id)
+    parent_profile = ParentProfile.objects.get(user=user)
     user.active=False
     user.save()
     students = Student.objects.filter(parent=parent_profile)
@@ -120,8 +120,8 @@ def deactivate_user_confirm_view(request, user_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def reactivate_user_confirm_view(request, user_id):
     """View which reactivates a parent user"""
-    user = User.objects.get(pk=user_id)
-    parent_profile = parent_profile = ParentProfile.objects.get(user=user)
+    user = get_object_or_404(User, pk=user_id)
+    parent_profile = ParentProfile.objects.get(user=user)
     user.active=True
     user.save()
     messages.success(request, 'This user has been reactivated.')
@@ -131,7 +131,7 @@ def reactivate_user_confirm_view(request, user_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def delete_user_view(request, user_id):
     """View to render a confirmation page to permenantly delete a parent user"""
-    user_for_deletion = User.objects.get(pk=user_id)
+    user_for_deletion = user = get_object_or_404(User, pk=user_id)
     try:
         user_profile = ParentProfile.objects.get(user=user_for_deletion)
     except ParentProfile.DoesNotExist:
@@ -142,6 +142,6 @@ def delete_user_view(request, user_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def delete_user_confirm_view(request, user_id):
     """View which permenantly deletes a parent user"""
-    User.objects.get(pk=user_id).delete()
+    user = get_object_or_404(User, pk=user_id).delete()
     messages.success(request, 'The user was permenantly deleted.')
     return redirect('staffuser:parents')

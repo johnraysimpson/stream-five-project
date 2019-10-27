@@ -10,7 +10,7 @@ def add_or_search_parent_view(request):
     parents = ParentProfile.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(Q(first_name__icontains=request.GET.get('q', ''))|
                                                                                                             Q(last_name__icontains=request.GET.get('q', ''))|
                                                                                                             Q(full_name__icontains=request.GET.get('q', ''))|
-                                                                                                            Q(user__centre=request.user.centre))
+                                                                                                            Q(user__centre=request.user.centre)).order_by('last_name')
     return render(request, 'parents.html', {'parents': parents})
     
 def search_student_view(request):
@@ -18,7 +18,7 @@ def search_student_view(request):
     students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(Q(first_name__icontains=request.GET.get('q', ''))|
                                                                                                     Q(last_name__icontains=request.GET.get('q', ''))|
                                                                                                     Q(full_name__icontains=request.GET.get('q', ''))|
-                                                                                                    Q(parent__user__centre=request.user.centre))
+                                                                                                    Q(parent__user__centre=request.user.centre)).order_by('last_name')
     return render(request, 'students.html', {'students': students})
     
 def add_or_search_tutor_view(request):
@@ -26,5 +26,5 @@ def add_or_search_tutor_view(request):
     tutors = TutorProfile.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(Q(first_name__icontains=request.GET.get('q', ''))|
                                                                                                     Q(last_name__icontains=request.GET.get('q', ''))|
                                                                                                     Q(full_name__icontains=request.GET.get('q', ''))|
-                                                                                                    Q(user__centre=request.user.centre))
+                                                                                                    Q(user__centre=request.user.centre)).order_by('last_name')
     return render(request, 'tutors.html', {'tutors': tutors})

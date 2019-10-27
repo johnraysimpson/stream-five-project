@@ -4,6 +4,7 @@ from .views import (
     )
 from lessons import parent_urls as lesson_urls
 from profiles import parent_urls as profile_urls
+from payments import parent_urls as payment_urls
 
 app_name = 'parentuser'
 urlpatterns = [
@@ -11,4 +12,5 @@ urlpatterns = [
         path('dashbaord/', parent_dashboard_view, name="dashboard"),
         path('', include(lesson_urls)),
         path('', include(profile_urls)),
+        path('', include(payment_urls)),
     ]

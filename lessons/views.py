@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from staffuser.views import staff_test
@@ -7,6 +7,7 @@ from .forms import LessonOccurrenceForm, LessonForm, LessonToStudentForm, Studen
 from datetime import datetime, date, timedelta
 from .models import Lesson
 from profiles.models import Student, ParentProfile
+from payments.models import Payment
 from operator import attrgetter
 
 def get_next_august():
@@ -53,7 +54,7 @@ def add_lesson_view(request):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def update_lesson_view(request, lesson_id):
     """View that renders an instance of the lesson form that has already been created for editing"""
-    lesson = Lesson.objects.get(pk=lesson_id)
+    lesson = get_object_or_404(Lesson, pk=lesson_id)
     if request.method == 'POST':
         update_lesson_form = LessonForm(request.POST, instance=lesson)
         if update_lesson_form.is_valid():
@@ -65,12 +66,12 @@ def update_lesson_view(request, lesson_id):
     
 def delete_lesson_confirm_view(request, lesson_id):
     """View to render page confirming deletion particular lesson"""
-    lesson = Lesson.objects.get(pk=lesson_id)
+    lesson = get_object_or_404(Lesson, pk=lesson_id)
     return render(request, 'delete_lesson_confirm.html', {'lesson': lesson})
     
 def delete_lesson_view(request, lesson_id):
     """View to delete particular lesson"""
-    Lesson.objects.get(pk=lesson_id).delete()
+    get_object_or_404(Lesson, pk=lesson_id).delete()
     messages.success(request, "Lesson deleted")
     return redirect('staffuser:dashboard')
 
@@ -79,7 +80,7 @@ def delete_lesson_view(request, lesson_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def relate_via_student_view(request, student_id):
     """View to render page and more for creating relationship between lesson and student via the student"""
-    student = Student.objects.get(pk=student_id)
+    student = get_object_or_404(Student, pk=student_id)
     if request.method == "POST":
         lesson_form = LessonToStudentForm(request.POST)
         if lesson_form.is_valid():
@@ -125,7 +126,7 @@ def relate_via_student_view(request, student_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def relate_via_lesson_view(request, lesson_id):
     """View to render page and more for creating relationship between lesson and student via the lesson"""
-    lesson = Lesson.objects.get(pk=lesson_id)
+    lesson = get_object_or_404(Lesson, pk=lesson_id)
     if request.method == "POST":
         student_lesson_form = StudentToLessonForm(request.POST, request=request)
         if student_lesson_form.is_valid():
@@ -166,34 +167,20 @@ def relate_via_lesson_view(request, lesson_id):
     return render(request, 'add_student_to_lesson.html', {'lesson': lesson, 'student_lesson_form': student_lesson_form})
 
 @login_required
-@user_passes_test(staff_or_parent_test, redirect_field_name=None, login_url='/oops/')
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def remove_student_from_lesson_confirm_view(request, lesson_id, student_id):
     """View to render a confirmation page for removing the relationship between a lesson and a student"""
-    student = Student.objects.get(pk=student_id)
-    lesson = Lesson.objects.get(pk=lesson_id)
-    if request.user.is_parent:
-        parent = ParentProfile.objects.get(user=request.user)
-        #print(parent)
-        #print(student.parent)
-        if student.parent != parent:
-            return redirect('/oops/')
+    student = get_object_or_404(Student, pk=student_id)
+    lesson = get_object_or_404(Lesson, pk=lesson_id)
     return render(request, 'remove_student_from_lesson_confirm.html', {'student': student, 'lesson': lesson})
     
 @login_required
-@user_passes_test(staff_or_parent_test, redirect_field_name=None, login_url='/oops/')
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def remove_student_from_lesson_view(request, lesson_id, student_id):
     """View that removes the relationship between a lesson and a student"""
-    student = Student.objects.get(pk=student_id)
-    lesson = Lesson.objects.get(pk=lesson_id)
+    student = get_object_or_404(Student, pk=student_id)
+    lesson = get_object_or_404(Lesson, pk=lesson_id)
     student.lessons.remove(lesson)
-    if request.user.is_parent:
-        parent = ParentProfile.objects.get(user=request.user)
-        print(parent)
-        print(student.parent)
-        if student.parent != parent:
-            return redirect('/oops/')
-        else:
-            return redirect('parentuser:get_student_lessons')
     return redirect('staffuser:get_lesson_detail', lesson_id=lesson_id)
 
    
@@ -225,7 +212,7 @@ def get_lessons_view(request, mondays_date):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')    
 def get_lesson_details_view(request, lesson_id):
     """View for retrieving a lesson and displaying details"""
-    lesson = Lesson.objects.get(pk=lesson_id)
+    lesson = get_object_or_404(Lesson, pk=lesson_id)
     return render(request, 'get_lesson_detail.html', {'lesson': lesson})
     
 @login_required
@@ -239,7 +226,53 @@ def get_student_lessons_view(request):
     for student in students:
         lessons = student.lessons.filter(student=student, date__gte=todays_date)
         queryset |= lessons
-    print(queryset)
-    student_lessons = queryset.order_by('date')
-    return render(request, 'get_student_lessons.html', {'student_lessons': student_lessons, 'students': students})
+    future_lessons = queryset.order_by('date')
     
+    queryset = Lesson.objects.none()
+    for student in students:
+        lessons = student.lessons.filter(student=student, date__lt=todays_date)
+        queryset |= lessons
+    past_lessons = queryset.order_by('date')
+    print(past_lessons)
+    payments = Payment.objects.filter(parent_id=parent.id)
+    queryset = Lesson.objects.none()
+    for payment in payments:
+        paid_lesson = Lesson.objects.filter(id=payment.lesson_id)
+        queryset |= paid_lesson
+    print(queryset)
+    paid_lessons = queryset.order_by('date')
+    unpaid_lessons = past_lessons
+    for paid_lesson in paid_lessons:
+        unpaid_lessons = unpaid_lessons.exclude(id=paid_lesson.id)
+        print(unpaid_lessons)
+    print(unpaid_lessons)
+    
+    
+    return render(request, 'get_student_lessons.html', {'future_lessons': future_lessons, 'past_lessons': past_lessons, 'students': students, 'parent': parent, 'paid_lessons': paid_lessons, 'unpaid_lessons': unpaid_lessons})
+    
+@login_required
+@user_passes_test(parent_test, redirect_field_name=None, login_url='/oops/')
+def parent_remove_student_from_lesson_confirm_view(request, lesson_id, student_id):
+    """View to render a confirmation page for removing the relationship between a lesson and a student"""
+    student = get_object_or_404(Student, pk=student_id)
+    lesson = get_object_or_404(Lesson, pk=lesson_id)
+    if request.user.is_parent:
+        parent = ParentProfile.objects.get(user=request.user)
+        if student.parent != parent:
+            return redirect('/oops/')
+        else:
+            return render(request, 'remove_student_from_lesson_confirm.html', {'student': student, 'lesson': lesson})
+            
+@login_required
+@user_passes_test(parent_test, redirect_field_name=None, login_url='/oops/')
+def parent_remove_student_from_lesson_view(request, lesson_id, student_id):
+    """View that removes the relationship between a lesson and a student"""
+    student = get_object_or_404(Student, pk=student_id)
+    lesson = get_object_or_404(Lesson, pk=lesson_id)
+    if request.user.is_parent:
+        parent = ParentProfile.objects.get(user=request.user)
+        if student.parent != parent:
+            return redirect('/oops/')
+        else:
+            student.lessons.remove(lesson)
+            return redirect('parentuser:get_student_lessons')

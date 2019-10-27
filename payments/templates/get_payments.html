@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}My Payments{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<h1>My Payments</h1>
+{% if payments %}
+    {% for payment in payments %}
+    <p>{{ payment.date_paid }}</p>
+    {% endfor %}
+{% else %}
+<p>You have not made any payments yet.</p>
+{% endif %}
+
+{% endblock %}

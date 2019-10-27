@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block head_js %}
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<script type="text/javascript">
+    //<![CDATA[
+    Stripe.publishableKey = '{{ publishable }}'
+    //]]>
+</script>
+<script type="text/javascript" src="{% static 'js/stripe.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<h1>Make Payment</h1>
+
+<p>Payer: {{ parent }}</p>
+
+<p>Lesson Details: {{ lesson }}</p>
+
+<p>Student Details: {{ student }}</p>
+
+<p>Payment Amount: £{{ student.price_per_lesson }}</p>
+
+<form role="form" method="post" id="payment-form">
+    <legend>Payment Details</legend>
+
+    <div id="credit-card-errors">
+        <div id="stripe-error-message"></div>
+    </div>
+
+    <div>
+        {{ payment_form.as_p }}
+    </div>
+
+    {% csrf_token %}
+    <div>
+        <input type="submit" value="Submit Payment">
+    </div>
+</form>
+
+{% endblock %}
