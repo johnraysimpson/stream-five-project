@@ -24,6 +24,16 @@ def earnings_period(month):
     else:
         return [(date(year, month-1, 21)), (date(year, month, 21))]
         
+        
+def intake_period(month):
+    today = datetime.today()
+    year = today.year
+    if month == 12:
+        next_month = 1
+        return [(date(year, month, 1)), (date(year+1, next_month, 1))]
+    else:
+        return [(date(year, month, 1)), (date(year, month+1, 1))]
+        
 def get_earnings(request_date, tutor):
     view_date = datetime.strptime(request_date, "%Y-%m-%d")
     view_month = view_date.month
@@ -49,6 +59,34 @@ def get_earnings(request_date, tutor):
     return {'tutor': tutor, "current_month_name": current_month_name, 'lessons': lessons, 'rounded_earnings': rounded_earnings, 'last_month': last_month, 'next_month': next_month}
 
 # Create your views here.
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def intake_view(request, request_date):
+    view_date = datetime.strptime(request_date, "%Y-%m-%d")
+    view_month = view_date.month
+    print(view_month)
+    intake_month = intake_period(view_month)
+    if view_month == 12:
+        next_month = date(view_date.year + 1, 1, 1)
+    else:
+        next_month = date(view_date.year, view_month + 1, 1)
+    if view_month == 1:
+        last_month = date(view_date.year - 1, 12, 28)
+    else:
+        last_month = date(view_date.year, view_month - 1, 28)
+    current_month_name = view_date.strftime("%B")
+    if request.user.is_admin:
+        payments = Payment.objects.filter(date_paid__gte=intake_month[0], date_paid__lt=intake_month[1])
+    else:
+        payments = Payment.objects.filter(date_paid__gte=intake_month[0], date_paid__lt=intake_month[1], centre_name=request.user.centre.centre_name)
+    intake = 0
+    for payment in payments:
+        paid_amount = float(payment.amount_paid)
+        intake += paid_amount
+        print(intake)
+    rounded_intake = '{0:.2f}'.format(intake)
+    return render(request, 'get_intake.html', {"current_month_name": current_month_name, 'payments': payments, 'rounded_intake': rounded_intake, 'last_month': last_month, 'next_month': next_month})
+    
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def tutor_earnings_view(request, tutor_id, request_date):
@@ -96,8 +134,8 @@ def make_payment_view(request, parent_id, student_id, lesson_id):
                                             amount_paid = student.price_per_lesson,
                                             date_paid = datetime.today()
                                             )
-                    messages.error(request, "You have successfully paid")
-                    return redirect(reverse('parentuser:get_payments'))
+                    messages.error(request, "Payment successful")
+                    return redirect(reverse('parentuser:get_student_lessons'))
                 else:
                     messages.error(request, "Unable to take payment")
             else:

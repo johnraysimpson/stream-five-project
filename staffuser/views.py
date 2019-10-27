@@ -21,5 +21,6 @@ def get_mondays_date():
 def staff_dashboard_view(request):
     """Renders dashboard for staff user"""
     mondays_date = get_mondays_date()
-    return render(request, "staff_dashboard.html", {'mondays_date': mondays_date})
+    todays_date = date.today()
+    return render(request, "staff_dashboard.html", {'mondays_date': mondays_date, 'todays_date': todays_date})
     

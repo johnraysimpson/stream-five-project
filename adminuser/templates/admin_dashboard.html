@@ -20,4 +20,8 @@
     <a href="{% url 'adminuser:add_staff' %}">Add Staff User</a>
 </div>
 
+<div>
+    <a href="{% url 'adminuser:get_intake' request_date=todays_date %}">Intake</a>
+</div>
+
 {% endblock %}

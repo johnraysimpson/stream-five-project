@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from .forms import CentreForm, StaffUserForm
 from django.contrib.auth.decorators import login_required, user_passes_test
+from datetime import date
 
 def admin_test(user):
     return user.is_admin
@@ -9,7 +11,8 @@ def admin_test(user):
 @user_passes_test(admin_test, redirect_field_name=None, login_url='/oops/')
 def admin_dashboard_view(request):
     """Renders dashboard for admin user"""
-    return render(request, "admin_dashboard.html")
+    todays_date = date.today()
+    return render(request, "admin_dashboard.html", {'todays_date': todays_date})
 
 @login_required()
 @user_passes_test(admin_test, redirect_field_name=None, login_url='/oops/')
@@ -18,7 +21,8 @@ def add_centre_view(request):
     centre_form = CentreForm(request.POST or None)
     if centre_form.is_valid():
         centre_form.save()
-        centre_form = CentreForm()
+        messages.success(request, 'Centre successfully created')
+        return redirect('adminuser:dashboard')
     return render(request, "add_centre.html", {'centre_form': centre_form})
  
 @login_required()
@@ -30,5 +34,6 @@ def add_staff_view(request):
         user = staff_user_form.save()
         user.staff=True
         user.save()
-        staff_user_form = StaffUserForm()
+        messages.success(request, 'Staff user successfuly registered')
+        return redirect('adminuser:dashboard')
     return render(request, "add_staff_user.html", {'staff_user_form': staff_user_form})

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}View Lessons{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<h1>Upcoming lessons</h1>
+{% for lesson in lessons %}
+<p>{{ lesson.subject }}</p>
+<p>{{ lesson.date }}</p>
+<p>{{ lesson.earning }}</p>
+{% for student in lesson.student_set.all %}
+<p><a href="{% url 'tutoruser:student_profile' student_id=student.id %}">{{ student }}</a></p>
+{% endfor %}
+{% endfor %}
+
+
+
+{% endblock %}

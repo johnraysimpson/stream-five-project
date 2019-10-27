@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Intake{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<h1>Intake</h1>
+<h3>{{ current_month_name }}</h3>
+<h3>£{{ rounded_intake }}</h3>
+{% for payment in payments %}
+<p>{{ payment }}</p>
+{% endfor %}
+
+<p><a href="{% url 'staffuser:get_intake' request_date=last_month %}">Last Month</a></p>
+<p><a href="{% url 'staffuser:get_intake' request_date=next_month %}">Next Month</a></p>
+
+{% endblock %}

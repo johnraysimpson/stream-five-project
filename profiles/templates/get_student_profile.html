@@ -28,13 +28,14 @@
 
 <h3>Parent Information</h3>
 {% if user.is_staff %}
-<p><a href="{% url 'staffuser:parent_profile' parent_id=parent.id %}">
+<p><a href="{% url 'staffuser:parent_profile' parent_id=parent.id %}">{{ parent }}</a> - {{ student.relationship }}</p>
 {% elif user.is_parent %}
-<p><a href="{% url 'parentuser:parent_profile' %}">
-{% elif parent.is_tutor %}
-<p><a href="#">
+<p><a href="{% url 'parentuser:parent_profile' %}">{{ parent }}</a> - {{ student.relationship }}</p>
+{% elif user.is_tutor %}
+<p>{{ parent }} - {{ student.relationship }}</p>
+<p>Telephone: {{ parent.telephone }}</p>
 {% endif %}
-{{ parent }}</a> - {{ student.relationship }}</p>
+
     
 {% if user.is_staff %}
 <p><a href="{% url 'staffuser:delete_student' student_id=student.id %}">Delete Student</a></p>

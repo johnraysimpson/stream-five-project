@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from staffuser.views import staff_test
-from parentuser.views import parent_test, staff_or_parent_test
+from parentuser.views import parent_test
+from tutoruser.views import tutor_test
 from .forms import LessonOccurrenceForm, LessonForm, LessonToStudentForm, StudentToLessonForm
 from datetime import datetime, date, timedelta
 from .models import Lesson
-from profiles.models import Student, ParentProfile
+from profiles.models import Student, ParentProfile, TutorProfile
 from payments.models import Payment
 from operator import attrgetter
 
@@ -41,11 +42,15 @@ def add_lesson_view(request):
                                         earning=earning
                                         )
                 start_date += timedelta(days=7)
+            messages.success(request, 'Lessons successfully created')
+            return redirect('staffuser:dashboard')
         else:
             lesson = lesson_form.save()
             lesson.centre = request.user.centre
             lesson.earning = earning
             lesson.save()
+            messages.success(request, 'Lesson successfully created')
+            return redirect('staffuser:dashboard')
         lesson_form = LessonOccurrenceForm()
     return render(request, 'add_lesson.html', {'lesson_form': lesson_form})
 
@@ -117,7 +122,8 @@ def relate_via_student_view(request, student_id):
                 else:
                     for lesson in matched_lessons:
                         student.lessons.add(lesson)
-                    lesson_form = LessonToStudentForm()
+                    messages.success(request, 'Student successfully added to lesson')
+                    return redirect('staffuser:dashboard')
     else:
         lesson_form = LessonToStudentForm()
     return render(request, 'add_student_lesson.html', {'lesson_form': lesson_form, 'student': student})
@@ -161,7 +167,7 @@ def relate_via_lesson_view(request, lesson_id):
                 student = student_lesson_form.cleaned_data['student']
                 for lesson in matched_lessons:
                     student.lessons.add(lesson)
-                student_lesson_form = StudentToLessonForm(request=request)
+                return redirect('staffuser:get_lesson_detail', lesson_id=lesson_id)
     else:
         student_lesson_form = StudentToLessonForm(request=request)
     return render(request, 'add_student_to_lesson.html', {'lesson': lesson, 'student_lesson_form': student_lesson_form})
@@ -276,3 +282,13 @@ def parent_remove_student_from_lesson_view(request, lesson_id, student_id):
         else:
             student.lessons.remove(lesson)
             return redirect('parentuser:get_student_lessons')
+            
+            
+@login_required
+@user_passes_test(tutor_test, redirect_field_name=None, login_url='/oops/')
+def get_tutor_lessons_view(request):
+    """View that renders page displaying a tutor's upcoming lessons"""
+    tutor = TutorProfile.objects.get(user=request.user)
+    lessons = Lesson.objects.filter(tutor=tutor)
+    print(lessons)
+    return render(request, 'get_tutor_lessons.html', {'tutor': tutor, 'lessons': lessons})

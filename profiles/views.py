@@ -198,3 +198,12 @@ def get_tutoruser_profile(request):
     """Renders page for displaying a logged in parent's profile information"""
     tutor = get_object_or_404(TutorProfile, user=request.user)
     return render(request, 'get_tutor_profile.html', {'tutor': tutor})
+    
+@login_required
+@user_passes_test(tutor_test, redirect_field_name=None, login_url='/oops/')
+def get_student_profile_as_tutor(request, student_id):
+    """Renders page for displaying a logged in parent's profile information"""
+    student = get_object_or_404(Student, id=student_id)
+    parent = ParentProfile.objects.get(student=student)
+    year_group = get_year_group(student.date_of_birth)
+    return render(request, 'get_student_profile.html', {'student': student, 'parent': parent, 'year_group': year_group})

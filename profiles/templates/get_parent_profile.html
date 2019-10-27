@@ -17,7 +17,7 @@
 
 {% if user.is_staff %}
 <a href="{% url 'staffuser:update_parent_profile' parent_id=parent.id %}">Edit Profile</a>
-{% else %}
+{% elif user.is_parent %}
 <p>If any information is incorrect or needs changing, please contact a member of staff.</p>
 
 {% endif %}
