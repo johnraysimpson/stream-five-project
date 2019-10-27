@@ -17,8 +17,12 @@
 
 {% if user.is_staff %}
 <a href="{% url 'staffuser:update_tutor_profile' tutor_id=tutor.id  %}">Edit Profile</a>
+{% else %}
+<p>If any information is incorrect or needs updating, contact a member of staff.</p>
 {% endif %}
 
+{% if user.is_staff %}
 <p><a href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=todays_date %}">Earnings</a></p>
+{% endif %}
 
 {% endblock %}

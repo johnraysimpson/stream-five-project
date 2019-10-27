@@ -10,6 +10,7 @@
     {% endfor %}
 {% endif %}
 
+{% if unpaid_lessons %}
 <h1>Unpaid lessons</h1>
 {% for lesson in unpaid_lessons %}
     {% for student in students %}
@@ -17,15 +18,12 @@
             <p>{{ lesson }}</p>
             <p>{{ student }}</p>
             <p>{{ student.price_per_lesson }}</p>
-            {% if lesson in paid_lessons %}
-                <p>Lesson paid</p>
-            {% else %}
                 <p><a href="{% url 'parentuser:make_payment' parent_id=parent.id student_id=student.id lesson_id=lesson.id %}">Pay for Lesson</a></p>
             {% endif %}
         {% endif %}
     {% endfor %}
 {% endfor %}
-
+{% endif %}
 
 <h1>Upcoming Lessons</h1>
 

@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'search',
     'payments',
     'parentuser',
+    'tutoruser',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

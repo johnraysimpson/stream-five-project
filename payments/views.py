@@ -8,6 +8,7 @@ from lessons.models import Lesson
 from profiles.models import TutorProfile, ParentProfile, Student
 from parentuser.views import parent_test
 from staffuser.views import staff_test
+from tutoruser.views import tutor_test
 from django.conf import settings
 import stripe
 
@@ -22,13 +23,8 @@ def earnings_period(month):
         return [(date(year-1, prev_month, 21)), (date(year, month, 21))]
     else:
         return [(date(year, month-1, 21)), (date(year, month, 21))]
-
-# Create your views here.
-@login_required
-@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def tutor_earnings_view(request, tutor_id, request_date):
-    """View to render page to show the earnings of a tutor within a month"""
-    tutor = get_object_or_404(TutorProfile, id=tutor_id)
+        
+def get_earnings(request_date, tutor):
     view_date = datetime.strptime(request_date, "%Y-%m-%d")
     view_month = view_date.month
     print(view_month)
@@ -50,7 +46,24 @@ def tutor_earnings_view(request, tutor_id, request_date):
         earned = round((total_minutes / 60) * float(tutor.pay_per_hour), 2)
         earnings += earned
     rounded_earnings = '{0:.2f}'.format(earnings)
-    return render(request, 'tutor_earnings.html', {'tutor': tutor, "current_month_name": current_month_name, 'lessons': lessons, 'rounded_earnings': rounded_earnings, 'last_month': last_month, 'next_month': next_month})
+    return {'tutor': tutor, "current_month_name": current_month_name, 'lessons': lessons, 'rounded_earnings': rounded_earnings, 'last_month': last_month, 'next_month': next_month}
+
+# Create your views here.
+@login_required
+@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
+def tutor_earnings_view(request, tutor_id, request_date):
+    """View to render page to show the earnings of a tutor within a month"""
+    tutor = get_object_or_404(TutorProfile, id=tutor_id)
+    context = get_earnings(request_date, tutor)
+    return render(request, 'tutor_earnings.html', context)
+    
+@login_required
+@user_passes_test(tutor_test, redirect_field_name=None, login_url='/oops/')
+def tutoruser_earnings_view(request, request_date):
+    """View to render page to show the earnings of a tutor within a month"""
+    tutor = get_object_or_404(TutorProfile, user=request.user)
+    context = get_earnings(request_date, tutor)
+    return render(request, 'tutor_earnings.html', context)
     
 @login_required
 @user_passes_test(parent_test, redirect_field_name=None, login_url='/oops/')

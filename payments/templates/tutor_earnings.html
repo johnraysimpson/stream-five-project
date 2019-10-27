@@ -16,8 +16,12 @@
 {% for lesson in lessons %}
 <p>{{ lesson }} - £{{ lesson.earning }}</p>
 {% endfor %}
+
+{% if user.is_staff %}
 <p><a href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=last_month %}">Last Month</a></p>
 <p><a href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=next_month %}">Next Month</a></p>
-
-
+{% elif user.is_tutor %}
+<p><a href="{% url 'tutoruser:my_earnings' request_date=last_month %}">Last Month</a></p>
+<p><a href="{% url 'tutoruser:my_earnings' request_date=next_month %}">Next Month</a></p>
+{% endif %}
 {% endblock %}

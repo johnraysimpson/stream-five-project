@@ -22,7 +22,7 @@
                 {% elif user.is_staff %}
                 <li><a href="{% url 'staffuser:dashboard' %}">Dashboard</a></li>
                 {% elif user.is_tutor %}
-                <li><a href="#">Dashboard</a></li>
+                <li><a href="{% url 'tutoruser:dashboard' %}">Dashboard</a></li>
                 {% elif user.is_parent %}
                 <li><a href="{% url 'parentuser:dashboard' %}">Dashboard</a></li>
                 {% endif %}

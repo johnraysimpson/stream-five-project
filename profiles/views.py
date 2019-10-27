@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from staffuser.views import staff_test
 from parentuser.views import parent_test
+from tutoruser.views import tutor_test
 from lessons.views import get_next_august
 from accounts.models import User
 from .models import Student, ParentProfile, TutorProfile
@@ -190,3 +191,10 @@ def get_parents_student_profile_view(request, student_id):
         return render(request, 'get_student_profile.html', {'parent': parent, 'student': student, 'year_group': year_group})
     else:
         return redirect('/oops/')
+        
+@login_required
+@user_passes_test(tutor_test, redirect_field_name=None, login_url='/oops/')
+def get_tutoruser_profile(request):
+    """Renders page for displaying a logged in parent's profile information"""
+    tutor = get_object_or_404(TutorProfile, user=request.user)
+    return render(request, 'get_tutor_profile.html', {'tutor': tutor})

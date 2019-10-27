@@ -24,25 +24,34 @@ def login_view(request):
             if login_form.is_valid():
                 try:
                     user = User.objects.get(email=login_form.cleaned_data['email'])
-                    if user.is_active:
-                        user = auth.authenticate(email=request.POST['email'],
-                                                password=request.POST['password'])
-                        if user:
-                                auth.login(user=user, request=request)
-                                messages.success(request, "You have successfully logged in")
-                                if user.is_admin:
-                                    return redirect('adminuser:dashboard')
-                                elif user.is_staff:
-                                    return redirect('staffuser:dashboard')
-                                elif user.is_parent:
-                                    if user.password_changed:
-                                        return redirect('parentuser:dashboard')
-                                    else:
-                                        return redirect('first_password_change')
-                    else:
-                        login_form.add_error(None, 'Your account is not active, contact a member of staff to reenroll')
                 except User.DoesNotExist:
+                    user = None
                     login_form.add_error(None, "Your username or password is incorrect.")
+                if user:
+                    if user.is_active:
+                        try:
+                            user = auth.authenticate(email=request.POST['email'],
+                                            password=request.POST['password'])
+                            auth.login(user=user, request=request)
+                            messages.success(request, "You have successfully logged in!")
+                            if user.is_admin:
+                                return redirect('adminuser:dashboard')
+                            elif user.is_staff:
+                                return redirect('staffuser:dashboard')
+                            elif user.is_parent:
+                                if user.password_changed:
+                                    return redirect('parentuser:dashboard')
+                                else:
+                                    return redirect('first_password_change')
+                            elif user.is_tutor:
+                                if user.password_changed:
+                                    return redirect('tutoruser:dashboard')
+                                else:
+                                    return redirect('first_password_change')
+                        except:
+                            login_form.add_error(None, "Your username or password is incorrect.")
+                    else:
+                        login_form.add_error(None, "Your account is not active, contact a member of staff to reenroll.")
         else:
             login_form = UserLoginForm()
         return render(request, 'login.html', {"login_form": login_form})
@@ -58,7 +67,10 @@ def first_password_change(request):
             user.password_changed=True
             user.save()
             messages.success(request, 'Your password was successfully updated!')
-            return redirect('parentuser:dashboard')
+            if request.user.is_parent:
+                return redirect('parentuser:dashboard')
+            elif request.user.is_tutor:
+                return redirect('tutor:dashboard')
         else:
             messages.error(request, 'Please correct the error below.')
     else:

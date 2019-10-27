@@ -16,13 +16,13 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ('admin','staff', 'active', 'parent', 'tutor')
     fieldsets = (
         (None, {'fields': ('email', 'password','password_changed', 'centre')}),
-        ('Permissions', {'fields': ('admin','staff', 'active', 'parent', 'tutor')}),
+        ('Permissions', {'fields': ('admin','staff', 'active', 'parent', 'tutor', 'password_changed')}),
     )
     
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'admin','staff', 'active', 'parent', 'tutor', 'centre')}
+            'fields': ('email', 'password1', 'password2', 'admin','staff', 'active', 'parent', 'tutor', 'centre', 'password_changed')}
         ),
     )
     search_fields = ('email',)

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Tutor Dashboard{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<h1>Hello, {{ tutor.first_name }} {{ tutor.last_name }}!</h1>
+ 
+
+<div>
+    <a href="#">View Upcoming Lessons</a>
+</div>
+
+<div>
+    <a href="{% url 'tutoruser:my_earnings' request_date=todays_date %}">View Earnings</a>
+</div>
+
+<div>
+    <a href="{% url 'tutoruser:tutor_profile' %}">View Profile</a>
+</div>
+
+{% endblock %}
