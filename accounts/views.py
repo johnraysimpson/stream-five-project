@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import UserLoginForm, FirstPasswordChangeForm, CreateUserForm
+from profiles.forms import ParentProfileForm, TutorProfileForm
 from .models import User
 from profiles.models import ParentProfile, Student, TutorProfile
 from staffuser.views import staff_test
@@ -33,7 +34,7 @@ def login_view(request):
                             user = auth.authenticate(email=request.POST['email'],
                                             password=request.POST['password'])
                             auth.login(user=user, request=request)
-                            messages.success(request, "You have successfully logged in!")
+                            messages.success(request, "You have successfully logged in")
                             if user.is_admin:
                                 return redirect('adminuser:dashboard')
                             elif user.is_staff:
@@ -82,29 +83,51 @@ def first_password_change(request):
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_parent_view(request):
-    """Renders add parent page, creates form for registering a parent user"""
-    parent_user_form = CreateUserForm(request.POST or None)
-    if parent_user_form.is_valid():
-        user = parent_user_form.save()
-        user.parent=True
-        user.centre = request.user.centre
-        user.save()
-        return redirect('staffuser:add_parent_profile', parentuser_id=user.pk)
-    return render(request, "add_parent_user.html", {'parent_user_form': parent_user_form})
+    """Renders add parent page, creates form for registering a parent user and creating a profile"""
+    if request.method=='POST':
+        parent_user_form = CreateUserForm(request.POST)
+        parent_profile_form = ParentProfileForm(request.POST)
+        
+        if parent_user_form.is_valid() and parent_profile_form.is_valid():
+            user = parent_user_form.save(commit=False)
+            user.parent=True
+            user.centre = request.user.centre
+            user.save()
+            
+            parent_profile = parent_profile_form.save(commit=False)
+            parent_profile.user = user
+            parent_profile.save()
+            messages.success(request, "Parent successfully created")
+            return redirect('staffuser:dashboard')
+    else:
+        parent_user_form = CreateUserForm()
+        parent_profile_form = ParentProfileForm()
+    return render(request, "add_parent_user.html", {'parent_user_form': parent_user_form, 'parent_profile_form': parent_profile_form})
   
 #accounts 
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_tutor_view(request):
-    """Renders add tutor page, creates form for registering a tutor user"""
-    tutor_user_form = CreateUserForm(request.POST or None)
-    if tutor_user_form.is_valid():
-        user = tutor_user_form.save()
-        user.tutor=True
-        user.centre = request.user.centre
-        user.save()
-        return redirect('staffuser:add_tutor_profile', tutoruser_id=user.pk)
-    return render(request, "add_tutor_user.html", {'tutor_user_form': tutor_user_form})
+    """Renders add tutor page, creates form for registering a tutor user and creating a profile"""
+    if request.method == 'POST':
+        
+        tutor_user_form = CreateUserForm(request.POST)
+        tutor_profile_form = TutorProfileForm(request.POST)
+        if tutor_user_form.is_valid() and tutor_profile_form.is_valid():
+            user = tutor_user_form.save()
+            user.tutor=True
+            user.centre = request.user.centre
+            user.save()
+            
+            tutor_profile = tutor_profile_form.save()
+            tutor_profile.user = tutoruser
+            tutor_profile.save()
+            messages.success(request, "Tutor successfully created")
+            return redirect('staffuser:dashboard')
+    else:
+        tutor_user_form = CreateUserForm()
+        tutor_profile_form = TutorProfileForm()
+    return render(request, "add_tutor_user.html", {'tutor_user_form': tutor_user_form, 'tutor_profile_form': tutor_profile_form})
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')

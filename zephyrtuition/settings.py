@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'payments',
     'parentuser',
     'tutoruser',
+    'crispy_forms',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -152,6 +153,8 @@ MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 
 STRIPE_PUBLISHABLE = os.environ.get('STRIPE_PUBLISHABLE')
 STRIPE_SECRET = os.environ.get('STRIPE_SECRET')
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'

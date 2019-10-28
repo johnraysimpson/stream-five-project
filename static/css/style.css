@@ -1,0 +1,142 @@
+.navbar {
+    background-color: #e3f2fd;
+    border-bottom: 2px solid #b5b7b9;
+}
+
+h1 {
+    margin-top: 70px;
+    text-align: center;
+}
+
+.footer {
+    background-color: #e8e8e8;
+    border-top: 2px solid #b5b7b9;
+}
+
+.message > p {
+    /*background-color: #e3f2fd;*/
+    padding: 1px 3px;
+    border-radius: 5px;
+    border: 2px solid #58b161;
+    color: #58b161;
+    font-weight: 500;
+}
+
+.message > p > i,
+.alert > ul > li > i {
+    margin-right: 4px;    
+}
+
+body {
+    min-height:100vh;
+    background-image: url('../img/clouds-background.jpg');
+    background-repeat: repeat;
+    background-attachment: fixed;
+}
+
+.content {
+    background-color: #f5f5f5;
+}
+
+.dashboard-link {
+   color: #6c757d;
+   transition: color 1s;
+}
+
+.dashboard-link:hover {
+    text-decoration: none;
+    color: #959a9e;
+}
+
+.dashboard-box {
+    border-radius: 20px;
+    border: 3px solid #b5b7b9;
+    background-color: #e3f2fd;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+    }
+    
+.dashboard {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.dashboard-icon {
+    margin-top: 12px;
+}
+
+.btn-general {
+    background-color: #7dc5eb;
+    color: #6c757d;
+    transition: color 1.5s, background-color 1.5s;
+}
+
+.btn-general:hover {
+    background-color: #e3f2fd;
+    color: #959a9e;
+}
+
+.dropdown-menu {
+        background-color: #e3f2fd;
+        border: none;
+    }
+    
+.dropdown-item:hover {
+    background-color: #f5f5f5;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.alert {
+    position: relative;
+    padding: 0;
+    margin-bottom: 0;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    display: inline-block;
+}
+
+.alert > ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.alert > ul > li {
+    list-style-type: none;
+    padding-left: 0;
+    padding: 1px 3px;
+    margin-bottom: 3px;
+    border-radius: 5px;
+    border: 2px solid #d64646;
+    color: #d64646;
+    font-weight: 500;
+}
+
+/*ul {*/
+/*    list-style-type: none;*/
+/*}*/
+
+@media only screen and (min-width: 992px) {
+    .dashboard-box {
+        border-radius: 20px;
+        border: 3px solid #b5b7b9;
+        background-color: #e3f2fd;
+        padding-left: 10px;
+        padding-right: 10px;
+        height: 250px;
+    }
+    
+    .dropdown-menu {
+        background-color: #f5f5f5;
+        border: 1px solid rgba(0,0,0,.15);
+    }
+    
+    .dropdown-item:hover {
+        background-color: #e3f2fd;
+    }
+}

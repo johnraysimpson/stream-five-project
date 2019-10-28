@@ -4,35 +4,66 @@
 
 {% block content %}
 
-{% if messages %}
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
+<h1>Hello, {{ user.centre.centre_name }} Staff</h1>
 
-<h1>Hello, staff member!</h1>
- 
-
-<div>
-    <a href="{% url 'staffuser:get_lessons' mondays_date=mondays_date %}">View Lessons</a>
+<div class="row message">
+    {% if messages %}
+        {% for message in messages %}
+            <p><i class="fa fa-exclamation-circle fa-lg"></i>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
 </div>
 
-<div>
-    <a href="{% url 'staffuser:parents' %}">Parents</a>
+<div class="row dashboard">
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'staffuser:get_lessons' mondays_date=mondays_date %}">
+            <div class="dashboard-box">
+                <i class="fa fa-calendar-check-o fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>View Lessons</h3>
+                <p>Click here to view, edit or delete lessons.</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'staffuser:parents' %}">
+            <div class="dashboard-box">
+                <i class="fa fa-users fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>Parents</h3>
+                <p>Click here to add, search, deactivate or delete a parent user, or see/update their profile.</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'staffuser:students' %}">
+            <div class="dashboard-box">
+                <i class="fa fa-child fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>Students</h3>
+                <p>Click here to add or delete students, or see/update their profiles.</p>
+            </div>
+        </a>
+    </div>
+    
+    <div class="col-lg-4 offset-lg-2 text-center">
+        <a class="dashboard-link" href="{% url 'staffuser:tutors' %}">
+            <div class="dashboard-box">
+                <i class="fa fa-graduation-cap fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>Tutors</h3>
+                <p>Click here to add or delete tutors, or see their profiles or earnings.</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'staffuser:get_intake' request_date=todays_date %}">
+            <div class="dashboard-box">
+                <i class="fa fa-money fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>Intake</h3>
+                <p>Click here to see monthly intake and a breakdown of payments.</p>
+            </div>
+        </a>
+    </div>
 </div>
-
-<div>
-    <a href="{% url 'staffuser:students' %}">Students</a>
-</div>
-
-<div>
-    <a href="{% url 'staffuser:tutors' %}">Tutors</a>
-</div>
-
-<div>
-    <a href="{% url 'staffuser:get_intake' request_date=todays_date %}">Intake</a>
-</div>
-
-
 
 {% endblock %}

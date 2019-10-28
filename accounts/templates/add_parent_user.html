@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Add Parent User{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block title %}Add Parent{% endblock %}
 
 {% block content %}
 
 <h1>Add Parent User</h1>
-
 <form method='POST'>
     {% csrf_token %}
-    {{ parent_user_form.as_p }}
+    {{ parent_user_form|crispy }}
+    {{ parent_profile_form|crispy }}
     <input type='submit' value='Save' />
 </form>
 

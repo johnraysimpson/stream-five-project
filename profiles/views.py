@@ -30,27 +30,6 @@ def get_year_group(date):
 # PARENT BASED VIEWS
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def add_parent_profile_view(request, parentuser_id):
-    """Renders page and form for adding profile information of a parent user"""
-    parentuser = get_object_or_404(User, pk=parentuser_id)
-    try:
-        if parentuser.is_parent:
-            ParentProfile.objects.get(user=parentuser)
-            return render(request, 'add_parent_profile.html', {'parentuser': parentuser, "parent_profile_exists": True})
-        else:
-            return redirect('/oops/')
-    except ParentProfile.DoesNotExist:
-        parent_profile_form = ParentProfileForm(request.POST or None)
-        if parent_profile_form.is_valid():
-            parent_profile = parent_profile_form.save()
-            parent_profile.user = parentuser
-            parent_profile.save()
-            messages.success(request, "Parent successfully created")
-            return redirect('staffuser:add_student', parent_id = parent_profile.id)
-        return render(request, 'add_parent_profile.html', {'parentuser': parentuser, "parent_profile_form": parent_profile_form})
-    
-@login_required
-@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def get_parent_profile_view(request, parent_id):
     """Renders page for displaying profile information about a parent user"""
     parent = get_object_or_404(ParentProfile, id=parent_id)
@@ -127,27 +106,6 @@ def delete_student_confirm_view(request, student_id):
     return redirect('staffuser:students')
 
 ## TUTOR BASED VIEWS
-@login_required
-@user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
-def add_tutor_profile_view(request, tutoruser_id):
-    """Renders page and form for adding profile information of a tutor user"""
-    tutoruser = get_object_or_404(User, pk=tutoruser_id)
-    try:
-        if tutoruser.is_tutor:
-            TutorProfile.objects.get(user=tutoruser)
-            return render(request, 'add_tutor_profile.html', {'tutoruser': tutoruser, "tutor_profile_exists": True})
-        else:
-            return redirect('/oops/')
-    except TutorProfile.DoesNotExist:
-        tutor_profile_form = TutorProfileForm(request.POST or None)
-        if tutor_profile_form.is_valid():
-            tutor_profile = tutor_profile_form.save()
-            tutor_profile.user = tutoruser
-            tutor_profile.save()
-            messages.success(request, "Tutor successfully created")
-            return redirect(reverse('staffuser:dashboard'))
-        return render(request, 'add_tutor_profile.html', {'tutoruser': tutoruser, "tutor_profile_form": tutor_profile_form})
-        
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def get_tutor_profile_view(request, tutor_id):

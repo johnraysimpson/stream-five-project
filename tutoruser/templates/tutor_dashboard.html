@@ -13,16 +13,37 @@
 <h1>Hello, {{ tutor.first_name }} {{ tutor.last_name }}!</h1>
  
 
-<div>
-    <a href="{% url 'tutoruser:get_tutor_lessons' %}">View Lessons</a>
-</div>
+<div class="row dashboard">
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'tutoruser:get_tutor_lessons' %}">
+            <div class="dashboard-box">
+                <i class="fa fa-calendar-check-o fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>View Lessons</h3>
+                <p>Click here to view upcoming lessons and which students are attending.</p>
+            </div>
+        </a>
+    </div>
 
-<div>
-    <a href="{% url 'tutoruser:my_earnings' request_date=todays_date %}">View Earnings</a>
-</div>
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'tutoruser:my_earnings' request_date=todays_date %}">
+            <div class="dashboard-box">
+                <i class="fa fa-money fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>Earnings</h3>
+                <p>Click here to see your earnings by month and a log of your lessons.</p>
+            </div>
+        </a>
+    </div>
 
-<div>
-    <a href="{% url 'tutoruser:tutor_profile' %}">View Profile</a>
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'tutoruser:tutor_profile' %}">
+            <div class="dashboard-box">
+                <i class="fa fa-user fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>Profile</h3>
+                <p>Click here to view the details we have for you.</p>
+            </div>
+        </a>
+    </div>
 </div>
 
 {% endblock %}
+

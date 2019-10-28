@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}Add Tutor User{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block title %}Add Tutor{% endblock %}
 
 {% block content %}
 
@@ -8,7 +10,8 @@
 
 <form method='POST'>
     {% csrf_token %}
-    {{ tutor_user_form.as_p }}
+    {{ tutor_user_form|crispy }}
+    {{ tutor_profile_form|crispy }}
     <input type='submit' value='Save' />
 </form>
 

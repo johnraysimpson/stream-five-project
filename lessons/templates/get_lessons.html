@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block title %}View Lessons{% endblock %}
+
 {% block content %}
     <h1>View Sessions</h1>
     {% if wrong_view_date %}
@@ -9,7 +11,7 @@
     <p><a href="{% url 'staffuser:add_lesson' %}">Create New Lesson</a></p>
     <h2>Week commencing {{ view_date|date:"d F Y" }}</h2>
     {% for day in days_of_the_week %}
-    <h1>{{ day.capitalize }}</h1>
+    <h2>{{ day.capitalize }}</h2>
         {% for lesson in lessons %}
             {% if lesson.day == day %}
                 <p>{{ lesson.tutor }} - {{ lesson.subject.capitalize }}</p>

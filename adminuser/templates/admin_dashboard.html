@@ -4,24 +4,47 @@
 
 {% block content %}
 
-{% if messages %}
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
-
 <h1>Hello, adminuser!</h1>
+
+<div class="row message">
+    {% if messages %}
+        {% for message in messages %}
+            <p><i class="fa fa-exclamation-circle fa-lg"></i>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+</div>
         
-<div>
-    <a href="{% url 'adminuser:add_centre' %}">Add Centre</a>
-</div>
+<div class="row dashboard">
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'adminuser:add_centre' %}">
+            <div class="dashboard-box">
+                <i class="fa fa-building fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>Add Centre</h3>
+                <p>Click here to add a new centre to this list of centres.</p>
+            </div>
+        </a>
+    </div>
 
-<div>
-    <a href="{% url 'adminuser:add_staff' %}">Add Staff User</a>
-</div>
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'adminuser:add_staff' %}">
+            <div class="dashboard-box">
+                <i class="fa fa-briefcase fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>Add Staff User</h3>
+                <p>Click here to add a staff account to a centre.</p>
+            </div>
+        </a>
+    </div>
 
-<div>
-    <a href="{% url 'adminuser:get_intake' request_date=todays_date %}">Intake</a>
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'adminuser:get_intake' request_date=todays_date %}">
+            <div class="dashboard-box">
+                <i class="fa fa-money fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>Intake</h3>
+                <p>Click here to see the intake of all the centres with a payment breakdown.</p>
+            </div>
+        </a>
+    </div>
 </div>
 
 {% endblock %}
+

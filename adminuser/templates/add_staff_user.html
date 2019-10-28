@@ -5,9 +5,11 @@
 {% block content %}
 <h1>Add Staff User</h1>
 
+<div class="row">
 <form method='POST'>
     {% csrf_token %}
     {{ staff_user_form.as_p }}
     <input type='submit' value='Save' />
 </form>
+</div>
 {% endblock %}

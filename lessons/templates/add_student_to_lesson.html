@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 
+{% load materializecss %}
+
 {% block title %}Add Lesson to Student{% endblock %}
 
 {% block content %}
 
 <h1>Add Student to Lesson</h1>
 <p>{{ lesson }}</p>
+
 <form method='POST'>
-    {% csrf_token %}
     {{ student_lesson_form.as_p }}
     <input type='submit' value='Save' />
 </form>

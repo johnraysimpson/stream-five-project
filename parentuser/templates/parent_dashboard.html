@@ -1,28 +1,47 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
 
-{% block title %}Parent Dashboard{% endblock %}
+{% block title %}Parent Dashboard{% endblock %} 
 
-{% block content %}
+{% block content %} 
 
-{% if messages %}
+{% if messages %} 
     {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
+        <p>{{ message }}</p>
+    {% endfor %} 
 {% endif %}
 
-<h1>Hello, {{ parent }}!</h1>
- 
+<h1>Hello, {{ parent }}</h1>
 
-<div>
-    <a href="{% url 'parentuser:get_student_lessons' %}">View Lessons</a>
-</div>
+<div class="row dashboard">
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'parentuser:get_student_lessons' %}">
+            <div class="dashboard-box">
+                <i class="fa fa-calendar-check-o fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>View Lessons</h3>
+                <p>Click here if you want to pay for, cancel or just simply see lessons coming up.</p>
+            </div>
+        </a>
+    </div>
 
-<div>
-    <a href="{% url 'parentuser:get_payments' %}">Paid Lessons</a>
-</div>
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'parentuser:get_payments' %}">
+            <div class="dashboard-box">
+                <i class="fa fa-credit-card fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>Paid Lessons</h3>
+                <p>Click here for a statement of your past payments.</p>
+            </div>
+        </a>
+    </div>
 
-<div>
-    <a href="{% url 'parentuser:parent_profile' %}">View Profile</a>
+    <div class="col-lg-4 text-center">
+        <a class="dashboard-link" href="{% url 'parentuser:parent_profile' %}">
+            <div class="dashboard-box">
+                <i class="fa fa-user fa-5x dashboard-icon" aria-hidden="true"></i>
+                <h3>View Profile</h3>
+                <p>Click here to view the details we have for you.</p>
+            </div>
+        </a>
+    </div>
 </div>
 
 {% endblock %}
