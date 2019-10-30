@@ -25,34 +25,57 @@ def get_next_august():
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_lesson_view(request):
     """Renders add session page with corresponding form"""
-    lesson_form = LessonOccurrenceForm(request.POST or None)
-    if lesson_form.is_valid():
-        tutor = lesson_form.cleaned_data['tutor']
-        earning = (lesson_form.cleaned_data['duration'].total_seconds() / 60) * float(tutor.pay_per_hour)
-        if lesson_form.cleaned_data['occurrence'] == 'weekly':
-            start_date = lesson_form.cleaned_data['date']
-            while start_date < get_next_august():
-                Lesson.objects.create(tutor=tutor, 
-                                        subject=lesson_form.cleaned_data['subject'], 
-                                        day=lesson_form.cleaned_data['day'], 
-                                        time=lesson_form.cleaned_data['time'], 
-                                        date=start_date, 
-                                        duration=lesson_form.cleaned_data['duration'],
-                                        centre=request.user.centre,
-                                        earning=earning
-                                        )
-                start_date += timedelta(days=7)
-            messages.success(request, 'Lessons successfully created')
-            return redirect('staffuser:dashboard')
-        else:
-            lesson = lesson_form.save()
-            lesson.centre = request.user.centre
-            lesson.earning = earning
-            lesson.save()
-            messages.success(request, 'Lesson successfully created')
-            return redirect('staffuser:dashboard')
+    dates=[]
+    if request.method == 'POST':
+        lesson_form = LessonOccurrenceForm(request.POST)
+        if lesson_form.is_valid():
+            tutor = lesson_form.cleaned_data['tutor']
+            earning = (lesson_form.cleaned_data['duration'].total_seconds() / 60) * float(tutor.pay_per_hour)
+            if lesson_form.cleaned_data['occurrence'] == 'weekly':
+                start_date = lesson_form.cleaned_data['date']
+                try:
+                    existing_lessons = Lesson.objects.filter(tutor=tutor,
+                                                            subject=lesson_form.cleaned_data['subject'], 
+                                                            day=lesson_form.cleaned_data['day'], 
+                                                            time=lesson_form.cleaned_data['time'],
+                                                            date__gte=start_date)
+                    if existing_lessons:
+                        for lesson in existing_lessons:
+                            dates.append(lesson.date)
+                        lesson_form.add_error(None, 'There is at least one date where this lesson exists, dates are listed below this form.')
+                except:
+                    while start_date < get_next_august():
+                        Lesson.objects.create(tutor=tutor, 
+                                                subject=lesson_form.cleaned_data['subject'], 
+                                                day=lesson_form.cleaned_data['day'], 
+                                                time=lesson_form.cleaned_data['time'], 
+                                                date=start_date, 
+                                                duration=lesson_form.cleaned_data['duration'],
+                                                centre=request.user.centre,
+                                                earning=earning
+                                                )
+                        start_date += timedelta(days=7)
+                    messages.success(request, 'Lessons successfully created')
+                    return redirect('staffuser:dashboard')
+            else:
+                try:
+                    existing_lesson = Lesson.objects.get(tutor=tutor,
+                                                            subject=lesson_form.cleaned_data['subject'], 
+                                                            day=lesson_form.cleaned_data['day'], 
+                                                            time=lesson_form.cleaned_data['time'],
+                                                            date=lesson_form.cleaned_data['date'])
+                    if existing_lesson:
+                        lesson_form.add_error(None, 'This lesson already exists.')
+                except:
+                    lesson = lesson_form.save()
+                    lesson.centre = request.user.centre
+                    lesson.earning = earning
+                    lesson.save()
+                    messages.success(request, 'Lesson successfully created')
+                    return redirect('staffuser:dashboard')
+    else:
         lesson_form = LessonOccurrenceForm()
-    return render(request, 'add_lesson.html', {'lesson_form': lesson_form})
+    return render(request, 'add_lesson.html', {'lesson_form': lesson_form, 'dates': dates})
 
 
 @login_required
@@ -228,33 +251,34 @@ def get_student_lessons_view(request):
     todays_date = date.today()
     parent = ParentProfile.objects.get(user=request.user)
     students = Student.objects.filter(parent=parent)
+    payments = Payment.objects.filter(parent_id=parent.id)
+    prev_payments = Payment.objects.filter(parent_id=parent.id, date__lt=todays_date)
+    
     queryset = Lesson.objects.none()
     for student in students:
         lessons = student.lessons.filter(student=student, date__gte=todays_date)
         queryset |= lessons
-    future_lessons = queryset.order_by('date')
+    future_lessons = queryset.distinct().order_by('date')
     
     queryset = Lesson.objects.none()
     for student in students:
         lessons = student.lessons.filter(student=student, date__lt=todays_date)
         queryset |= lessons
-    past_lessons = queryset.order_by('date')
-    print(past_lessons)
-    payments = Payment.objects.filter(parent_id=parent.id)
-    queryset = Lesson.objects.none()
-    for payment in payments:
-        paid_lesson = Lesson.objects.filter(id=payment.lesson_id)
-        queryset |= paid_lesson
-    print(queryset)
-    paid_lessons = queryset.order_by('date')
-    unpaid_lessons = past_lessons
-    for paid_lesson in paid_lessons:
-        unpaid_lessons = unpaid_lessons.exclude(id=paid_lesson.id)
-        print(unpaid_lessons)
-    print(unpaid_lessons)
+    past_lessons = queryset.distinct().order_by('date')
     
+    unpaid_lessons = []
+    for student in students:
+        for lesson in past_lessons:
+            if student in lesson.student_set.all():
+                unpaid_lessons.append((student, lesson))
+                
+    for student in students:
+        for payment in prev_payments:
+            for lesson in past_lessons:
+                if payment.lesson_id == lesson.id and payment.student_id == student.id:
+                    unpaid_lessons.remove((student, lesson))
     
-    return render(request, 'get_student_lessons.html', {'future_lessons': future_lessons, 'past_lessons': past_lessons, 'students': students, 'parent': parent, 'paid_lessons': paid_lessons, 'unpaid_lessons': unpaid_lessons})
+    return render(request, 'get_student_lessons.html', {'payments': payments, 'future_lessons': future_lessons, 'students': students, 'unpaid_lessons': unpaid_lessons})
     
 @login_required
 @user_passes_test(parent_test, redirect_field_name=None, login_url='/oops/')

@@ -11,17 +11,13 @@
 {% endif %}
 
 {% if unpaid_lessons %}
-<h1>Unpaid lessons</h1>
-{% for lesson in unpaid_lessons %}
-    {% for student in students %}
-        {% if student in lesson.student_set.all %}
-            <p>{{ lesson }}</p>
-            <p>{{ student }}</p>
-            <p>{{ student.price_per_lesson }}</p>
-                <p><a href="{% url 'parentuser:make_payment' parent_id=parent.id student_id=student.id lesson_id=lesson.id %}">Pay for Lesson</a></p>
-        {% endif %}
+    <h1>Unpaid lessons</h1>
+    {% for lesson in unpaid_lessons %}
+        <p>{{ lesson.1 }}</p>
+        <p>{{ lesson.0 }}</p>
+        <p>{{ lesson.0.price_per_lesson }}</p>
+        <p><a href="{% url 'parentuser:make_payment' parent_id=lesson.0.parent.id student_id=lesson.0.id lesson_id=lesson.1.id %}">Pay for Lesson</a></p>
     {% endfor %}
-{% endfor %}
 {% endif %}
 
 <h1>Upcoming Lessons</h1>
@@ -32,11 +28,15 @@
             <p>{{ lesson }}</p>
             <p>{{ student }}</p>
             <p>{{ student.price_per_lesson }}</p>
-            {% if lesson in paid_lessons %}
-                <p>Lesson paid</p>
-            {% else %}
-                <p><a href="{% url 'parentuser:make_payment' parent_id=parent.id student_id=student.id lesson_id=lesson.id %}">Pay for Lesson</a></p>
+            {% for payment in payments %}
+            {% if payment.lesson_id == lesson.id %}
+                {% if payment.student_id == student.id %}
+                    <p>Lesson paid</p>
+                {% else %}
+                    <p><a href="{% url 'parentuser:make_payment' parent_id=student.parent.id student_id=student.id lesson_id=lesson.id %}">Pay for Lesson</a></p>
+                {% endif %}
             {% endif %}
+            {% endfor %}
             <p><a href="{% url 'parentuser:remove_student_from_lesson_confirm' lesson_id=lesson.id student_id=student.id %}">Cancel Lesson</a></p>
         {% endif %}
     {% endfor %}

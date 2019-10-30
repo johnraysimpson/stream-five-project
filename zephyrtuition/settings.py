@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'parentuser',
     'tutoruser',
     'crispy_forms',
+    'tempus_dominus',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

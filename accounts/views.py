@@ -120,7 +120,7 @@ def add_tutor_view(request):
             user.save()
             
             tutor_profile = tutor_profile_form.save()
-            tutor_profile.user = tutoruser
+            tutor_profile.user = user
             tutor_profile.save()
             messages.success(request, "Tutor successfully created")
             return redirect('staffuser:dashboard')
@@ -166,7 +166,7 @@ def reactivate_user_confirm_view(request, user_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def delete_user_view(request, user_id):
     """View to render a confirmation page to permenantly delete a parent user"""
-    user_for_deletion = user = get_object_or_404(User, pk=user_id)
+    user_for_deletion = get_object_or_404(User, pk=user_id)
     try:
         user_profile = ParentProfile.objects.get(user=user_for_deletion)
     except ParentProfile.DoesNotExist:
@@ -177,6 +177,6 @@ def delete_user_view(request, user_id):
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def delete_user_confirm_view(request, user_id):
     """View which permenantly deletes a parent user"""
-    user = get_object_or_404(User, pk=user_id).delete()
+    get_object_or_404(User, pk=user_id).delete()
     messages.success(request, 'The user was permenantly deleted.')
     return redirect('staffuser:parents')

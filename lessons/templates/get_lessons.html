@@ -14,12 +14,33 @@
     <h2>{{ day.capitalize }}</h2>
         {% for lesson in lessons %}
             {% if lesson.day == day %}
-                <p>{{ lesson.tutor }} - {{ lesson.subject.capitalize }}</p>
+            <div class="col-md-4">
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th scope="col">{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }} - {{ lesson.subject.capitalize }} - {{ lesson.time }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <th scope="row">Students</th>
+                    </tr>
+                    {% for student in lesson.student_set.all %}
+                    <tr>
+                      <td scope="row">{{ student.first_name }} {{ student.last_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            <div class="col-lg-4 col-md-3"> 
+                <p>{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }} - {{ lesson.subject.capitalize }}</p>
                 <h4>Students</h4>
                 {% for student in lesson.student_set.all %}
-                <p>{{ student.first_name }}</p>
+                <p>{{ student.first_name }} {{ student.last_name }}</p>
                 {% endfor %}
                 <p><a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">View/Edit Lesson</a></p>
+            </div>
             {% endif %}
         {% endfor %}
     {% endfor %}

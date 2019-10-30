@@ -4,15 +4,26 @@
 
 {% block title %}Add Lesson{% endblock %}
 
+{% block head_js %}
+{{ lesson_form.media }}
+{% endblock %}
+
 {% block content %}
+
+
 
 <h1>Add Lesson</h1>
 <form method='POST'>
     {% csrf_token %}
+    
     {{ lesson_form|crispy }}
     <input type='submit' value='Save' />
 </form>
-
+    {% if dates %}
+    {% for date in dates %}
+    <span>{{ date|date:"d F Y" }}, </span>
+    {% endfor %}
+    {% endif %}
 
 {% endblock %}
 

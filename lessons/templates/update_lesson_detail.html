@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Update Lesson{% endblock %}
 
 {% block content %}
@@ -7,7 +9,7 @@
 <h1>Update Lesson</h1>
 <form method='POST'>
     {% csrf_token %}
-    {{ update_lesson_form.as_p }}
+    {{ update_lesson_form|crispy }}
     <input type='submit' value='Save' />
 </form>
 

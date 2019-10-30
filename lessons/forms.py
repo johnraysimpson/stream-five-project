@@ -16,9 +16,9 @@ class LessonForm(forms.ModelForm):
     tutor = forms.ModelChoiceField(queryset=TutorProfile.objects.all(), empty_label="Choose Tutor", required=True)
     day = forms.ChoiceField(choices=DAY_CHOICES)
     subject = forms.ChoiceField(choices=SUBJECT_CHOICES)
-    time = forms.TimeField(widget=forms.TimeInput(format="%H:%M", attrs={'class':'timepicker'}))
-    date = forms.DateField(label="Start date", widget=forms.DateInput(format='%d/%m/%Y',), input_formats=('%d/%m/%Y', ))
-    duration = forms.DurationField(label="Duration (HH:MM)")
+    time = forms.TimeField(label="Time (24 hour)",widget=forms.TextInput(attrs={'type': 'time'}))
+    date = forms.DateField(label="Start date", widget=forms.TextInput(attrs={'type': 'date'},))
+    duration = forms.DurationField(label="Duration (00:HH:MM)")
     
     class Meta:
         model = Lesson
@@ -83,12 +83,9 @@ class LessonToStudentForm(forms.ModelForm):
     tutor = forms.ModelChoiceField(queryset=TutorProfile.objects.all(), empty_label="Choose Tutor", required=True)
     day = forms.ChoiceField(choices=DAY_CHOICES)
     subject = forms.ChoiceField(choices=SUBJECT_CHOICES)
-    time = forms.TimeField(widget=forms.TimeInput(format="%H:%M"))
-    date = forms.DateField(label="Start date",
-        widget=forms.DateInput(format='%d/%m/%Y'),
-        input_formats=('%d/%m/%Y', )
-        )
+    time = forms.TimeField(label="Time (24 hour)",widget=forms.TextInput(attrs={'type': 'time'}))
+    date = forms.DateField(label="Start date", widget=forms.TextInput(attrs={'type': 'date'},))
     occurrence = occurrence_choices()
     class Meta():
         model = Student
-        fields = ('tutor', 'day', 'subject', 'time', 'date', 'occurrence')
+        fields = ('tutor', 'day', 'subject', 'date', 'time', 'occurrence')
