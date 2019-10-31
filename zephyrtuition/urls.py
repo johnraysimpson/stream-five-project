@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from pages.views import home_view
 from pages import urls as pages_urls
 from accounts import urls as accounts_urls
 from adminuser import urls as adminuser_urls
@@ -24,6 +25,7 @@ from tutoruser import urls as tutor_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', home_view),
     path('', include(pages_urls)),
     path('accounts/', include(accounts_urls)),
     path('admin_user/', include(adminuser_urls)),
