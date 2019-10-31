@@ -34,7 +34,7 @@ SECRET_KEY = 'SECRET_KEY'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = development
 
-ALLOWED_HOSTS = [os.environ.get('HOST_NAME', 'https://zephyr-tuition.herokuapp.com/')]
+ALLOWED_HOSTS = [os.environ.get('HOST_NAME', 'zephyr-tuition.herokuapp.com')]
 
 
 # Application definition
