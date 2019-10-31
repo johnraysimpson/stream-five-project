@@ -1,1 +1,1 @@
-web:gunicorn zephyrtuition.wsgi:application
+web: gunicorn zephyrtuition.wsgi:application
