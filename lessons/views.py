@@ -33,17 +33,16 @@ def add_lesson_view(request):
             earning = (lesson_form.cleaned_data['duration'].total_seconds() / 60) * float(tutor.pay_per_hour)
             if lesson_form.cleaned_data['occurrence'] == 'weekly':
                 start_date = lesson_form.cleaned_data['date']
-                try:
-                    existing_lessons = Lesson.objects.filter(tutor=tutor,
-                                                            subject=lesson_form.cleaned_data['subject'], 
-                                                            day=lesson_form.cleaned_data['day'], 
-                                                            time=lesson_form.cleaned_data['time'],
-                                                            date__gte=start_date)
-                    if existing_lessons:
-                        for lesson in existing_lessons:
-                            dates.append(lesson.date)
-                        lesson_form.add_error(None, 'There is at least one date where this lesson exists, dates are listed below this form.')
-                except:
+                existing_lessons = Lesson.objects.filter(tutor=tutor,
+                                                        subject=lesson_form.cleaned_data['subject'], 
+                                                        day=lesson_form.cleaned_data['day'], 
+                                                        time=lesson_form.cleaned_data['time'],
+                                                        date__gte=start_date)
+                if existing_lessons:
+                    for lesson in existing_lessons:
+                        dates.append(lesson.date)
+                    lesson_form.add_error(None, 'There is at least one date where this lesson exists, dates are listed below this form.')
+                else:
                     while start_date < get_next_august():
                         Lesson.objects.create(tutor=tutor, 
                                                 subject=lesson_form.cleaned_data['subject'], 
@@ -55,7 +54,9 @@ def add_lesson_view(request):
                                                 earning=earning
                                                 )
                         start_date += timedelta(days=7)
+                        
                     messages.success(request, 'Lessons successfully created')
+                    print(lesson_form.errors)
                     return redirect('staffuser:dashboard')
             else:
                 try:
@@ -83,14 +84,16 @@ def add_lesson_view(request):
 def update_lesson_view(request, lesson_id):
     """View that renders an instance of the lesson form that has already been created for editing"""
     lesson = get_object_or_404(Lesson, pk=lesson_id)
+    print(lesson.time)
     if request.method == 'POST':
-        update_lesson_form = LessonForm(request.POST, instance=lesson)
+        update_lesson_form = LessonForm(request.POST, instance = lesson)
         if update_lesson_form.is_valid():
             update_lesson_form.save()
             return redirect('staffuser:get_lesson_detail', lesson_id=lesson_id)
     else:
-        update_lesson_form = LessonForm(instance=lesson)
-    return render(request, 'update_lesson_detail.html', {'update_lesson_form': update_lesson_form})
+        update_lesson_form = LessonForm(instance = lesson)
+        
+    return render(request, 'update_lesson_detail.html', {'update_lesson_form': update_lesson_form, 'lesson': lesson})
     
 def delete_lesson_confirm_view(request, lesson_id):
     """View to render page confirming deletion particular lesson"""

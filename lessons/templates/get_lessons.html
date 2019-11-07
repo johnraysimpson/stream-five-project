@@ -14,11 +14,11 @@
     <h2>{{ day.capitalize }}</h2>
         {% for lesson in lessons %}
             {% if lesson.day == day %}
-            <div class="col-md-4">
+            <div class="col-md-4 col-lg-3">
             <table class="table">
                 <thead>
                     <tr>
-                      <th scope="col">{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }} - {{ lesson.subject.capitalize }} - {{ lesson.time }}</th>
+                      <th scope="col">{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }} - {{ lesson.subject.capitalize }} <p>{{ lesson.time }}</p></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,6 +30,9 @@
                       <td scope="row">{{ student.first_name }} {{ student.last_name }}</td>
                     </tr>
                     {% endfor %}
+                    <tr class="text-right">
+                        <td scope="row"><a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}"><button class="btn btn-general">View/Edit Lesson</button></a></td>
+                    </tr>
                 </tbody>
             </table>
             </div>

@@ -69,7 +69,8 @@ body {
 .btn-general {
     background-color: #7dc5eb;
     color: #6c757d;
-    transition: color 1.5s, background-color 1.5s;
+    transition: color 1s, background-color 1.5s;
+    border: 1px solid #b5b7b9;
 }
 
 .btn-general:hover {
@@ -115,6 +116,23 @@ body {
     border: 2px solid #d64646;
     color: #d64646;
     font-weight: 500;
+}
+
+th > p {
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+thead > tr > th {
+    background-color: #e3f2fd;
+}
+
+table {
+    border: 2px solid #b5b7b9;
+}
+
+.table thead th {
+    border-bottom: 2px solid #b5b7b9;
 }
 
 /*ul {*/
