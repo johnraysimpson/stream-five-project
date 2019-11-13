@@ -22,19 +22,19 @@
     <nav class="navbar fixed-top navbar-expand-lg navbar-light" >
         {% if user.is_authenticated %}
             {% if user.is_admin %}
-                <a class="navbar-brand" href="{% url 'adminuser:dashboard' %}">
+                <a class="navbar-brand company-name" href="{% url 'adminuser:dashboard' %}">
             {% elif user.is_staff %}
-                <a class="navbar-brand" href="{% url 'staffuser:dashboard' %}">
+                <a class="navbar-brand company-name" href="{% url 'staffuser:dashboard' %}">
             {% elif user.is_tutor %}
-                <a class="navbar-brand" href="{% url 'tutoruser:dashboard' %}">
+                <a class="navbar-brand company-name" href="{% url 'tutoruser:dashboard' %}">
             {% elif user.is_parent %}
-                <a class="navbar-brand" href="{% url 'parentuser:dashboard' %}">
+                <a class="navbar-brand company-name" href="{% url 'parentuser:dashboard' %}">
             {%endif %}
         {% else %}
-            <a class="navbar-brand" href="{% url 'home' %}">
+            <a class="navbar-brand company-name" href="{% url 'home' %}">
         {% endif %}
             <img src="{% static 'img/wind-image.png' %}" width="30" height="30" class="d-inline-block align-top" alt="wind-image">
-            Zephyr Tuition
+            <h4>Zephyr Tuition</h4>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
