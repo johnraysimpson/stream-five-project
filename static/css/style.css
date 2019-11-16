@@ -177,7 +177,10 @@ table {
 
 .first-password-change-form > p {
     font-style: italic;
-    
+}
+
+#hint_id_new_password1 > ul {
+    display: none;
 }
 
 @media only screen and (min-width: 992px) {

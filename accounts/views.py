@@ -143,7 +143,7 @@ def deactivate_user_confirm_view(request, user_id):
     """View which deactivates a parent user and removes all lessons from students"""
     user = get_object_or_404(User, pk=user_id)
     parent_profile = ParentProfile.objects.get(user=user)
-    user.active=False
+    user.is_active=False
     user.save()
     students = Student.objects.filter(parent=parent_profile)
     for student in students:
@@ -157,7 +157,7 @@ def reactivate_user_confirm_view(request, user_id):
     """View which reactivates a parent user"""
     user = get_object_or_404(User, pk=user_id)
     parent_profile = ParentProfile.objects.get(user=user)
-    user.active=True
+    user.is_active=True
     user.save()
     messages.success(request, 'This user has been reactivated.')
     return redirect('staffuser:parent_profile', parent_id=parent_profile.id)

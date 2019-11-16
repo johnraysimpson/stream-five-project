@@ -54,7 +54,7 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)
     admin = models.BooleanField(default=False)
     parent = models.BooleanField(default=False)
@@ -111,11 +111,5 @@ class User(AbstractBaseUser):
         """Function for determining if a user is an admin"""
         "Is the user a admin member?"
         return self.admin
-
-    @property
-    def is_active(self):
-        """Function for determining if a user is active"""
-        "Is the user active?"
-        return self.active
         
     objects = UserManager()
