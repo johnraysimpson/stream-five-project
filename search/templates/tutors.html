@@ -4,32 +4,53 @@
 
 {% block content %}
 
-{% if messages %}
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
+
 
 <h1>tutors</h1>
-
-<div>
-    <a href="{% url 'staffuser:add_tutor' %}">Add a new tutor</a>
-</div>
- 
-
-<div>
-    <p>Search tutor by name</p>
+<div class="col-lg-10 offset-lg-1">
+    <div class="row message">
+        {% if messages %}
+            {% for message in messages %}
+                <p><i class="fa fa-exclamation-circle fa-lg"></i>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div>
+        <p><a href="{% url 'staffuser:add_tutor' %}"><button type="button" class="btn btn-success">Add a new tutor</button></a></p>
+    </div>
+    <h4>Search tutor by name</h4>
     <form action="{% url 'staffuser:tutors' %}" method="get">
-                <input type="text" name="q">
-                <button type="submit">Search</button>
-            </form>
-</div>
-{% for tutor in tutors %}
-<div>
-    <p>{{ tutor }}</p>
-    <p><a href="{% url 'staffuser:tutor_profile' tutor_id=tutor.id %}">View Profile</a></p>
-    <p><a href="{% url 'staffuser:delete_user' user_id=tutor.user.id %}">Delete User</a></p>
-</div>
+        <div class="row">
+            <div class="col-9">
+                <input type="text" name="q" class="textinput textInput form-control" id="id_q">
+            </div>
+            <div class="col-3 text-right">
+                <button type="submit" class="btn btn-primary search-button"><i class="fa fa-search button-icon"></i><span class="search-text">Search</span></button>
+            </div>
+        </div>
+    </form>
+    <div class="search-list">
+    {% for tutor in tutors %}
+    <div class="row search-list-item">
+        <div class="col-12 col-md-4">
+            <p class="search-name">{{ tutor.first_name }} {{ tutor.last_name }}</p>
+        </div>
+        <div class="col-10 offset-1 offset-md-0 col-md-3 text-right">
+            <p><a href="{% url 'staffuser:tutor_profile' tutor_id=tutor.id %}"><button type="button" class="btn btn-primary view-button">View Profile</button></a></p>
+        </div>
+        {% if tutor.user.is_active %}
+            <div class="col-10 offset-1 offset-md-0 col-md-3 text-right">
+                <p><a href="{% url 'staffuser:deactivate_user' user_id=tutor.user.id %}"><button type="button" class="btn btn-warning deactivate-button">Deactivate</button></a></p>
+            </div>
+        {% else %}
+            <div class="col-10 offset-1 offset-md-0 col-md-3 text-right">
+                <p><a href="{% url 'staffuser:reactivate_user_confirm' user_id=tutor.user.id %}"><button type="button" class="btn btn-success reactivate-button">Reactivate</button></a></p>
+            </div>
+        {% endif %}
+        <div class="col-10 offset-1 offset-md-0 col-md-2 text-right">
+            <p><a href="{% url 'staffuser:delete_user' user_id=tutor.user.id %}"><button type="button" class="btn btn-danger delete-button">Delete</button></a></p>
+        </div>
+    </div>
 
 {% endfor %}
 

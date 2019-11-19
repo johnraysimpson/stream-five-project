@@ -6,6 +6,7 @@ body {
     background-repeat: repeat;
     background-attachment: fixed;
     font-family: 'Raleway', sans-serif;
+    font-size: 18px;
 }
 
 .navbar {
@@ -84,6 +85,10 @@ h1 {
     margin-top: 12px;
 }
 
+.btn {
+    border: none;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #36b6ff;
@@ -145,7 +150,7 @@ thead > tr > th {
     background-color: #e3f2fd;
 }
 
-table {
+.table {
     border: 2px solid #b5b7b9;
 }
 
@@ -165,12 +170,12 @@ table {
     margin-right: 4px;
 }
 
-.forgot-link {
+.page-links {
    color: #80c4eb;
    transition: text-decoration 1s;
 }
 
-.forgot-link:hover {
+.page-links:hover {
     text-decoration: underline;
     color: #80c4eb;
 }
@@ -182,6 +187,46 @@ table {
 #hint_id_new_password1 > ul {
     display: none;
 }
+
+.btn-success:hover {
+    background-color: #4abb64;
+}
+
+.search-button {
+    height: 38px;
+    width: 100%;
+}
+
+.view-button, .deactivate-button, .reactivate-button, .delete-button, .add-button {
+    width: 100%;
+}
+
+.search-list {
+    margin: 30px 0px;
+}
+
+.search-list-item {
+    background-color: #ffffff;
+    margin-bottom: 20px;
+    height: 180px;
+}
+
+.search-name {
+    font-weight: 500;
+}
+
+.contact-column {
+    padding-left: 10px;
+}
+
+.contact-info, .address-info {
+    margin: 20px 0;
+}
+
+.parents-students {
+    margin-top: 30px;
+}
+
 
 @media only screen and (min-width: 992px) {
     .dashboard-box {
@@ -200,5 +245,25 @@ table {
     
     .dropdown-item:hover {
         background-color: #e3f2fd;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .search-text {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .search-text {
+        display: none;
+    }
+    
+    .search-list-item {
+    height: 36px;
+    }
+    
+    .search-name {
+    margin: 10px 0px 0px 0px;
     }
 }

@@ -11,23 +11,42 @@
 {% endif %}
 
 <h1>Students</h1>
-
-<div>
-    <p>Search student by name</p>
+<div class="col-lg-10 offset-lg-1">
+    <div class="row message">
+        {% if messages %}
+            {% for message in messages %}
+                <p><i class="fa fa-exclamation-circle fa-lg"></i>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <h4>Search student by name</h4>
     <form action="{% url 'staffuser:students' %}" method="get">
-                <input type="text" name="q">
-                <button type="submit">Search</button>
-            </form>
+                <div class="row">
+            <div class="col-9">
+                <input type="text" name="q" class="textinput textInput form-control" id="id_q">
+            </div>
+            <div class="col-3 text-right">
+                <button type="submit" class="btn btn-primary search-button"><i class="fa fa-search button-icon"></i><span class="search-text">Search</span></button>
+            </div>
+        </div>
+    </form>
+    <div class="search-list">
+        {% for student in students %}
+        <div class="row search-list-item">
+            <div class="col-12 col-md-4">
+                <p class="search-name">{{ student }}</p>
+            </div>
+            <div class="col-10 offset-1 offset-md-0 col-md-3 text-right">
+                <p><a href="{% url 'staffuser:student_profile' student_id=student.id %}"><button type="button" class="btn btn-primary view-button">View Profile</button></a></p>
+            </div>
+            <div class="col-10 offset-1 offset-md-0 col-md-3 text-right">
+                <p><a href="{% url 'staffuser:add_student_lesson' student_id=student.id %}"><button type="button" class="btn btn-success add-button">Add to lesson</button></a></p>
+            </div>
+            <div class="col-10 offset-1 offset-md-0 col-md-2 text-right">
+                <p><a href="{% url 'staffuser:delete_student' student_id=student.id %}"><button type="button" class="btn btn-danger delete-button">Delete</button></a></p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
-{% for student in students %}
-<div>
-    <p>{{ student }}</p>
-    <p><a href="{% url 'staffuser:student_profile' student_id=student.id %}">View Profile</a></p>
-    <p><a href="{% url 'staffuser:add_student_lesson' student_id=student.id %}">Add Lesson to Student</a></p>
-    <p><a href="#">Delete Student</a></p>
-</div>
-
-{% endfor %}
-
-
 {% endblock %}

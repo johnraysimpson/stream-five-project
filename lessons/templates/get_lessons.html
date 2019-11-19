@@ -8,7 +8,7 @@
     <h2>Whoops...</h2>
     <p>View date entered was either an invalid date or not a Monday.</p>
     {% else %}
-    <p><a href="{% url 'staffuser:add_lesson' %}">Create New Lesson</a></p>
+    <p><a href="{% url 'staffuser:add_lesson' %}"><button type="button" class="btn btn-success">Create New Lesson</button></a></p>
     <h2>Week commencing {{ view_date|date:"d F Y" }}</h2>
     {% for day in days_of_the_week %}
     <h2>{{ day.capitalize }}</h2>
@@ -31,23 +31,21 @@
                     </tr>
                     {% endfor %}
                     <tr class="text-right">
-                        <td scope="row"><a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}"><button class="btn btn-general">View/Edit Lesson</button></a></td>
+                        <td scope="row">
+                            <a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">
+                                <button class="btn btn-primary">
+                                    <i class="fa fa-pencil button-icon"></i>View/Edit Lesson
+                                </button>
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
             </div>
-            <div class="col-lg-4 col-md-3"> 
-                <p>{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }} - {{ lesson.subject.capitalize }}</p>
-                <h4>Students</h4>
-                {% for student in lesson.student_set.all %}
-                <p>{{ student.first_name }} {{ student.last_name }}</p>
-                {% endfor %}
-                <p><a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">View/Edit Lesson</a></p>
-            </div>
             {% endif %}
         {% endfor %}
     {% endfor %}
-    <a href="{% url 'staffuser:get_lessons' mondays_date=previous_week %}">Previous Week</a>
-    <a href="{% url 'staffuser:get_lessons' mondays_date=next_week %}">Next Week</a>
+    <a class="page-links" href="{% url 'staffuser:get_lessons' mondays_date=previous_week %}">Previous Week</a>
+    <a class="page-links float-right" href="{% url 'staffuser:get_lessons' mondays_date=next_week %}">Next Week</a>
     {% endif %}
 {% endblock %}
