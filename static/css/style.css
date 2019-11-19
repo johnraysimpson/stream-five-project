@@ -6,7 +6,7 @@ body {
     background-repeat: repeat;
     background-attachment: fixed;
     font-family: 'Raleway', sans-serif;
-    font-size: 18px;
+    font-size: 17px;
 }
 
 .navbar {
@@ -225,6 +225,10 @@ thead > tr > th {
 
 .parents-students {
     margin-top: 30px;
+}
+
+.search-title {
+    margin-bottom: 20px;
 }
 
 

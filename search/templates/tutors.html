@@ -30,29 +30,33 @@
         </div>
     </form>
     <div class="search-list">
-    {% for tutor in tutors %}
-    <div class="row search-list-item">
-        <div class="col-12 col-md-4">
-            <p class="search-name">{{ tutor.first_name }} {{ tutor.last_name }}</p>
-        </div>
-        <div class="col-10 offset-1 offset-md-0 col-md-3 text-right">
-            <p><a href="{% url 'staffuser:tutor_profile' tutor_id=tutor.id %}"><button type="button" class="btn btn-primary view-button">View Profile</button></a></p>
-        </div>
-        {% if tutor.user.is_active %}
-            <div class="col-10 offset-1 offset-md-0 col-md-3 text-right">
-                <p><a href="{% url 'staffuser:deactivate_user' user_id=tutor.user.id %}"><button type="button" class="btn btn-warning deactivate-button">Deactivate</button></a></p>
-            </div>
+        <h4 class="row search-title">Tutors</h4>
+        {% if tutors %}
+            {% for tutor in tutors %}
+                <div class="row search-list-item">
+                    <div class="col-12 col-md-4">
+                        <p class="search-name">{{ tutor.first_name }} {{ tutor.last_name }}</p>
+                    </div>
+                    <div class="col-10 offset-1 offset-md-0 col-md-3 text-right">
+                        <p><a href="{% url 'staffuser:tutor_profile' tutor_id=tutor.id %}"><button type="button" class="btn btn-primary view-button">View Profile</button></a></p>
+                    </div>
+                    {% if tutor.user.is_active %}
+                        <div class="col-10 offset-1 offset-md-0 col-md-3 text-right">
+                            <p><a href="{% url 'staffuser:deactivate_user' user_id=tutor.user.id %}"><button type="button" class="btn btn-warning deactivate-button">Deactivate</button></a></p>
+                        </div>
+                    {% else %}
+                        <div class="col-10 offset-1 offset-md-0 col-md-3 text-right">
+                            <p><a href="{% url 'staffuser:reactivate_user_confirm' user_id=tutor.user.id %}"><button type="button" class="btn btn-success reactivate-button">Reactivate</button></a></p>
+                        </div>
+                    {% endif %}
+                    <div class="col-10 offset-1 offset-md-0 col-md-2 text-right">
+                        <p><a href="{% url 'staffuser:delete_user' user_id=tutor.user.id %}"><button type="button" class="btn btn-danger delete-button">Delete</button></a></p>
+                    </div>
+                </div>
+            {% endfor %}
         {% else %}
-            <div class="col-10 offset-1 offset-md-0 col-md-3 text-right">
-                <p><a href="{% url 'staffuser:reactivate_user_confirm' user_id=tutor.user.id %}"><button type="button" class="btn btn-success reactivate-button">Reactivate</button></a></p>
-            </div>
+            <p>No results matching the name entered.</p>
         {% endif %}
-        <div class="col-10 offset-1 offset-md-0 col-md-2 text-right">
-            <p><a href="{% url 'staffuser:delete_user' user_id=tutor.user.id %}"><button type="button" class="btn btn-danger delete-button">Delete</button></a></p>
-        </div>
     </div>
-
-{% endfor %}
-
-
+</div>
 {% endblock %}
