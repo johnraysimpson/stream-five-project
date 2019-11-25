@@ -216,17 +216,10 @@ thead > tr > th {
     font-weight: 500;
 }
 
-.contact-column {
-    padding-left: 10px;
+.address-info > p {
+    margin-bottom: 5px;
 }
 
-.contact-info, .address-info {
-    margin: 20px 0;
-}
-
-.parents-students {
-    margin-top: 30px;
-}
 
 .search-title {
     margin-bottom: 20px;
@@ -246,7 +239,7 @@ thead > tr > th {
     margin-bottom: 10px;
 }
 
-.lesson-info > table > tbody > tr > td:nth-child(even) {
+.table-content > table > tbody > tr > td:nth-child(even) {
     padding-left: 20px;
 }
 

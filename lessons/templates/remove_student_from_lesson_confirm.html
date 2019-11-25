@@ -5,18 +5,18 @@
 {% block content %}
 
 {% if user.is_staff %}
-<h1>Confirm Remove Student</h1>
+    <h1>Confirm Remove Student</h1>
 {% elif user.is_parent %}
-<h1>Cancel Lesson</h1>
+    <h1>Cancel Lesson</h1>
 {% endif %}
 <div class="col-lg-10 offset-lg-1">
-<h5>Are you sure you want to remove</h5>
-<div class="col-12">
-<p>{{ student }}</p>
-</div>
-<h5>from the lesson</h5>
-
-<div class="col-12 lesson-info">
+    <h5>Are you sure you want to remove</h5>
+    <div class="col-12">
+        <p>{{ student }}</p>
+    </div>
+    
+    <h5>from the lesson</h5>
+    <div class="col-12 table-content">
         <table>
             <tr>
                 <td><b>Tutor: </b></td>
@@ -49,16 +49,27 @@
             </div>
             <div class="col-6 text-right button-spacing">
                 <p><a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">
-                    <button type="button" class="btn btn-secondary"><i class="fa fa-arrow-left button-icon"></i>Cancel</button>
+                    <button type="button" class="btn btn-secondary"><i class="fa fa-arrow-left button-icon"></i>Go Back</button>
                 </a></p>
             </div>
         </div>
     {% elif user.is_parent %}
-        <p><a href="{% url 'parentuser:remove_student_from_lesson' lesson_id=lesson.id student_id=student.id %}">Cancel Lesson</a></p>
-        <p><a href="{% url 'parentuser:get_student_lessons' %}">Go Back</a></p>
+        <div class="row col-12">
+            <div class="col-6 button-spacing">
+                <p><a href="{% url 'parentuser:remove_student_from_lesson' lesson_id=lesson.id student_id=student.id %}">
+                    <button type="button" class="btn btn-danger"><i class="fa fa-times button-icon"></i>Cancel Lesson</button>
+                </a></p>
+            </div>
+            <div class="col-6 text-right button-spacing">
+                <p><a href="{% url 'parentuser:get_student_lessons' %}">
+                    <button type="button" class="btn btn-secondary"><i class="fa fa-arrow-left button-icon"></i>Go Back</button>
+                </a></p>
+            </div>
+        </div>
     {% endif %}
 </div>
 
 
 
 {% endblock %}
+

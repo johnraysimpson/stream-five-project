@@ -13,52 +13,66 @@
             {% endfor %}
         {% endif %}
     </div>
-    <div class="row">
-        <div class="col-12 col-md-6">
-            <h3>Address</h3>
-            <div class="address-info">
-                <p>{{ parent.address1 }}, {{ parent.address2 }},</p>
-                <p>{{ parent.town_or_city }},</p>
-                <p>{{ parent.county }},</p>
-                <p>{{ parent.post_code }}</p>
-            </div>
-        </div>
-        <div class="col-12 col-md-6">
-            <h3>Contact Information</h3>
-            <div class="contact-info">
-                <table class="contact-table">
-                    <tr>
-                        <td><b>Email: </b></td>
-                        <td class="contact-column">{{ parent.user.email }}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Telephone: </b></td>
-                        <td class="contact-column">{{ parent.telephone }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="col-12">
-            {% if user.is_staff %}
-                <p><a href="{% url 'staffuser:update_parent_profile' parent_id=parent.id %}"><button type="button" class="btn btn-primary">Edit Profile</button></a></p>
-            {% elif user.is_parent %}
-                <p><b>If any information is incorrect or needs changing, please contact a member of staff.</b></p>
-            {% endif %}
-        </div>
-        <div class="col-12 parents-students">
-            <h3>Students</h3>
-            {% for student in students %}
-                {% if user.is_staff %}
-                    <p><a class="page-links" href="{% url 'staffuser:student_profile' student_id=student.id %}">{{ student }}</a></p>
-                {% else %}
-                    <p><a class="page-links" href="{% url 'parentuser:student_profile' student_id=student.id %}">{{ student }}</a></p>
-                {% endif %}
-            {% endfor %}
-        </div>
-        <div class="col-12">
-            <p><a href="{% url 'staffuser:add_student' parent_id=parent.id %}"><button type="button" class="btn btn-success">Create a student</button></a></p>
+    <h3>Contact Information</h3>
+    <div class="col-12">
+        <div class="table-content">
+            <table>
+                <tr>
+                    <td><b>Email: </b></td>
+                    <td>{{ parent.user.email }}</td>
+                </tr>
+                <tr>
+                    <td><b>Telephone: </b></td>
+                    <td>{{ parent.telephone }}</td>
+                </tr>
+            </table>
         </div>
     </div>
+    <h3>Address</h3>
+    <div class="col-12">
+        <div class="address-info">
+            <p>{{ parent.address1 }},</p>
+            {% if parent.address2 %}
+                <p>{{ parent.address2 }},</p>
+            {% endif %}
+            <p>{{ parent.town_or_city }},</p>
+            <p>{{ parent.county }},</p>
+            <p>{{ parent.post_code }}</p>
+        </div>
+    </div>
+    {% if user.is_staff %}
+        <div class="col-12 button-spacing">
+            <p><a href="{% url 'staffuser:update_parent_profile' parent_id=parent.id %}">
+                <button type="button" class="btn btn-primary"><i class="fa fa-pencil button-icon"></i>Edit Profile</button>
+            </a></p>
+        </div>
+    {% elif user.is_parent %}
+        <div class="col-12">
+            <p><b>If any information is incorrect or needs changing, please contact a member of staff.</b></p>
+        </div>
+    {% endif %}
+    <h3>Students</h3>
+    <div class="col-12">
+        {% for student in students %}
+            {% if user.is_staff %}
+                <p><a class="page-links" href="{% url 'staffuser:student_profile' student_id=student.id %}">{{ student }}</a></p>
+            {% else %}
+                <p><a class="page-links" href="{% url 'parentuser:student_profile' student_id=student.id %}">{{ student }}</a></p>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% if user.is_staff %}
+    <div class="col-12 button-spacing">
+        <p><a href="{% url 'staffuser:add_student' parent_id=parent.id %}">
+            <button type="button" class="btn btn-success"><i class="fa fa-plus button-icon"></i>Add New Student</button>
+        </a></p>
+    </div>
+    <div class="button-spacing">
+        <p><a href="{% url 'staffuser:delete_user' user_id=parent.user.id %}">
+            <button type="button" class="btn btn-danger"><i class="fa fa-trash button-icon"></i>Delete Parent</button>
+        </a></p>
+    </div>
+    {% endif %}
 </div>
 
 {% endblock %}

@@ -1,44 +1,58 @@
 {% extends 'base.html' %}
 
-{% block title %}Parent Profile{% endblock %}
+{% block title %}Student Profile{% endblock %}
 
 {% block content %}
 
-{% if messages %}
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
-
 <h1>Profile of {{ student }}</h1>
-
-<p><b>Date of birth: </b>{{ student.date_of_birth }}</p>
-<p><b>Year: </b>{{ year_group }}</p>
-{% if student.notes %}
-{% if staff.is_staff or staff.is_tutor %}
-    <p><b>Notes: </b>{{ student.notes }}</p>
-{% endif %}
-{% endif %}
-{% if user.is_staff %}
-<a href="{% url 'staffuser:update_student' student_id=student.id %}">Edit Profile</a>
-{% elif user.is_parent %}
-<p>If any information is incorrect or needs changing, please contact a member of staff.</p>
-{% endif %}
-
-
-<h3>Parent Information</h3>
-{% if user.is_staff %}
-<p><a href="{% url 'staffuser:parent_profile' parent_id=parent.id %}">{{ parent }}</a> - {{ student.relationship }}</p>
-{% elif user.is_parent %}
-<p><a href="{% url 'parentuser:parent_profile' %}">{{ parent }}</a> - {{ student.relationship }}</p>
-{% elif user.is_tutor %}
-<p>{{ parent }} - {{ student.relationship }}</p>
-<p>Telephone: {{ parent.telephone }}</p>
-{% endif %}
-
+<div class="col-lg-10 offset-lg-1">
+    <h3>Personal Information</h3>
+    <div class="col-12">
+        <p><b>First name: </b>{{ student.first_name }}</p>
+        <p><b>Last name: </b>{{ student.last_name }}</p>
+        <p><b>Date of birth: </b>{{ student.date_of_birth }}</p>
+        <p><b>Year: </b>{{ year_group }}</p>
+        <p><b>Price per lesson: </b>£{{ student.price_per_lesson }}</p>
+        {% if student.notes %}
+            {% if user.is_staff or user.is_tutor %}
+                <p><b>Notes: </b>{{ student.notes }}</p>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% if user.is_staff %}
+        <div class="col-12 button-spacing">
+            <a href="{% url 'staffuser:update_student' student_id=student.id %}">
+                <button type="button" class="btn btn-primary"><i class="fa fa-pencil button-icon"></i>Edit Profile</button>
+            </a>
+        </div>
+    {% elif user.is_parent %}
+        <div class="col-12">
+            <p>If any information is incorrect or needs changing, please contact a member of staff.</p>
+        </div>
+    {% endif %}
     
-{% if user.is_staff %}
-<p><a href="{% url 'staffuser:delete_student' student_id=student.id %}">Delete Student</a></p>
-{% endif %}
+    <h3>Parent Information</h3>
+    <div class="col-12">
+        {% if user.is_staff %}
+            <p><a class="page-links" href="{% url 'staffuser:parent_profile' parent_id=parent.id %}">{{ parent }}</a> - {{ student.relationship }}</p>
+        {% elif user.is_parent %}
+            <p><a href="{% url 'parentuser:parent_profile' %}">{{ parent }}</a> - {{ student.relationship }}</p>
+        {% elif user.is_tutor %}
+            <p>{{ parent }} - {{ student.relationship }}</p>
+            <p>Telephone: {{ parent.telephone }}</p>
+        {% endif %}
+    </div>
+        
+    {% if user.is_staff %}
+        <div class="button-spacing">
+            <a href="{% url 'staffuser:delete_student' student_id=student.id %}">
+                <button type="button" class="btn btn-danger"><i class="fa fa-trash button-icon"></i>Delete Student</button>
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+
 
 {% endblock %}
+
