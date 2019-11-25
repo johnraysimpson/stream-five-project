@@ -37,12 +37,12 @@
     <div class="row">
         <div class="col-6 button-spacing">
             <p><a class="page-links" href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=last_month %}">
-                <button type="button" class="btn btn-success"><i class="fa fa-arrow-left button-icon"></i>Last Month</button>
+                <button type="button" class="btn btn-success"><i class="fa fa-arrow-left button-icon" aria-hidden="true"></i>Last Month</button>
             </a></p>
         </div>
         <div class="col-6 button-spacing text-right">
             <p><a class="page-links" href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=next_month %}">
-                <button type="button" class="btn btn-success">Next Month<i class="fa fa-arrow-right button-icon-right"></i></button>
+                <button type="button" class="btn btn-success">Next Month<i class="fa fa-arrow-right button-icon-right" aria-hidden="true"></i></button>
             </a></p>
         </div>
     </div>
@@ -50,12 +50,12 @@
     <div class="row">
         <div class="col-6 button-spacing">
             <p><a class="page-links" href="{% url 'tutoruser:my_earnings' request_date=last_month %}">
-                <button type="button" class="btn btn-success"><i class="fa fa-arrow-left button-icon"></i>Last Month</button>
+                <button type="button" class="btn btn-success"><i class="fa fa-arrow-left button-icon" aria-hidden="true"></i>Last Month</button>
             </a></p>
         </div>
         <div class="col-6 button-spacing text-right">
             <p><a class="page-links" href="{% url 'tutoruser:my_earnings' request_date=last_month %}">
-                <button type="button" class="btn btn-success">Next Month<i class="fa fa-arrow-right button-icon-right"></i></button>
+                <button type="button" class="btn btn-success">Next Month<i class="fa fa-arrow-right button-icon-right" aria-hidden="true"></i></button>
             </a></p>
         </div>
     </div>

@@ -36,12 +36,12 @@
     <div class="row col-12">
         <div class="col-6 button-spacing">
             <p><a href="{% url 'staffuser:delete_lesson' lesson_id=lesson.id %}">
-                <button type="button" class="btn btn-danger"><i class="fa fa-trash button-icon"></i>Delete Lesson</button>
+                <button type="button" class="btn btn-danger"><i class="fa fa-trash button-icon" aria-hidden="true"></i>Delete Lesson</button>
             </a></p>
         </div>
         <div class="col-6 text-right button-spacing">
             <p><a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">
-                <button type="button" class="btn btn-secondary"><i class="fa fa-arrow-left button-icon"></i>Go Back</button>
+                <button type="button" class="btn btn-secondary"><i class="fa fa-arrow-left button-icon" aria-hidden="true"></i>Go Back</button>
             </a></p>
         </div>
     </div>

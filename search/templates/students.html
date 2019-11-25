@@ -9,7 +9,7 @@
     <div class="row message">
         {% if messages %}
             {% for message in messages %}
-                <p><i class="fa fa-exclamation-circle fa-lg"></i>{{ message }}</p>
+                <p><i class="fa fa-exclamation-circle fa-lg" aria-hidden="true"></i>{{ message }}</p>
             {% endfor %}
         {% endif %}
     </div>
@@ -20,7 +20,7 @@
                 <input type="text" name="q" class="textinput textInput form-control" id="id_q">
             </div>
             <div class="col-3 text-right">
-                <button type="submit" class="btn btn-primary search-button"><i class="fa fa-search button-icon"></i><span class="search-text">Search</span></button>
+                <button type="submit" class="btn btn-primary search-button"><i class="fa fa-search button-icon" aria-hidden="true"></i><span class="search-text">Search</span></button>
             </div>
         </div>
     </form>

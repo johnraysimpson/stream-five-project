@@ -15,7 +15,7 @@
     <div class="row message">
         {% if messages %}
             {% for message in messages %}
-                <p><i class="fa fa-exclamation-circle fa-lg"></i>{{ message }}</p>
+                <p><i class="fa fa-exclamation-circle fa-lg" aria-hidden="true"></i>{{ message }}</p>
             {% endfor %}
         {% endif %}
     </div>
@@ -64,12 +64,12 @@
     {% if user.is_staff %}
         <div class="col-12 button-spacing">
             <p><a href="{% url 'staffuser:update_tutor_profile' tutor_id=tutor.id  %}">
-                <button type="button" class="btn btn-primary"><i class="fa fa-pencil button-icon"></i>Edit Profile</button>
+                <button type="button" class="btn btn-primary"><i class="fa fa-pencil button-icon" aria-hidden="true"></i>Edit Profile</button>
             </a></p>
         </div>
         <div class="button-spacing">
             <p><a href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=todays_date %}">
-                <button type="button" class="btn btn-success"><i class="fa fa-money button-icon"></i>View Earnings</button>
+                <button type="button" class="btn btn-success"><i class="fa fa-money button-icon" aria-hidden="true"></i>View Earnings</button>
             </a></p>
         </div>
     {% elif user.is_tutor %}

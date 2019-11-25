@@ -15,7 +15,7 @@
         {% csrf_token %}
         {{ lesson_form|crispy }}
         <div class="button-spacing">
-            <button type="submit" class="btn btn-success"><i class="fa fa-plus button-icon"></i>Create Lesson</button>
+            <button type="submit" class="btn btn-success"><i class="fa fa-plus button-icon" aria-hidden="true"></i>Create Lesson</button>
         </div>
     </form>
     {% if dates %}

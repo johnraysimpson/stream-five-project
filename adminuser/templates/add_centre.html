@@ -1,16 +1,20 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Add Centre{% endblock %}
 
 {% block content %}
 <h1>Add New Centre</h1>
 
 
-    <div class="row">
-<form method='POST' class="col m8">
-    {% csrf_token %}
-    {{ centre_form.as_p }}
-    <input type='submit' value='Save' />
-</form>
+<div class="col-lg-10 offset-lg-1">
+    <form method='POST'>
+        {% csrf_token %}
+        {{ centre_form|crispy }}
+        <div class="button-spacing">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-plus button-icon" aria-hidden="true"></i>Add Centre</button>
+        </div>
+    </form>
 </div>
 {% endblock %}

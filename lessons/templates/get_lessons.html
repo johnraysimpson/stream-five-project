@@ -8,7 +8,7 @@
     <h2>Whoops...</h2>
     <p>View date entered was either an invalid date or not a Monday.</p>
     {% else %}
-    <p><a href="{% url 'staffuser:add_lesson' %}"><button type="button" class="btn btn-success">Create New Lesson</button></a></p>
+    <p><a href="{% url 'staffuser:add_lesson' %}"><button type="button" class="btn btn-success"><i class="fa fa-plus button-icon" aria-hidden="true"></i>Create New Lesson</button></a></p>
     <h2>{{ view_date|date:"d F Y" }} - {{ sundays_date|date:"d F Y" }}</h2>
     {% for day in days_of_the_week %}
         <h2>{{ day.capitalize }}</h2>
@@ -35,7 +35,7 @@
                                 <td scope="row">
                                     <a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">
                                         <button class="btn btn-primary">
-                                            <i class="fa fa-pencil button-icon"></i>View/Edit Lesson
+                                            <i class="fa fa-pencil button-icon" aria-hidden="true"></i>View/Edit Lesson
                                         </button>
                                     </a>
                                 </td>
@@ -50,12 +50,12 @@
     <div class="row col-12">
         <div class="col-6 button-spacing">
             <p><a class="page-links" href="{% url 'staffuser:get_lessons' mondays_date=previous_week %}">
-                <button type="button" class="btn btn-success"><i class="fa fa-arrow-left button-icon"></i>Previous Week</button>
+                <button type="button" class="btn btn-success"><i class="fa fa-arrow-left button-icon" aria-hidden="true"></i>Previous Week</button>
             </a></p>
         </div>
         <div class="col-6 button-spacing text-right">
             <p><a class="page-links" href="{% url 'staffuser:get_lessons' mondays_date=next_week %}">
-                <button type="button" class="btn btn-success">Next Week<i class="fa fa-arrow-right button-icon-right"></i></button>
+                <button type="button" class="btn btn-success">Next Week<i class="fa fa-arrow-right button-icon-right" aria-hidden="true"></i></button>
             </a></p>
         </div>
     </div>

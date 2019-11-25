@@ -33,7 +33,7 @@
     </div>
     <div class="col-12 button-spacing">
         <a href="{% url 'staffuser:update_lesson_detail' lesson_id=lesson.id %}">
-            <button type="button" class="btn btn-primary"><i class="fa fa-pencil button-icon"></i>Edit Lesson</button>
+            <button type="button" class="btn btn-primary"><i class="fa fa-pencil button-icon" aria-hidden="true"></i>Edit Lesson</button>
         </a>
     </div>
     <h2>Students</h2>
@@ -51,12 +51,12 @@
         {% endfor %}
     <div class="col-12 button-spacing">
         <a href="{% url 'staffuser:add_student_to_lesson' lesson_id=lesson.id %}">
-            <button type="button" class="btn btn-success"><i class="fa fa-plus button-icon"></i>Add student to this lesson</button>
+            <button type="button" class="btn btn-success"><i class="fa fa-plus button-icon" aria-hidden="true"></i>Add student to this lesson</button>
         </a>
     </div>
     <div class="col-12 button-spacing">
         <a href="{% url 'staffuser:delete_lesson_confirm' lesson_id=lesson.id %}">
-            <button type="button" class="btn btn-danger"><i class="fa fa-trash button-icon"></i>Delete Lesson</button>
+            <button type="button" class="btn btn-danger"><i class="fa fa-trash button-icon" aria-hidden="true"></i>Delete Lesson</button>
         </a>
     </div>
 </div>

@@ -14,7 +14,7 @@
     <div class="row col-s12">
         <div class="col-6 button-spacing">
             <p><a href="{% url 'staffuser:delete_user_confirm' user_id=user_for_deletion.id %}">
-                <button type="button" class="btn btn-danger"><i class="fa fa-trash button-icon"></i>Delete User</button>
+                <button type="button" class="btn btn-danger"><i class="fa fa-trash button-icon" aria-hidden="true"></i>Delete User</button>
             </a></p>
         </div>
         <div class="col-6 text-right button-spacing">
@@ -23,7 +23,7 @@
             {% else %}
                 <p><a href="{% url 'staffuser:tutors' %}">
             {% endif %}
-                    <button type="button" class="btn btn-secondary"><i class="fa fa-arrow-left button-icon"></i>Go Back</button>
+                    <button type="button" class="btn btn-secondary"><i class="fa fa-arrow-left button-icon" aria-hidden="true"></i>Go Back</button>
                 </a></p>
         </div>
     </div>

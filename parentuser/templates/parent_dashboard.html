@@ -11,37 +11,44 @@
 {% endif %}
 
 <h1>Hello, {{ parent }}</h1>
-
-<div class="row dashboard">
-    <div class="col-lg-4 text-center">
-        <a class="dashboard-link" href="{% url 'parentuser:get_student_lessons' %}">
-            <div class="dashboard-box">
-                <i class="fa fa-calendar-check-o fa-5x dashboard-icon" aria-hidden="true"></i>
-                <h3>View Lessons</h3>
-                <p>Click here if you want to pay for, cancel or just simply see lessons coming up.</p>
-            </div>
-        </a>
+<div class="col-lg-10 offset-lg-1">
+    <div class="row message">
+        {% if messages %}
+            {% for message in messages %}
+                <p><i class="fa fa-exclamation-circle fa-lg" aria-hidden="true"></i>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
     </div>
-
-    <div class="col-lg-4 text-center">
-        <a class="dashboard-link" href="{% url 'parentuser:get_payments' %}">
-            <div class="dashboard-box">
-                <i class="fa fa-credit-card fa-5x dashboard-icon" aria-hidden="true"></i>
-                <h3>Paid Lessons</h3>
-                <p>Click here for a statement of your past payments.</p>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-lg-4 text-center">
-        <a class="dashboard-link" href="{% url 'parentuser:parent_profile' %}">
-            <div class="dashboard-box">
-                <i class="fa fa-user fa-5x dashboard-icon" aria-hidden="true"></i>
-                <h3>View Profile</h3>
-                <p>Click here to view the details we have for you.</p>
-            </div>
-        </a>
+    <div class="row dashboard">
+        <div class="col-lg-4 text-center">
+            <a class="dashboard-link" href="{% url 'parentuser:get_student_lessons' %}">
+                <div class="dashboard-box">
+                    <i class="fa fa-calendar-check-o fa-5x dashboard-icon" aria-hidden="true"></i>
+                    <h3>View Lessons</h3>
+                    <p>Click here if you want to pay for, cancel or just simply see lessons coming up.</p>
+                </div>
+            </a>
+        </div>
+    
+        <div class="col-lg-4 text-center">
+            <a class="dashboard-link" href="{% url 'parentuser:get_payments' %}">
+                <div class="dashboard-box">
+                    <i class="fa fa-credit-card fa-5x dashboard-icon" aria-hidden="true"></i>
+                    <h3>Paid Lessons</h3>
+                    <p>Click here for a statement of your past payments.</p>
+                </div>
+            </a>
+        </div>
+    
+        <div class="col-lg-4 text-center">
+            <a class="dashboard-link" href="{% url 'parentuser:parent_profile' %}">
+                <div class="dashboard-box">
+                    <i class="fa fa-user fa-5x dashboard-icon" aria-hidden="true"></i>
+                    <h3>View Profile</h3>
+                    <p>Click here to view the details we have for you.</p>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
-
 {% endblock %}
