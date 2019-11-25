@@ -5,9 +5,21 @@
 {% block content %}
 
 <h1>Delete Student</h1>
-<p>Are you sure you want to permenantly delete {{ student }}?</p>
-
-<p><a href="{% url 'staffuser:delete_student_confirm' student_id=student.id %}">Delete</a></p>
-<p><a href="{% url 'staffuser:student_profile' student_id=student.id %}">Cancel</a></p>
-
+<div class="col-lg-10 offset-lg-1">
+    <h5>Are you sure you want to permenantly delete {{ student }}?</h5>
+    
+    <div class="row col-12">
+        <div class="col-6 button-spacing">
+            <p><a href="{% url 'staffuser:delete_student_confirm' student_id=student.id %}">
+                <button type="button" class="btn btn-danger"><i class="fa fa-trash button-icon"></i>Delete Student</button>
+            </a></p>
+        </div>
+        <div class="col-6 text-right button-spacing">
+            <p><a href="{% url 'staffuser:students' %}">
+                <button type="button" class="btn btn-secondary"><i class="fa fa-arrow-left button-icon"></i>Go Back</button>
+            </a></p>
+        </div>
+    </div>
+</div>
 {% endblock %}
+

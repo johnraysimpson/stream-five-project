@@ -1,15 +1,19 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Add Student{% endblock %}
 
 {% block content %}
 
-<h1>Add student to Parent</h1>
-<form method='POST'>
-    <p><b>Parent: </b>{{ parent }}</p>
-    {% csrf_token %}
-    {{ student_form.as_p }}
-    <input type='submit' value='Save' />
-</form>
-
+<h1>Add Student To {{ parent }}</h1>
+<div class="col-lg-10 offset-lg-1">
+    <form method='POST'>
+        {% csrf_token %}
+        {{ student_form|crispy }}
+        <div class="button-spacing">
+            <button type="submit" class="btn btn-success"><i class="fa fa-plus button-icon"></i>Add Student</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

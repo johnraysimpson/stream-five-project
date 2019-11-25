@@ -271,9 +271,6 @@ thead > tr > th {
 }
 
 @media only screen and (min-width: 768px) {
-    .search-text {
-        display: none;
-    }
     
     .search-list-item {
     height: 36px;

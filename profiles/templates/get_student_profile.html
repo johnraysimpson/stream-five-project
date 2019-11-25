@@ -42,14 +42,6 @@
             <p>Telephone: {{ parent.telephone }}</p>
         {% endif %}
     </div>
-        
-    {% if user.is_staff %}
-        <div class="button-spacing">
-            <a href="{% url 'staffuser:delete_student' student_id=student.id %}">
-                <button type="button" class="btn btn-danger"><i class="fa fa-trash button-icon"></i>Delete Student</button>
-            </a>
-        </div>
-    {% endif %}
 </div>
 
 

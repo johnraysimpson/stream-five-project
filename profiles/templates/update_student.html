@@ -1,15 +1,20 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Update Student{% endblock %}
 
 {% block content %}
 
-<h1>Update {{ student }}'s Profile</h1>
-<form method='POST'>
-    <p><b>Parent: </b>{{ parent }}</p>
-    {% csrf_token %}
-    {{ student_form.as_p }}
-    <input type='submit' value='Save' />
-</form>
-
+<h1>Update Student Profile - {{ student }}</h1>
+<div class="col-lg-10 offset-lg-1">
+    <form method='POST'>
+        <h5><b>Parent: </b>{{ student.parent }}</h5>
+        {% csrf_token %}
+        {{ student_form|crispy }}
+        <div class="button-spacing">
+            <button type="submit" class="btn btn-success"><i class="fa fa-check button-icon"></i>Update Profile</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

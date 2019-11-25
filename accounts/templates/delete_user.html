@@ -6,17 +6,26 @@
 
 <h1>Delete User</h1>
 
-
-<p>Are you sure you want to permenantly delete {{ user_profile }}?</p>
-
-<p>Doing so will remove the users profile and any related students.</p>
-
-<a href="{% url 'staffuser:delete_user_confirm' user_id=user_for_deletion.id %}">Delete</a>
-    
-{% if user_for_deletion.is_parent %}
-    <a href="{% url 'staffuser:parents' %}">Cancel</a>
-{% else %}
-    <a href="{% url 'staffuser:tutors' %}">Cancel</a>
-{% endif %}
-
+<div class="col-lg-10 offset-lg-1">
+    <h5>Are you sure you want to permenantly delete {{ user_profile }}?</h5>
+    <div class="col-s12">
+        <p>Doing so will remove the users profile and any related students/lessons.</p>
+    </div>
+    <div class="row col-s12">
+        <div class="col-6 button-spacing">
+            <p><a href="{% url 'staffuser:delete_user_confirm' user_id=user_for_deletion.id %}">
+                <button type="button" class="btn btn-danger"><i class="fa fa-trash button-icon"></i>Delete User</button>
+            </a></p>
+        </div>
+        <div class="col-6 text-right button-spacing">
+            {% if user_for_deletion.is_parent %}
+                <p><a href="{% url 'staffuser:parents' %}">
+            {% else %}
+                <p><a href="{% url 'staffuser:tutors' %}">
+            {% endif %}
+                    <button type="button" class="btn btn-secondary"><i class="fa fa-arrow-left button-icon"></i>Go Back</button>
+                </a></p>
+        </div>
+    </div>
+</div>
 {% endblock %}
