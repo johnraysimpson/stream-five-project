@@ -16,6 +16,7 @@ body {
 
 h2, h3, h4, h5, h6 {
     font-family: 'McLaren', sans-serif;
+    margin: 20px 0px;
 }
 
 .company-name > h4 {
@@ -229,6 +230,20 @@ thead > tr > th {
 
 .search-title {
     margin-bottom: 20px;
+}
+
+.button-spacing {
+    margin: 20px 0px;
+}
+
+.button-icon-right {
+    margin-left: 4px;
+}
+
+.student-item {
+    border-bottom: solid 1px #dee2e6;
+    height: 40px;
+    margin-bottom: 10px;
 }
 
 

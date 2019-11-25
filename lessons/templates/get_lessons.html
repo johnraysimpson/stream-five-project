@@ -9,43 +9,55 @@
     <p>View date entered was either an invalid date or not a Monday.</p>
     {% else %}
     <p><a href="{% url 'staffuser:add_lesson' %}"><button type="button" class="btn btn-success">Create New Lesson</button></a></p>
-    <h2>Week commencing {{ view_date|date:"d F Y" }}</h2>
+    <h2>{{ view_date|date:"d F Y" }} - {{ sundays_date|date:"d F Y" }}</h2>
     {% for day in days_of_the_week %}
-    <h2>{{ day.capitalize }}</h2>
-        {% for lesson in lessons %}
-            {% if lesson.day == day %}
-            <div class="col-md-4 col-lg-3">
-            <table class="table">
-                <thead>
-                    <tr>
-                      <th scope="col">{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }} - {{ lesson.subject.capitalize }} <p>{{ lesson.time }}</p></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                      <th scope="row">Students</th>
-                    </tr>
-                    {% for student in lesson.student_set.all %}
-                    <tr>
-                      <td scope="row">{{ student.first_name }} {{ student.last_name }}</td>
-                    </tr>
-                    {% endfor %}
-                    <tr class="text-right">
-                        <td scope="row">
-                            <a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">
-                                <button class="btn btn-primary">
-                                    <i class="fa fa-pencil button-icon"></i>View/Edit Lesson
-                                </button>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
-            {% endif %}
-        {% endfor %}
+        <h2>{{ day.capitalize }}</h2>
+        <div class="row col-12">
+            {% for lesson in lessons %}
+                {% if lesson.day == day %}
+                <div class="col-md-4 col-lg-3">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                              <th scope="col">{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }} - {{ lesson.subject.capitalize }} <p>{{ lesson.time }}</p></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <th scope="row">Students</th>
+                            </tr>
+                            {% for student in lesson.student_set.all %}
+                            <tr>
+                              <td scope="row">{{ student.first_name }} {{ student.last_name }}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="text-right">
+                                <td scope="row">
+                                    <a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">
+                                        <button class="btn btn-primary">
+                                            <i class="fa fa-pencil button-icon"></i>View/Edit Lesson
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     {% endfor %}
-    <a class="page-links" href="{% url 'staffuser:get_lessons' mondays_date=previous_week %}">Previous Week</a>
-    <a class="page-links float-right" href="{% url 'staffuser:get_lessons' mondays_date=next_week %}">Next Week</a>
+    <div class="row col-12">
+        <div class="col-6 button-spacing">
+            <p><a class="page-links" href="{% url 'staffuser:get_lessons' mondays_date=previous_week %}">
+                <button type="button" class="btn btn-success"><i class="fa fa-arrow-left button-icon"></i>Previous Week</button>
+            </a></p>
+        </div>
+        <div class="col-6 button-spacing text-right">
+            <p><a class="page-links" href="{% url 'staffuser:get_lessons' mondays_date=next_week %}">
+                <button type="button" class="btn btn-success">Next Week<i class="fa fa-arrow-right button-icon-right"></i></button>
+            </a></p>
+        </div>
+    </div>
     {% endif %}
 {% endblock %}

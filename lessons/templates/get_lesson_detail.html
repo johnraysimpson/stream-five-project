@@ -4,21 +4,61 @@
 
 {% block content %}
 
-<h1>Lesson details</h1>
-
-<p>{{ lesson.tutor }}</p>
-<p>{{ lesson.subject }}</p>
-<p>{{ lesson.date }}</p>
-<p>{{ lesson.time }}</p>
-
-<p><a href="{% url 'staffuser:update_lesson_detail' lesson_id=lesson.id %}">Edit Lesson</a></p>
-
-{% for student in lesson.student_set.all %}
-    <p><a href="{% url 'staffuser:student_profile' student_id=student.id %}">{{ student.get_long_name }}</a></p>
-    <p><a href="{% url 'staffuser:remove_student_from_lesson_confirm' lesson_id=lesson.id student_id=student.id %}">Remove Student</a></p>
-{% endfor %}
-<p><a href="{% url 'staffuser:add_student_to_lesson' lesson_id=lesson.id %}">Add student to this lesson</a></p>
-
-<p><a href="{% url 'staffuser:delete_lesson_confirm' lesson_id=lesson.id %}">Delete Lesson</a></p>
+<h1>Lesson detail</h1>
+<div class="col-lg-10 offset-lg-1">
+    <h2>Information</h2>
+    <div class="col-12 lesson-info">
+        <table>
+            <tr>
+                <td><b>Tutor: </b></td>
+                <td>{{ lesson.tutor }}</td>
+            </tr>
+            <tr>
+                <td><b>Subject: </b></td>
+                <td>{{ lesson.subject }}</td>
+            </tr>
+            <tr>
+                <td><b>Date: </b></td>
+                <td>{{ lesson.date|date:"d F Y" }}</td>
+            </tr>
+            <tr>
+                <td><b>Time: </b></td>
+                <td>{{ lesson.time }}</td>
+            </tr>
+            <tr>
+                <td><b>Duration: </b></td>
+                <td>{{ hours }} hr {{ minutes }} mins</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-12 button-spacing">
+        <a href="{% url 'staffuser:update_lesson_detail' lesson_id=lesson.id %}">
+            <button type="button" class="btn btn-primary"><i class="fa fa-pencil button-icon"></i>Edit Lesson</button>
+        </a>
+    </div>
+    <h2>Students</h2>
+        {% for student in lesson.student_set.all %}
+        <div class="row col-12 student-item">
+            <div class="col-6">
+                <p class="search-name"><a class="page-links" href="{% url 'staffuser:student_profile' student_id=student.id %}">{{ student.get_long_name }}</a></p>
+            </div>
+            <div class="col-6 text-right">
+                <p><a href="{% url 'staffuser:remove_student_from_lesson_confirm' lesson_id=lesson.id student_id=student.id %}">
+                    <button type="button" class="btn btn-danger">Remove</button>
+                </a></p>
+            </div>
+        </div>
+        {% endfor %}
+    <div class="col-12 button-spacing">
+        <a href="{% url 'staffuser:add_student_to_lesson' lesson_id=lesson.id %}">
+            <button type="button" class="btn btn-success"><i class="fa fa-plus button-icon"></i>Add student to this lesson</button>
+        </a>
+    </div>
+    <div class="col-12 button-spacing">
+        <a href="{% url 'staffuser:delete_lesson_confirm' lesson_id=lesson.id %}">
+            <button type="button" class="btn btn-danger"><i class="fa fa-trash button-icon"></i>Delete Lesson</button>
+        </a>
+    </div>
+</div>
 
 {% endblock %}

@@ -231,7 +231,8 @@ def get_lessons_view(request, mondays_date):
             previous_week = (view_date - timedelta(days=7)).date
             return render(request, 'get_lessons.html', {'lessons': this_weeks_lessons, 
                                                         'days_of_the_week': days_of_the_week, 
-                                                        'view_date': view_date, 
+                                                        'view_date': view_date,
+                                                        'sundays_date': sundays_date,
                                                         'next_week': next_week, 
                                                         'previous_week': previous_week}
                                                         )
@@ -245,7 +246,10 @@ def get_lessons_view(request, mondays_date):
 def get_lesson_details_view(request, lesson_id):
     """View for retrieving a lesson and displaying details"""
     lesson = get_object_or_404(Lesson, pk=lesson_id)
-    return render(request, 'get_lesson_detail.html', {'lesson': lesson})
+    total_minutes = lesson.duration.total_seconds()
+    hours = int(total_minutes // 60)
+    minutes = int(total_minutes % 60)
+    return render(request, 'get_lesson_detail.html', {'lesson': lesson, 'hours': hours, 'minutes': minutes})
     
 @login_required
 @user_passes_test(parent_test, redirect_field_name=None, login_url='/oops/')
