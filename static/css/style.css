@@ -246,6 +246,10 @@ thead > tr > th {
     margin-bottom: 10px;
 }
 
+.lesson-info > table > tbody > tr > td:nth-child(even) {
+    padding-left: 20px;
+}
+
 
 @media only screen and (min-width: 992px) {
     .dashboard-box {

@@ -19,6 +19,14 @@ def get_next_august():
     if month >= 8:
         year += 1
     return date(year, 8, 1)
+    
+def get_hours_and_minutes(lesson):
+    """Function to return the duration field in hours and minutes"""
+    total_minutes = lesson.duration.total_seconds()
+    hours = int(total_minutes // 60)
+    minutes = int(total_minutes % 60)
+    hours_and_minutes = {'hours': hours, 'minutes': minutes}
+    return hours_and_minutes
 
 
 @login_required
@@ -98,7 +106,8 @@ def update_lesson_view(request, lesson_id):
 def delete_lesson_confirm_view(request, lesson_id):
     """View to render page confirming deletion particular lesson"""
     lesson = get_object_or_404(Lesson, pk=lesson_id)
-    return render(request, 'delete_lesson_confirm.html', {'lesson': lesson})
+    hours_and_minutes = get_hours_and_minutes(lesson)
+    return render(request, 'delete_lesson_confirm.html', {'lesson': lesson, 'hours_and_minutes': hours_and_minutes})
     
 def delete_lesson_view(request, lesson_id):
     """View to delete particular lesson"""
@@ -159,6 +168,7 @@ def relate_via_student_view(request, student_id):
 def relate_via_lesson_view(request, lesson_id):
     """View to render page and more for creating relationship between lesson and student via the lesson"""
     lesson = get_object_or_404(Lesson, pk=lesson_id)
+    hours_and_minutes = get_hours_and_minutes(lesson)
     if request.method == "POST":
         student_lesson_form = StudentToLessonForm(request.POST, request=request)
         if student_lesson_form.is_valid():
@@ -196,7 +206,7 @@ def relate_via_lesson_view(request, lesson_id):
                 return redirect('staffuser:get_lesson_detail', lesson_id=lesson_id)
     else:
         student_lesson_form = StudentToLessonForm(request=request)
-    return render(request, 'add_student_to_lesson.html', {'lesson': lesson, 'student_lesson_form': student_lesson_form})
+    return render(request, 'add_student_to_lesson.html', {'lesson': lesson, 'student_lesson_form': student_lesson_form, 'hours_and_minutes': hours_and_minutes})
 
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
@@ -204,7 +214,8 @@ def remove_student_from_lesson_confirm_view(request, lesson_id, student_id):
     """View to render a confirmation page for removing the relationship between a lesson and a student"""
     student = get_object_or_404(Student, pk=student_id)
     lesson = get_object_or_404(Lesson, pk=lesson_id)
-    return render(request, 'remove_student_from_lesson_confirm.html', {'student': student, 'lesson': lesson})
+    hours_and_minutes = get_hours_and_minutes(lesson)
+    return render(request, 'remove_student_from_lesson_confirm.html', {'student': student, 'lesson': lesson, 'hours_and_minutes': hours_and_minutes})
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
@@ -246,10 +257,8 @@ def get_lessons_view(request, mondays_date):
 def get_lesson_details_view(request, lesson_id):
     """View for retrieving a lesson and displaying details"""
     lesson = get_object_or_404(Lesson, pk=lesson_id)
-    total_minutes = lesson.duration.total_seconds()
-    hours = int(total_minutes // 60)
-    minutes = int(total_minutes % 60)
-    return render(request, 'get_lesson_detail.html', {'lesson': lesson, 'hours': hours, 'minutes': minutes})
+    hours_and_minutes = get_hours_and_minutes(lesson)
+    return render(request, 'get_lesson_detail.html', {'lesson': lesson, 'hours_and_minutes': hours_and_minutes})
     
 @login_required
 @user_passes_test(parent_test, redirect_field_name=None, login_url='/oops/')

@@ -11,10 +11,14 @@
 {% block content %}
 
 <h1>Update Lesson</h1>
-<form method='POST'>
-    {% csrf_token %}
-    {{ update_lesson_form|crispy }}
-    <input type='submit' value='Save' />
-</form>
+<div class="col-lg-10 offset-lg-1">
+    <form method='POST'>
+        {% csrf_token %}
+        {{ update_lesson_form|crispy }}
+        <div class="button-spacing">
+            <button type="submit" class="btn btn-success"><i class="fa fa-sign-in button-icon"></i>Update Lesson</button>
+        </div>
+    </form>
+</div>
 
 {% endblock %}

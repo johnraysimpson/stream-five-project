@@ -9,22 +9,56 @@
 {% elif user.is_parent %}
 <h1>Cancel Lesson</h1>
 {% endif %}
-
-<p>Are you sure you want to remove</p>
-
+<div class="col-lg-10 offset-lg-1">
+<h5>Are you sure you want to remove</h5>
+<div class="col-12">
 <p>{{ student }}</p>
+</div>
+<h5>from the lesson</h5>
 
-<p>from the lesson</p>
+<div class="col-12 lesson-info">
+        <table>
+            <tr>
+                <td><b>Tutor: </b></td>
+                <td>{{ lesson.tutor }}</td>
+            </tr>
+            <tr>
+                <td><b>Subject: </b></td>
+                <td>{{ lesson.subject }}</td>
+            </tr>
+            <tr>
+                <td><b>Date: </b></td>
+                <td>{{ lesson.date|date:"d F Y" }}</td>
+            </tr>
+            <tr>
+                <td><b>Time: </b></td>
+                <td>{{ lesson.time }}</td>
+            </tr>
+            <tr>
+                <td><b>Duration: </b></td>
+                <td>{{ hours_and_minutes.hours }} hr {{ hours_and_minutes.minutes }} mins</td>
+            </tr>
+        </table>
+    </div>
+    {% if user.is_staff %}
+        <div class="row col-12">
+            <div class="col-6 button-spacing">
+                <p><a href="{% url 'staffuser:remove_student_from_lesson' lesson_id=lesson.id student_id=student.id %}">
+                    <button type="button" class="btn btn-danger"><i class="fa fa-times button-icon"></i>Remove</button>
+                </a></p>
+            </div>
+            <div class="col-6 text-right button-spacing">
+                <p><a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">
+                    <button type="button" class="btn btn-secondary"><i class="fa fa-arrow-left button-icon"></i>Cancel</button>
+                </a></p>
+            </div>
+        </div>
+    {% elif user.is_parent %}
+        <p><a href="{% url 'parentuser:remove_student_from_lesson' lesson_id=lesson.id student_id=student.id %}">Cancel Lesson</a></p>
+        <p><a href="{% url 'parentuser:get_student_lessons' %}">Go Back</a></p>
+    {% endif %}
+</div>
 
-<p>{{ lesson }}</p>
 
-
-{% if user.is_staff %}
-<p><a href="{% url 'staffuser:remove_student_from_lesson' lesson_id=lesson.id student_id=student.id %}">Remove</a></p>
-<p><a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">Cancel</a></p>
-{% elif user.is_parent %}
-<p><a href="{% url 'parentuser:remove_student_from_lesson' lesson_id=lesson.id student_id=student.id %}">Cancel Lesson</a></p>
-<p><a href="{% url 'parentuser:get_student_lessons' %}">Go Back</a></p>
-{% endif %}
 
 {% endblock %}

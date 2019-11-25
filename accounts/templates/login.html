@@ -11,7 +11,7 @@
     <form method="POST" class="form-style">
         {% csrf_token %}
         {{ login_form|crispy }}
-        <div>
+        <div class="button-spacing">
             <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in button-icon"></i>Login</button>
         </div>
     </form>
