@@ -15,10 +15,10 @@ import stripe
 
 stripe.api_key = settings.STRIPE_SECRET
 
-def earnings_period(month):
+def earnings_period(view_date):
     """Function to declare that the earning period is always between the 21 of two consecutive months"""
-    today = datetime.today()
-    year = today.year
+    year = view_date.year
+    month = view_date.month
     if month == 1:
         prev_month = 12
         return [(date(year-1, prev_month, 21)), (date(year, month, 21))]
@@ -26,9 +26,9 @@ def earnings_period(month):
         return [(date(year, month-1, 21)), (date(year, month, 21))]
         
         
-def intake_period(month):
-    today = datetime.today()
-    year = today.year
+def intake_period(view_date):
+    year = view_date.year
+    month = view_date.month
     if month == 12:
         next_month = 1
         return [(date(year, month, 1)), (date(year+1, next_month, 1))]
@@ -53,11 +53,12 @@ def get_earnings(request_date, tutor):
     view_date = datetime.strptime(request_date, "%Y-%m-%d")
     view_month = view_date.month
     print(view_month)
-    payment_month = earnings_period(view_month)
+    payment_month = earnings_period(view_date)
     next_month = get_next_month(view_date, view_month)
     last_month = get_last_month(view_date, view_month)
     current_month_name = view_date.strftime("%B")
-    lessons = Lesson.objects.filter(date__gt=payment_month[0], date__lte=payment_month[1])
+    current_year = view_date.strftime("%Y")
+    lessons = Lesson.objects.filter(tutor=tutor, date__gt=payment_month[0], date__lte=payment_month[1]).order_by('date')
     earnings = 0
     for lesson in lessons:
         duration = lesson.duration
@@ -65,7 +66,8 @@ def get_earnings(request_date, tutor):
         earned = round((total_minutes / 60) * float(tutor.pay_per_hour), 2)
         earnings += earned
     rounded_earnings = '{0:.2f}'.format(earnings)
-    return {'tutor': tutor, "current_month_name": current_month_name, 'lessons': lessons, 'rounded_earnings': rounded_earnings, 'last_month': last_month, 'next_month': next_month}
+    print(payment_month)
+    return {'tutor': tutor, "current_month_name": current_month_name, 'current_year': current_year, 'lessons': lessons, 'rounded_earnings': rounded_earnings, 'last_month': last_month, 'next_month': next_month}
 
 
 def get_intake(payments):
@@ -83,7 +85,7 @@ def intake_view(request, request_date):
     view_date = datetime.strptime(request_date, "%Y-%m-%d")
     view_month = view_date.month
     print(view_month)
-    intake_month = intake_period(view_month)
+    intake_month = intake_period(view_date)
     next_month = get_next_month(view_date, view_month)
     last_month = get_last_month(view_date, view_month)
     current_month_name = view_date.strftime("%B")

@@ -9,21 +9,21 @@
 {% endblock %}
 
 {% block content %}
-
-
-
 <h1>Add Lesson</h1>
-<form method='POST'>
-    {% csrf_token %}
-    
-    {{ lesson_form|crispy }}
-    <input type='submit' value='Save' />
-</form>
+<div class="col-lg-10 offset-lg-1">
+    <form method='POST'>
+        {% csrf_token %}
+        {{ lesson_form|crispy }}
+        <div class="button-spacing">
+            <button type="submit" class="btn btn-success"><i class="fa fa-plus button-icon"></i>Create Lesson</button>
+        </div>
+    </form>
     {% if dates %}
     {% for date in dates %}
     <span>{{ date|date:"d F Y" }}, </span>
     {% endfor %}
     {% endif %}
+</div>
 
 {% endblock %}
 

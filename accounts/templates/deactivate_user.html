@@ -1,17 +1,32 @@
 {% extends 'base.html' %}
 
-{% block title %}Deactivate Parent{% endblock %}
+{% block title %}Deactivate User{% endblock %}
 
 {% block content %}
 
 <h1>Deactivate User</h1>
 
-<p>Are you sure you want to deactivate {{ parent_profile }}?</p>
-
-<p>Doing so will remove all lessons from any related students.</p>
-
-<a href="{% url 'staffuser:deactivate_user_confirm' user_id=parent_user.id %}">Deactivate</a>
-
-<a href="{% url 'staffuser:parents' %}">Cancel</a>
-
+<div class="col-lg-10 offset-lg-1">
+    <h5>Are you sure you want to deactivate {{ profile }}?</h5>
+    <div class="col-12">
+        <p>Doing so will remove all related lessons.</p>
+    </div>
+    <div class="row col-s12">
+        <div class="col-6 button-spacing">
+            <p><a href="{% url 'staffuser:deactivate_user_confirm' user_id=user.id %}">
+                <button type="button" class="btn btn-danger"><i class="fa fa-times button-icon"></i>Deactivate</button>
+            </a></p>
+        </div>
+        <div class="col-6 text-right button-spacing">
+            {% if profile.user.is_parent %}
+                <p><a href="{% url 'staffuser:parents' %}">
+            {% else %}
+                <p><a href="{% url 'staffuser:tutors' %}">
+            {% endif %}
+                    <button type="button" class="btn btn-secondary"><i class="fa fa-arrow-left button-icon"></i>Go Back</button>
+                </a></p>
+        </div>
+    </div>
+</div>
 {% endblock %}
+

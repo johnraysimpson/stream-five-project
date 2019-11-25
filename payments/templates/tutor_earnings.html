@@ -4,24 +4,62 @@
 
 {% block content %}
 
-{% if messages %}
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
-
-<h1>Tutor earnings</h1>
-<h3>{{ current_month_name }}</h3>
-<h3>£{{ rounded_earnings }}</h3>
-{% for lesson in lessons %}
-<p>{{ lesson }} - £{{ lesson.earning }}</p>
-{% endfor %}
-
-{% if user.is_staff %}
-<p><a href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=last_month %}">Last Month</a></p>
-<p><a href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=next_month %}">Next Month</a></p>
-{% elif user.is_tutor %}
-<p><a href="{% url 'tutoruser:my_earnings' request_date=last_month %}">Last Month</a></p>
-<p><a href="{% url 'tutoruser:my_earnings' request_date=next_month %}">Next Month</a></p>
-{% endif %}
+<h1>Tutor Earnings - {{ tutor.first_name }} {{ tutor.last_name }}</h1>
+<div class="col-lg-10 offset-lg-1">
+    <h3>{{ current_month_name }} {{ current_year }}</h3>
+    <div class="col-12 table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Earning</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for lesson in lessons %}
+            <tr>
+                <td>{{ lesson.subject }}</td>
+                <td>{{ lesson.date }}</td>
+                <td>{{ lesson.time }}</td>
+                <td>£{{ lesson.earning }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-12 text-right">
+        <h3>Total: £{{ rounded_earnings }}</h3>
+    </div>
+    
+    {% if user.is_staff %}
+    <div class="row">
+        <div class="col-6 button-spacing">
+            <p><a class="page-links" href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=last_month %}">
+                <button type="button" class="btn btn-success"><i class="fa fa-arrow-left button-icon"></i>Last Month</button>
+            </a></p>
+        </div>
+        <div class="col-6 button-spacing text-right">
+            <p><a class="page-links" href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=next_month %}">
+                <button type="button" class="btn btn-success">Next Month<i class="fa fa-arrow-right button-icon-right"></i></button>
+            </a></p>
+        </div>
+    </div>
+    {% elif user.is_tutor %}
+    <div class="row">
+        <div class="col-6 button-spacing">
+            <p><a class="page-links" href="{% url 'tutoruser:my_earnings' request_date=last_month %}">
+                <button type="button" class="btn btn-success"><i class="fa fa-arrow-left button-icon"></i>Last Month</button>
+            </a></p>
+        </div>
+        <div class="col-6 button-spacing text-right">
+            <p><a class="page-links" href="{% url 'tutoruser:my_earnings' request_date=last_month %}">
+                <button type="button" class="btn btn-success">Next Month<i class="fa fa-arrow-right button-icon-right"></i></button>
+            </a></p>
+        </div>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
+

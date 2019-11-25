@@ -5,6 +5,7 @@ from .forms import UserLoginForm, FirstPasswordChangeForm, CreateUserForm
 from profiles.forms import ParentProfileForm, TutorProfileForm
 from .models import User
 from profiles.models import ParentProfile, Student, TutorProfile
+from lessons.models import Lesson
 from staffuser.views import staff_test
 
 
@@ -123,7 +124,7 @@ def add_tutor_view(request):
             tutor_profile.user = user
             tutor_profile.save()
             messages.success(request, "Tutor successfully created")
-            return redirect('staffuser:dashboard')
+            return redirect('staffuser:tutor_profile', tutor_id=tutor_profile.id)
     else:
         tutor_user_form = CreateUserForm()
         tutor_profile_form = TutorProfileForm()
@@ -132,35 +133,50 @@ def add_tutor_view(request):
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def deactivate_user_view(request, user_id):
-    """View to render a confirmation page to deactivate a parent user"""
-    parent_user = get_object_or_404(User, pk=user_id)
-    parent_profile = get_object_or_404(ParentProfile, user=parent_user)
-    return render(request, 'deactivate_user.html', {'parent_user': parent_user, 'parent_profile': parent_profile})
+    """View to render a confirmation page to deactivate a user"""
+    user = get_object_or_404(User, pk=user_id)
+    try:
+        profile = ParentProfile.objects.get(user=user)
+    except ParentProfile.DoesNotExist:
+        profile = TutorProfile.objects.get(user=user)
+    return render(request, 'deactivate_user.html', {'user': user, 'profile': profile})
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def deactivate_user_confirm_view(request, user_id):
-    """View which deactivates a parent user and removes all lessons from students"""
+    """View which deactivates a user and removes anything related to lessons"""
     user = get_object_or_404(User, pk=user_id)
-    parent_profile = ParentProfile.objects.get(user=user)
     user.is_active=False
     user.save()
-    students = Student.objects.filter(parent=parent_profile)
-    for student in students:
-        student.lessons.clear()
-    messages.success(request, 'User '+parent_profile.first_name+' '+parent_profile.last_name+' has been deactivated.')
-    return redirect('staffuser:parents')
+    try:
+        parent_profile = ParentProfile.objects.get(user=user)
+        students = Student.objects.filter(parent=parent_profile)
+        for student in students:
+            student.lessons.clear()
+        messages.success(request, 'User '+parent_profile.first_name+' '+parent_profile.last_name+' has been deactivated.')
+        return redirect('staffuser:parents')
+    except ParentProfile.DoesNotExist:
+        tutor_profile = TutorProfile.objects.get(user=user)
+        lessons = Lesson.objects.filter(tutor=tutor_profile)
+        for lesson in lessons:
+            lesson.delete()
+        messages.success(request, 'User '+tutor_profile.first_name+' '+tutor_profile.last_name+' has been deactivated.')
+        return redirect('staffuser:tutors')
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def reactivate_user_confirm_view(request, user_id):
     """View which reactivates a parent user"""
     user = get_object_or_404(User, pk=user_id)
-    parent_profile = ParentProfile.objects.get(user=user)
     user.is_active=True
     user.save()
     messages.success(request, 'This user has been reactivated.')
-    return redirect('staffuser:parent_profile', parent_id=parent_profile.id)
+    try:
+        parent_profile = ParentProfile.objects.get(user=user)
+        return redirect('staffuser:parents')
+    except ParentProfile.DoesNotExist:
+        tutor_profile = TutorProfile.objects.get(user=user)
+        return redirect('staffuser:tutors')
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
@@ -176,7 +192,15 @@ def delete_user_view(request, user_id):
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def delete_user_confirm_view(request, user_id):
-    """View which permenantly deletes a parent user"""
-    get_object_or_404(User, pk=user_id).delete()
-    messages.success(request, 'The user was permenantly deleted.')
-    return redirect('staffuser:parents')
+    """View which permenantly deletes a user"""
+    user = get_object_or_404(User, pk=user_id)
+    try:
+        user_profile = ParentProfile.objects.get(user=user)
+        user.delete()
+        messages.success(request, 'The user was permenantly deleted.')
+        return redirect('staffuser:parents')
+    except ParentProfile.DoesNotExist:
+        user_profile = TutorProfile.objects.get(user=user)
+        user.delete()
+        messages.success(request, 'The user was permenantly deleted.')
+        return redirect('staffuser:tutors')

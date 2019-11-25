@@ -1,14 +1,20 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Update Tutor Profile{% endblock %}
 
 
 {% block content %}
 
-<h1>Update Profile Information For Tutor - {{ tutor }}</h1>
+<h1>Update Tutor Profile - {{ tutor.first_name }} {{ tutor.last_name }}</h1>
+<div class="col-lg-10 offset-lg-1">
     <form method='POST'>
         {% csrf_token %}
-        {{ tutor_profile_form.as_p }}
-        <input type='submit' value='Save' />
+        {{ tutor_profile_form|crispy }}
+        <div class="button-spacing">
+            <button type="submit" class="btn btn-success"><i class="fa fa-check button-icon"></i>Update Profile</button>
+        </div>
     </form>
+</div>
 {% endblock %}

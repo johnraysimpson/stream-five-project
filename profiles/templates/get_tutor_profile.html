@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Parent Profile{% endblock %}
+{% block title %}tutor Profile{% endblock %}
 
 {% block content %}
 
@@ -10,19 +10,73 @@
     {% endfor %}
 {% endif %}
 
-<h1>Profile of {{ tutor }}</h1>
-
-<p><b>Email: </b>{{ tutor.user.email }}</p>
-<p><b>Address: </b>{{ tutor.address1 }}</p>
-
-{% if user.is_staff %}
-<a href="{% url 'staffuser:update_tutor_profile' tutor_id=tutor.id  %}">Edit Profile</a>
-{% else %}
-<p>If any information is incorrect or needs updating, contact a member of staff.</p>
-{% endif %}
-
-{% if user.is_staff %}
-<p><a href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=todays_date %}">Earnings</a></p>
-{% endif %}
+<h1>Profile of {{ tutor.first_name }} {{ tutor.last_name }}</h1>
+<div class="col-lg-10 offset-lg-1">
+    <div class="row message">
+        {% if messages %}
+            {% for message in messages %}
+                <p><i class="fa fa-exclamation-circle fa-lg"></i>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <h3>Contact Information</h3>
+    <div class="col-12">
+        <div class="table-content">
+            <table>
+                <tr>
+                    <td><b>Email: </b></td>
+                    <td>{{ tutor.user.email }}</td>
+                </tr>
+                <tr>
+                    <td><b>Telephone: </b></td>
+                    <td>{{ tutor.telephone }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <h3>Address</h3>
+    <div class="col-12">
+        <div class="address-info">
+            <p>{{ tutor.address1 }},</p>
+            {% if tutor.address2 %}
+                <p>{{ tutor.address2 }},</p>
+            {% endif %}
+            <p>{{ tutor.town_or_city }},</p>
+            <p>{{ tutor.county }},</p>
+            <p>{{ tutor.post_code }}</p>
+        </div>
+    </div>
+    <h3>Employment Information</h3>
+    <div class="col-12">
+        <div class="table-content">
+            <table>
+                <tr>
+                    <td><b>Main Centre: </b></td>
+                    <td>{{ tutor.user.centre }}</td>
+                </tr>
+                <tr>
+                    <td><b>Hourly Rate: </b></td>
+                    <td>£{{ tutor.pay_per_hour }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    {% if user.is_staff %}
+        <div class="col-12 button-spacing">
+            <p><a href="{% url 'staffuser:update_tutor_profile' tutor_id=tutor.id  %}">
+                <button type="button" class="btn btn-primary"><i class="fa fa-pencil button-icon"></i>Edit Profile</button>
+            </a></p>
+        </div>
+        <div class="button-spacing">
+            <p><a href="{% url 'staffuser:tutor_earnings' tutor_id=tutor.id request_date=todays_date %}">
+                <button type="button" class="btn btn-success"><i class="fa fa-money button-icon"></i>View Earnings</button>
+            </a></p>
+        </div>
+    {% elif user.is_tutor %}
+        <div class="col-12">
+            <p><b>If any information is incorrect or needs changing, please contact a member of staff.</b></p>
+        </div>
+    {% endif %}
+</div>
 
 {% endblock %}
