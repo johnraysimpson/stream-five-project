@@ -4,12 +4,6 @@
 
 {% block content %}
 
-{% if messages %}
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
-
 <h1>My Payments</h1>
 <div class="col-lg-10 offset-lg-1">
     {% if payments %}

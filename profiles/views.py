@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from staffuser.views import staff_test
@@ -7,8 +7,7 @@ from tutoruser.views import tutor_test
 from lessons.views import get_next_august
 from accounts.models import User
 from .models import Student, ParentProfile, TutorProfile
-from django.http import HttpResponse
-from datetime import datetime, date, timedelta
+from datetime import datetime, date
 from .forms import ParentProfileForm, TutorProfileForm, StudentForm
 
 def get_next_september():
@@ -24,7 +23,6 @@ def get_year_group(date):
     """Function that uses the date of birth of a student to find the year group they are currently in"""
     age = (get_next_september() - date).days // 365.5
     year_group = int(age - 5)
-    print(year_group)
     return year_group
 
 # PARENT BASED VIEWS
@@ -62,6 +60,7 @@ def add_student_view(request, parent_id):
             student = student_form.save()
             student.parent = parent
             student.save()
+            messages.success(request, 'Student successfully created.')
             return redirect('staffuser:student_profile', student_id=student.id)
     else:
         student_form = StudentForm()

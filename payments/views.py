@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from datetime import datetime, date, timedelta
+from datetime import datetime, date
 from .models import Payment
 from .forms import MakePaymentForm
 from lessons.models import Lesson
@@ -53,7 +53,6 @@ def get_last_month(request_date, month):
 def get_earnings(request_date, tutor):
     view_date = datetime.strptime(request_date, "%Y-%m-%d")
     view_month = view_date.month
-    print(view_month)
     payment_month = earnings_period(view_date)
     next_month = get_next_month(view_date, view_month)
     last_month = get_last_month(view_date, view_month)
@@ -67,7 +66,6 @@ def get_earnings(request_date, tutor):
         earned = round((total_minutes / 60) * float(tutor.pay_per_hour), 2)
         earnings += earned
     rounded_earnings = '{0:.2f}'.format(earnings)
-    print(payment_month)
     return {'tutor': tutor, "current_month_name": current_month_name, 'current_year': current_year, 'lessons': lessons, 'rounded_earnings': rounded_earnings, 'last_month': last_month, 'next_month': next_month}
 
 
@@ -76,7 +74,6 @@ def get_intake(payments):
     for payment in payments:
         paid_amount = float(payment.amount_paid)
         intake += paid_amount
-        print(intake)
     rounded_intake = '{0:.2f}'.format(intake)
     return rounded_intake
 
@@ -85,7 +82,6 @@ def get_intake(payments):
 def intake_view(request, request_date):
     view_date = datetime.strptime(request_date, "%Y-%m-%d")
     view_month = view_date.month
-    print(view_month)
     intake_month = intake_period(view_date)
     next_month = get_next_month(view_date, view_month)
     last_month = get_last_month(view_date, view_month)
@@ -130,7 +126,6 @@ def intake_view(request, request_date):
 def whole_intake_view(request, request_date):
     view_date = datetime.strptime(request_date, "%Y-%m-%d")
     view_month = view_date.month
-    print(view_month)
     intake_month = intake_period(view_month)
     next_month = get_next_month(view_date, view_month)
     last_month = get_last_month(view_date, view_month)
@@ -221,7 +216,6 @@ def make_payment_view(request, parent_id, student_id, lesson_id):
                 except stripe.error.CardError:
                     messages.error(request, "Your card was declined")
             else:
-                print(payment_form.errors)
                 messages.error(request, "We were unable to take payment with that card")
         else:
             payment_form = MakePaymentForm()

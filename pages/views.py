@@ -1,5 +1,4 @@
-from django.shortcuts import render, redirect, reverse
-from django.contrib import auth, messages
+from django.shortcuts import render
 from adminuser.models import Centre
 
 # Create your views here.

@@ -15,7 +15,6 @@ def add_or_search_parent_view(request):
                                                                                                                 ).order_by('last_name')
     except:
         parents = ParentProfile.objects.filter(user__centre=request.user.centre).order_by('last_name')
-    print(request.GET.get('q'))
     return render(request, 'parents.html', {'parents': parents})
     
 def search_student_view(request):

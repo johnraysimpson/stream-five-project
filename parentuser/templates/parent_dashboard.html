@@ -2,13 +2,7 @@
 
 {% block title %}Parent Dashboard{% endblock %} 
 
-{% block content %} 
-
-{% if messages %} 
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %} 
-{% endif %}
+{% block content %}
 
 <h1>Hello, {{ parent }}</h1>
 <div class="col-lg-10 offset-lg-1">

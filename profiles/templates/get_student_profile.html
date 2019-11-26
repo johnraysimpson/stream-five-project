@@ -6,6 +6,13 @@
 
 <h1>Profile of {{ student }}</h1>
 <div class="col-lg-10 offset-lg-1">
+    <div class="row message">
+        {% if messages %}
+            {% for message in messages %}
+                <p><i class="fa fa-exclamation-circle fa-lg" aria-hidden="true"></i>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
     <h3>Personal Information</h3>
     <div class="col-12">
         <div class="table-content">

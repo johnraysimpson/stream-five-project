@@ -4,15 +4,16 @@
 
 {% block content %}
 
-{% if messages %}
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
-
 <h1>Hello, {{ tutor.first_name }} {{ tutor.last_name }}!</h1>
  
 <div class="col-lg-10 offset-lg-1">
+    <div class="row message">
+        {% if messages %}
+            {% for message in messages %}
+                <p><i class="fa fa-exclamation-circle fa-lg" aria-hidden="true"></i>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
     <div class="row dashboard">
         <div class="col-lg-4 text-center">
             <a class="dashboard-link" href="{% url 'tutoruser:get_tutor_lessons' %}">

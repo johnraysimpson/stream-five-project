@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import UserLoginForm, FirstPasswordChangeForm, CreateUserForm
@@ -99,7 +99,7 @@ def add_parent_view(request):
             parent_profile.user = user
             parent_profile.save()
             messages.success(request, "Parent successfully created")
-            return redirect('staffuser:dashboard')
+            return redirect('staffuser:parent_profile', parent_id=parent_profile.id)
     else:
         parent_user_form = CreateUserForm()
         parent_profile_form = ParentProfileForm()

@@ -3,16 +3,17 @@
 {% block title %}View Lessons{% endblock %}
 
 {% block content %}
-
-{% if messages %}
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
-
-{% if unpaid_lessons %}
-    <h1>Unpaid lessons</h1>
-    <div class="col-lg-10 offset-lg-1">
+<div class="col-lg-10 offset-lg-1">
+    <h1>Student Lessons</h1>
+    <div class="row message">
+        {% if messages %}
+            {% for message in messages %}
+                <p><i class="fa fa-exclamation-circle fa-lg" aria-hidden="true"></i>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+    {% if unpaid_lessons %}
+        <h2>Unpaid lessons</h2>
         {% for lesson in unpaid_lessons %}
             <div class="col-12">
                 <table class="table unpaid-table">
@@ -41,11 +42,8 @@
                 </table>
             </div>
         {% endfor %}
-    </div>
-{% endif %}
-
-<h1>Upcoming Lessons</h1>
-<div class="col-lg-10 offset-lg-1">
+    {% endif %}
+    <h2>Upcoming Lessons</h2>
     <p>Displaying 10 lessons per page</p>
     {% for lesson in future_lessons %}
         {% for student in students %}

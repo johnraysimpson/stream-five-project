@@ -1,7 +1,5 @@
-from django.shortcuts import render, redirect
-from datetime import datetime, date, timedelta
-from accounts.forms import CreateUserForm
-from accounts.models import User
+from django.shortcuts import render
+from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 
@@ -15,7 +13,6 @@ def get_mondays_date():
     mondays_date=todays_date - timedelta(days=todays_date.weekday())
     return mondays_date
 
-#keep
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def staff_dashboard_view(request):

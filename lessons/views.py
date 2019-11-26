@@ -64,7 +64,6 @@ def add_lesson_view(request):
                         start_date += timedelta(days=7)
                         
                     messages.success(request, 'Lessons successfully created')
-                    print(lesson_form.errors)
                     return redirect('staffuser:dashboard')
             else:
                 try:
@@ -92,7 +91,6 @@ def add_lesson_view(request):
 def update_lesson_view(request, lesson_id):
     """View that renders an instance of the lesson form that has already been created for editing"""
     lesson = get_object_or_404(Lesson, pk=lesson_id)
-    print(lesson.time)
     if request.method == 'POST':
         update_lesson_form = LessonForm(request.POST, instance = lesson)
         if update_lesson_form.is_valid():
@@ -151,7 +149,6 @@ def relate_via_student_view(request, student_id):
                         
                     else:
                         start_date += timedelta(days=14)
-                print(matched_lessons) 
                 if not matched_lessons:
                     lesson_form.add_error(None, 'lesson(s) do not exist')
                 else:
