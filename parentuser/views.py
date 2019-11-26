@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
 from profiles.models import ParentProfile
 
-# Create your views here.
+
 def parent_test(user):
     """Test to check if the user is a parent"""
     return user.is_parent

@@ -29,10 +29,6 @@ class UserAdmin(BaseUserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
 
-
 admin.site.register(User, UserAdmin)
 
-
-
-# Remove Group Model from admin. We're not using it.
 admin.site.unregister(Group)

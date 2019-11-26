@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from adminuser.models import Centre
 
-# Create your views here.
+
 def home_view(request):
     """Renders home page"""
     return render(request, 'index.html')

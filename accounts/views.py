@@ -65,7 +65,7 @@ def first_password_change(request):
         form = FirstPasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            auth.update_session_auth_hash(request, user)  # Important!
+            auth.update_session_auth_hash(request, user)
             user.password_changed=True
             user.save()
             messages.success(request, 'Your password was successfully updated!')
@@ -104,8 +104,7 @@ def add_parent_view(request):
         parent_user_form = CreateUserForm()
         parent_profile_form = ParentProfileForm()
     return render(request, "add_parent_user.html", {'parent_user_form': parent_user_form, 'parent_profile_form': parent_profile_form})
-  
-#accounts 
+
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')
 def add_tutor_view(request):

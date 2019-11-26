@@ -17,7 +17,6 @@ class LessonForm(forms.ModelForm):
     tutor = forms.ModelChoiceField(queryset=TutorProfile.objects.all(), empty_label="Choose Tutor", required=True)
     day = forms.ChoiceField(choices=DAY_CHOICES)
     subject = forms.ChoiceField(choices=SUBJECT_CHOICES)
-    #time = forms.TimeField(label="Time (24 hour)",input_formats=['%H:%M'], widget=TimePicker(options={'format': 'HH:mm'}, attrs={'autocomplete': 'off'}))
     date = forms.DateField(label="Start date", input_formats=['%d/%m/%Y'], widget=DatePicker(options={'format': 'DD/MM/YYYY', }, attrs={'input_group': False, 'autocomplete': 'off'}))
     duration = forms.DurationField(label="Duration (00:HH:MM)")
     time = forms.TimeField(label="Time (24 hour)",widget=forms.TextInput(attrs={'type': 'time'}))
@@ -42,8 +41,6 @@ class LessonForm(forms.ModelForm):
         """Validation to check if the day and date matches, and if the date is not in the past"""
         input_day = self.cleaned_data.get('day')
         input_date = self.cleaned_data.get('date')
-        print(input_date)
-        print(input_day)
         if input_date < datetime.date.today():
             raise forms.ValidationError("Can not create a lesson in the past.")
         elif input_date.strftime("%A").lower() != input_day:

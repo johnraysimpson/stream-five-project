@@ -23,7 +23,6 @@ class UserAdminCreationForm(forms.ModelForm):
         fields = ('email',)
 
     def clean_password2(self):
-        # Check that the two password entries match
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
@@ -31,7 +30,6 @@ class UserAdminCreationForm(forms.ModelForm):
         return password2
 
     def save(self, commit=True):
-        # Save the provided password in hashed format
         user = super(UserAdminCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         if commit:
@@ -48,9 +46,6 @@ class UserAdminChangeForm(forms.ModelForm):
         fields = ('email', 'password', 'is_active', 'admin')
 
     def clean_password(self):
-        # Regardless of what the user provides, return the initial value.
-        # This is done here, rather than on the field, because the
-        # field does not have access to the initial value
         return self.initial["password"]
         
 class FirstPasswordChangeForm(SetPasswordForm):
@@ -76,17 +71,15 @@ class CreateUserForm(forms.ModelForm):
         return self.cleaned_data['email'].lower()
     
     def save(self, commit=True):
-        # Save the provided password in hashed format
         user = super(CreateUserForm, self).save(commit=False)
         password = User.objects.make_random_password(length=10, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789')
-        print(password)
-        # send_mail(
-        #         "Welcome to Zephyr Tuition",
-        #         ("Hello "+user.email+",\n\nYou have been registered to our website, your randomly generated password is\n\n"
-        #         +password+"\n\nYou will be required to change your password when you first login with your email address.\n\nThank you for choosing us as a tutoring company.\n\nThe Zephyr Team"),
-        #         os.environ.get('EMAIL_ADDRESS'),
-        #         [user.email]
-        #         )
+        send_mail(
+                "Welcome to Zephyr Tuition",
+                ("Hello "+user.email+",\n\nYou have been registered to our website, your randomly generated password is\n\n"
+                +password+"\n\nYou will be required to change your password when you first login with your email address.\n\nThank you for choosing us as a tutoring company.\n\nThe Zephyr Team"),
+                os.environ.get('EMAIL_ADDRESS'),
+                [user.email]
+                )
         user.set_password(password)
         if commit:
             user.save()
