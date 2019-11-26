@@ -49,45 +49,33 @@
     <p>Displaying 10 lessons per page</p>
     {% for lesson in future_lessons %}
         {% for student in students %}
-            {% if student in lesson.student_set.all %}
+            {% if student in lesson.0.student_set.all %}
                 <div class="col-12">
                     <table class="table">
                         <thead>
                             <tr>
-                              <th scope="col">{{ student }} - {{ lesson.subject }}</th>
+                              <th scope="col">{{ student }} - {{ lesson.0.subject }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                              <td scope="row">{{ lesson.day.capitalize }} - {{ lesson.date }} - {{ lesson.time }}</td>
+                              <td scope="row">{{ lesson.0.day.capitalize }} - {{ lesson.0.date }} - {{ lesson.0.time }}</td>
                             </tr>
                             <tr>
                               <td scope="row"><b>£{{ student.price_per_lesson }}</b></td>
                             </tr>
                             <tr class="text-right">
                                 <td scope="row">
-                                    {% if payments %}
-                                        {% for payment in payments %}
-                                            {% if payment.lesson_id == lesson.id %}
-                                                {% if payment.student_id == student.id %}
+                                            {% if lesson.1 == 'paid' %}
                                                     <span class="paid-lesson"><i class="fa fa-check-square-o button-icon" aria-hidden="true"></i>Lesson paid</span>
-                                                {% endif %}
-                                            {% else %}
-                                                    <a href="{% url 'parentuser:make_payment' parent_id=student.parent.id student_id=student.id lesson_id=lesson.id %}">
+                                                {% elif lesson.1 == 'unpaid' %}
+                                                    <a href="{% url 'parentuser:make_payment' parent_id=student.parent.id student_id=student.id lesson_id=lesson.0.id %}">
                                                         <button class="btn btn-success">
                                                             <i class="fa fa-credit-card button-icon" aria-hidden="true"></i>Pay for Lesson
                                                         </button>
                                                     </a>
                                             {% endif %}
-                                        {% endfor %}
-                                    {% else %}
-                                        <a href="{% url 'parentuser:make_payment' parent_id=student.parent.id student_id=student.id lesson_id=lesson.id %}">
-                                            <button class="btn btn-success">
-                                                <i class="fa fa-credit-card button-icon" aria-hidden="true"></i>Pay for Lesson
-                                            </button>
-                                        </a>
-                                    {% endif %}
-                                    <a href="{% url 'parentuser:remove_student_from_lesson_confirm' lesson_id=lesson.id student_id=student.id %}">
+                                    <a href="{% url 'parentuser:remove_student_from_lesson_confirm' lesson_id=lesson.0.id student_id=student.id %}">
                                         <button class="btn btn-danger cancel-lesson-button">
                                             <i class="fa fa-times button-icon" aria-hidden="true"></i>Cancel Lesson
                                         </button>
