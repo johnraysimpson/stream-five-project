@@ -67,7 +67,7 @@
         {% if user.is_staff %}
             <p><a class="page-links" href="{% url 'staffuser:parent_profile' parent_id=parent.id %}">{{ parent }}</a> - {{ student.relationship }}</p>
         {% elif user.is_parent %}
-            <p><a href="{% url 'parentuser:parent_profile' %}">{{ parent }}</a> - {{ student.relationship }}</p>
+            <p><a class="page-links" href="{% url 'parentuser:parent_profile' %}">{{ parent }}</a> - {{ student.relationship }}</p>
         {% elif user.is_tutor %}
             <div class="table-content">
                 <table>
