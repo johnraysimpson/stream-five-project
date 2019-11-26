@@ -92,7 +92,38 @@ def intake_view(request, request_date):
     current_month_name = view_date.strftime("%B")
     payments = Payment.objects.filter(date_paid__gte=intake_month[0], date_paid__lt=intake_month[1], centre_name=request.user.centre.centre_name)
     rounded_intake = get_intake(payments)
-    return render(request, 'get_intake.html', {"current_month_name": current_month_name, 'payments': payments, 'rounded_intake': rounded_intake, 'last_month': last_month, 'next_month': next_month})
+    
+    todays_date = datetime.today()
+    parents = ParentProfile.objects.filter(user__centre=request.user.centre)
+    students = Student.objects.filter(parent__user__centre=request.user.centre)
+    prev_payments = Payment.objects.filter(centre_name=request.user.centre.centre_name, date__lt=todays_date)
+    
+    queryset = Lesson.objects.none()
+    for student in students:
+        lessons = student.lessons.filter(student=student, date__lt=todays_date)
+        queryset |= lessons
+    past_lessons = queryset.distinct().order_by('date')
+    
+    unpaid_lessons = []
+    for parent in parents:
+        for student in students:
+            for lesson in past_lessons:
+                if student.parent==parent and student in lesson.student_set.all():
+                    unpaid_lessons.append((parent, student, lesson))
+    
+    for parent in parents:
+        for student in students:
+            for payment in prev_payments:
+                for lesson in past_lessons:
+                    if payment.parent_id == parent.id and payment.lesson_id == lesson.id and payment.student_id == student.id:
+                        unpaid_lessons.remove((parent, student, lesson))
+    
+    return render(request, 'get_intake.html', {"current_month_name": current_month_name, 
+                                                'payments': payments, 
+                                                'rounded_intake': rounded_intake, 
+                                                'last_month': last_month, 
+                                                'next_month': next_month,
+                                                'unpaid_lessons': unpaid_lessons})
     
 @login_required
 @user_passes_test(admin_test, redirect_field_name=None, login_url='/oops/')
@@ -106,7 +137,38 @@ def whole_intake_view(request, request_date):
     current_month_name = view_date.strftime("%B")
     payments = Payment.objects.filter(date_paid__gte=intake_month[0], date_paid__lt=intake_month[1])
     rounded_intake = get_intake(payments)
-    return render(request, 'get_intake.html', {"current_month_name": current_month_name, 'payments': payments, 'rounded_intake': rounded_intake, 'last_month': last_month, 'next_month': next_month})
+    
+    todays_date = datetime.today()
+    parents = ParentProfile.objects.filter()
+    students = Student.objects.filter()
+    prev_payments = Payment.objects.filter(date__lt=todays_date)
+    
+    queryset = Lesson.objects.none()
+    for student in students:
+        lessons = student.lessons.filter(student=student, date__lt=todays_date)
+        queryset |= lessons
+    past_lessons = queryset.distinct().order_by('date')
+    
+    unpaid_lessons = []
+    for parent in parents:
+        for student in students:
+            for lesson in past_lessons:
+                if student.parent==parent and student in lesson.student_set.all():
+                    unpaid_lessons.append((parent, student, lesson))
+    
+    for parent in parents:
+        for student in students:
+            for payment in prev_payments:
+                for lesson in past_lessons:
+                    if payment.parent_id == parent.id and payment.lesson_id == lesson.id and payment.student_id == student.id:
+                        unpaid_lessons.remove((parent, student, lesson))
+                        
+    return render(request, 'get_intake.html', {"current_month_name": current_month_name, 
+                                                'payments': payments, 
+                                                'rounded_intake': rounded_intake, 
+                                                'last_month': last_month, 
+                                                'next_month': next_month, 
+                                                'unpaid_lessons': unpaid_lessons})
     
 @login_required
 @user_passes_test(staff_test, redirect_field_name=None, login_url='/oops/')

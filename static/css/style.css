@@ -245,7 +245,6 @@ thead > tr > th {
     min-width: 7.6em;
 }
 
-
 .small-screen-links > a {
     display: block;
 }
@@ -283,7 +282,8 @@ thead > tr > th {
 
 .unpaid-table > thead > tr > th {
     background-color: #ff6060;
-    border: 2px solid #909090;
+    border-top: 2px solid #909090;
+    border-bottom: 2px solid #909090;
 }
 
 .unpaid-table > tbody > tr > td {
@@ -293,6 +293,11 @@ thead > tr > th {
 
 .unpaid-table {
     border: 2px solid #909090;
+}
+
+.intake-unpaid > table > thead > tr > th {
+    width: 33.33%;
+    vertical-align: top;
 }
 
 .payment-table > table > tbody > tr > td > p {
