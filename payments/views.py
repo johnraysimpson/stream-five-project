@@ -12,6 +12,7 @@ from tutoruser.views import tutor_test
 from adminuser.views import admin_test
 from django.conf import settings
 import stripe
+from django.core.paginator import Paginator
 
 stripe.api_key = settings.STRIPE_SECRET
 
@@ -170,5 +171,8 @@ def make_payment_view(request, parent_id, student_id, lesson_id):
 @user_passes_test(parent_test, redirect_field_name=None, login_url='/oops/')
 def get_payments_view(request):
     parent = get_object_or_404(ParentProfile, user=request.user)
-    payments = Payment.objects.filter(parent_id=parent.id).order_by('-date_paid')
+    payments_list = Payment.objects.filter(parent_id=parent.id).order_by('-date_paid')
+    paginator = Paginator(payments_list, 20)
+    page = request.GET.get('page')
+    payments = paginator.get_page(page)
     return render(request, 'get_payments.html', {'payments': payments})

@@ -11,12 +11,54 @@
 {% endif %}
 
 <h1>My Payments</h1>
-{% if payments %}
-    {% for payment in payments %}
-    <p>{{ payment.date_paid }}</p>
-    {% endfor %}
-{% else %}
-<p>You have not made any payments yet.</p>
-{% endif %}
-
+<div class="col-lg-10 offset-lg-1">
+    {% if payments %}
+        <p>Displaying 20 payments per page.</p>
+        <div class="col-12 table-responsive">
+            <table class="table money-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Date</th>
+                        <th>Subject</th>
+                        <th>Amount Paid</th>
+                        <th>Date Paid</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.student_first_name }}</td>
+                    <td>{{ payment.date }}</td>
+                    <td>{{ payment.subject }}</td>
+                    <td>£{{ payment.amount_paid }}</td>
+                    <td>{{ payment.date_paid }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination row">
+            <div class="col-6 small-screen-links">
+                {% if payments.has_previous %}
+                    <a class="page-links" href="?page={{ payments.previous_page_number }}"><button type="button" class="btn btn-primary">&lsaquo; previous</button></a>
+                    <a class="page-links" href="?page=1"><button type="button" class="btn btn-primary">&laquo; first</button></a>
+                {% endif %}
+            </div>
+            <div class="col-6 text-right small-screen-links">
+                {% if payments.has_next %}
+                    <a class="page-links" href="?page={{ payments.next_page_number }}"><button type="button" class="btn btn-primary">next &rsaquo;</button></a>
+                    <a class="page-links" href="?page={{ payments.paginator.num_pages }}"><button type="button" class="btn btn-primary">last &raquo;</button></a>
+                {% endif %}
+            </div>
+            <div class="col-12 text-center">
+                <span class="current">
+                    Page {{ payments.number }} of {{ payments.paginator.num_pages }}
+                </span>
+            </div>
+        </div>
+    {% else %}
+    <p>You have not made any payments yet.</p>
+    {% endif %}
+</div>
 {% endblock %}
