@@ -2,6 +2,8 @@
 
 {% load staticfiles %}
 
+{% load crispy_forms_tags %}
+
 {% block head_js %}
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 <script type="text/javascript">
@@ -15,30 +17,51 @@
 {% block content %}
 
 <h1>Make Payment</h1>
-
-<p>Payer: {{ parent }}</p>
-
-<p>Lesson Details: {{ lesson }}</p>
-
-<p>Student Details: {{ student }}</p>
-
-<p>Payment Amount: £{{ student.price_per_lesson }}</p>
-
-<form role="form" method="post" id="payment-form">
-    <legend>Payment Details</legend>
-
-    <div id="credit-card-errors">
-        <div id="stripe-error-message"></div>
+<div class="col-lg-10 offset-lg-1">
+    <h3>Purchase Details</h3>
+    <div class="col-12">
+        <div class="table-content payment-table">
+            <table>
+                <tr>
+                    <td><b>Payment by: </b></td>
+                    <td>{{ parent }}</td>
+                </tr>
+                <tr>
+                    <td><b>Student: </b></td>
+                    <td>{{ student }}</td>
+                </tr>
+                <tr>
+                    <td class="lesson-details"><b>Lesson details: </b></td>
+                    <td>
+                        <p>{{ lesson.subject }}</p>
+                        <p>{{ lesson.day.capitalize }}</p>
+                        <p>{{ lesson.date }}</p>
+                        <p>{{ lesson.time }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Payment Amount: </b></td>
+                    <td>£{{ student.price_per_lesson }}</td>
+                </tr>
+            </table>
+        </div>
     </div>
-
-    <div>
-        {{ payment_form.as_p }}
-    </div>
-
-    {% csrf_token %}
-    <div>
-        <input type="submit" value="Submit Payment">
-    </div>
-</form>
+    <h3>Payment Details</h3>
+    <form role="form" method="post" id="payment-form">
+    
+        <div id="credit-card-errors">
+            <div id="stripe-error-message"></div>
+        </div>
+    
+        <div>
+            {{ payment_form|crispy }}
+        </div>
+    
+        {% csrf_token %}
+        <div class="button-spacing">
+            <button type="submit" class="btn btn-success"><i class="fa fa-credit-card button-icon" aria-hidden="true"></i>Make Payment</button>
+        </div>
+    </form>
 
 {% endblock %}
+

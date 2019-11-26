@@ -1,7 +1,48 @@
 {% extends 'base.html' %}
 
+{% load staticfiles %}
+
 {% block title %}About{% endblock %}
 
 {% block content %}
-<h1>About</h1>
+<h1>About Us</h1>
+<div class="col-lg-10 offset-lg-1">
+    <div class="col-md-10 offset-md-1">
+        <img class="main-page-img" src="{% static 'img/about-page-image.jpg' %}" width="100%" alt="tutoring-student">
+    </div>
+    <div class="page-info">
+        <p>
+            We currently have {{ no_of_centres }} centres in the country with the aim to expand further nationally. 
+            Find your closest center <a class="page-links" href="{% url 'contact' %}">here.</a>
+        </p>
+    </div>
+    <div class="col-12 page-info">
+        <h3>Why Choose Us?</h3>
+        <p>
+            We only offer the absolute best for your children, our tutors are fully qualified 
+            teachers and have a lot of experience with the specifications of their subject 
+            fields. With class sizes being far too large students are bound to struggle with 
+            getting the most out of their classroom lessons. Our lessons are taught in very small 
+            groups and your child's learning is planned and tailored for them. Every tutor and 
+            staff member only want to see your child excel.
+        </p>
+    </div>
+    <div class="row col-12 page-info">
+        <h3>What we offer</h3>
+        <p>
+            We currently offer the main core subjects: English, Maths and Science. We aim to 
+            offer a wider range of subjects, particularly in the English Baccalaureate, in 
+            the near future.
+        </p>
+        <div class="col-12 col-md-4">
+            <img class="subject-img rounded mx-auto d-block" src="{% static 'img/maths-img.jpg' %}" height="200" alt="maths">
+        </div>
+        <div class="col-12 col-md-4 ">
+            <img class="subject-img rounded mx-auto d-block" src="{% static 'img/english-img.png' %}" height="200" alt="english">
+        </div>
+        <div class="col-12 col-md-4 ">
+            <img class="subject-img rounded mx-auto d-block" src="{% static 'img/science-img.jpg' %}" height="200" alt="science">
+        </div>
+    </div>
+</div>
 {% endblock %}

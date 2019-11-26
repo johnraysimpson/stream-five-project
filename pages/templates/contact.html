@@ -1,13 +1,85 @@
 {% extends 'base.html' %}
 
+{% load staticfiles %}
+
 {% block title %}Contact{% endblock %}
 
 {% block content %}
-<h1>Contact</h1>
-
-{% for centre in centres %}
-<p>{{ centre.centre_name }}</p>
-<p>{{ centre.post_code }}</p>
-{% endfor %}
-
+{% if user.is_authenticated %}
+    {% if user.is_parent %}
+        <h1>Your Centre</h1>
+        <div class="col-lg-10 offset-lg-1">
+            <div class="centre-information">
+                <h3>{{ user.centre.centre_name }}</h3>
+                <h5>Address</h5>
+                <div class="col-12">
+                    <div class="address-info">
+                        <p>{{ user.centre.address1 }},</p>
+                        {% if user.centre.address2 %}
+                            <p>{{ user.centre.address2 }},</p>
+                        {% endif %}
+                        <p>{{ user.centre.town_or_city }},</p>
+                        <p>{{ user.centre.county }},</p>
+                        <p>{{ user.centre.post_code }}</p>
+                    </div>
+                </div>
+                <h5>Contact Information</h5>
+                <div class="col-12">
+                    <div class="table-content">
+                        <table>
+                            <tr>
+                                <td><b>Email: </b></td>
+                                <td>{{ user.centre.email }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Telephone: </b></td>
+                                <td>{{ user.centre.telephone }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% else %}
+    <h1>Contact Us</h1>
+    <div class="col-lg-10 offset-lg-1">
+        <div class="col-md-10 offset-md-1">
+            <img class="main-page-img" src="{% static 'img/contact-img.jpeg' %}" width="100%" alt="find us">
+        </div>
+        <h2>Our Centers</h2>
+        {% for centre in centres %}
+            <div class="centre-information">
+                <h3>{{ centre.centre_name }}</h3>
+                <h5>Address</h5>
+                <div class="col-12">
+                    <div class="address-info">
+                        <p>{{ centre.address1 }},</p>
+                        {% if centre.address2 %}
+                            <p>{{ centre.address2 }},</p>
+                        {% endif %}
+                        <p>{{ centre.town_or_city }},</p>
+                        <p>{{ centre.county }},</p>
+                        <p>{{ centre.post_code }}</p>
+                    </div>
+                </div>
+                <h5>Contact Information</h5>
+                <div class="col-12">
+                    <div class="table-content">
+                        <table>
+                            <tr>
+                                <td><b>Email: </b></td>
+                                <td>{{ centre.email }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Telephone: </b></td>
+                                <td>{{ centre.telephone }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 {% endblock %}

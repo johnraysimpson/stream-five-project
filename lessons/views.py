@@ -9,7 +9,7 @@ from datetime import datetime, date, timedelta
 from .models import Lesson
 from profiles.models import Student, ParentProfile, TutorProfile
 from payments.models import Payment
-from operator import attrgetter
+from django.core.paginator import Paginator
 
 def get_next_august():
     """Function that returns the date of the next time it is August"""
@@ -274,7 +274,10 @@ def get_student_lessons_view(request):
     for student in students:
         lessons = student.lessons.filter(student=student, date__gte=todays_date)
         queryset |= lessons
-    future_lessons = queryset.distinct().order_by('date')
+    future_lessons_list = queryset.distinct().order_by('date')
+    paginator = Paginator(future_lessons_list, 10)
+    page = request.GET.get('page')
+    future_lessons = paginator.get_page(page)
     
     queryset = Lesson.objects.none()
     for student in students:
@@ -329,6 +332,8 @@ def parent_remove_student_from_lesson_view(request, lesson_id, student_id):
 def get_tutor_lessons_view(request):
     """View that renders page displaying a tutor's upcoming lessons"""
     tutor = TutorProfile.objects.get(user=request.user)
-    lessons = Lesson.objects.filter(tutor=tutor)
-    print(lessons)
+    lessons_list = Lesson.objects.filter(tutor=tutor).order_by('date')
+    paginator = Paginator(lessons_list, 10)
+    page = request.GET.get('page')
+    lessons = paginator.get_page(page)
     return render(request, 'get_tutor_lessons.html', {'tutor': tutor, 'lessons': lessons})

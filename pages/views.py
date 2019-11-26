@@ -9,7 +9,8 @@ def home_view(request):
     
 def about_view(request):
     """Renders about page"""
-    return render(request, 'about.html')
+    no_of_centres = Centre.objects.all().count()
+    return render(request, 'about.html', {'no_of_centres': no_of_centres})
     
 def contact_view(request):
     """Renders contact page and retrieves information about all centres in the database"""

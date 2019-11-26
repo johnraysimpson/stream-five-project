@@ -4,22 +4,50 @@
 
 {% block content %}
 
-{% if messages %}
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
-
 <h1>Upcoming lessons</h1>
-{% for lesson in lessons %}
-<p>{{ lesson.subject }}</p>
-<p>{{ lesson.date }}</p>
-<p>{{ lesson.earning }}</p>
-{% for student in lesson.student_set.all %}
-<p><a href="{% url 'tutoruser:student_profile' student_id=student.id %}">{{ student }}</a></p>
-{% endfor %}
-{% endfor %}
-
+<div class="col-lg-10 offset-lg-1">
+    <p>Displaying 10 lessons per page.</p>
+    {% for lesson in lessons %}
+        <div class="col-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th scope="col">{{ lesson.subject.capitalize }} - {{ lesson.day.capitalize }} - {{ lesson.date }} - {{ lesson.time }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <th scope="row">Students</th>
+                    </tr>
+                    {% for student in lesson.student_set.all %}
+                    <tr>
+                      <td scope="row"><a class="page-links" href="{% url 'tutoruser:student_profile' student_id=student.id %}">{{ student.first_name }} {{ student.last_name }}</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endfor %}
+    <div class="pagination row">
+        <div class="col-6 small-screen-links">
+            {% if lessons.has_previous %}
+                <a class="page-links" href="?page={{ lessons.previous_page_number }}"><button type="button" class="btn btn-primary">&lsaquo; previous</button></a>
+                <a class="page-links" href="?page=1"><button type="button" class="btn btn-primary">&laquo; first</button></a>
+            {% endif %}
+        </div>
+        <div class="col-6 text-right small-screen-links">
+            {% if lessons.has_next %}
+                <a class="page-links" href="?page={{ lessons.next_page_number }}"><button type="button" class="btn btn-primary">next &rsaquo;</button></a>
+                <a class="page-links" href="?page={{ lessons.paginator.num_pages }}"><button type="button" class="btn btn-primary">last &raquo;</button></a>
+            {% endif %}
+        </div>
+        <div class="col-12 text-center">
+            <span class="current">
+                Page {{ lessons.number }} of {{ lessons.paginator.num_pages }}
+            </span>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}

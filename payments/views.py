@@ -136,28 +136,27 @@ def make_payment_view(request, parent_id, student_id, lesson_id):
             if payment_form.is_valid():
                 try:
                     customer = stripe.Charge.create(amount = int(student.price_per_lesson*100), currency = 'GBP', description = request.user.email, card = payment_form.cleaned_data['stripe_id'],)
+                    if customer.paid:
+                        Payment.objects.create(
+                                                parent_id = parent_id,
+                                                first_name = parent.first_name,
+                                                last_name = parent.last_name,
+                                                student_id = student_id,
+                                                student_first_name = student.first_name,
+                                                student_last_name = student.last_name,
+                                                lesson_id = lesson_id,
+                                                subject = lesson.subject,
+                                                centre_name = lesson.centre.centre_name,
+                                                date = lesson.date,
+                                                amount_paid = student.price_per_lesson,
+                                                date_paid = datetime.today()
+                                                )
+                        messages.error(request, "Payment successful")
+                        return redirect(reverse('parentuser:get_student_lessons'))
+                    else:
+                        messages.error(request, "Unable to take payment")
                 except stripe.error.CardError:
                     messages.error(request, "Your card was declined")
-            
-                if customer.paid:
-                    Payment.objects.create(
-                                            parent_id = parent_id,
-                                            first_name = parent.first_name,
-                                            last_name = parent.last_name,
-                                            student_id = student_id,
-                                            student_first_name = student.first_name,
-                                            student_last_name = student.last_name,
-                                            lesson_id = lesson_id,
-                                            subject = lesson.subject,
-                                            centre_name = lesson.centre.centre_name,
-                                            date = lesson.date,
-                                            amount_paid = student.price_per_lesson,
-                                            date_paid = datetime.today()
-                                            )
-                    messages.error(request, "Payment successful")
-                    return redirect(reverse('parentuser:get_student_lessons'))
-                else:
-                    messages.error(request, "Unable to take payment")
             else:
                 print(payment_form.errors)
                 messages.error(request, "We were unable to take payment with that card")

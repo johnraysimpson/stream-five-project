@@ -1,15 +1,35 @@
 {% extends 'base.html' %}
 
+{% load staticfiles %}
+
 {% block title %}Home{% endblock %}
 
 {% block content %}
 
-<h1>Home</h1>
-
-{% if messages %}
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
-
+<h1><img src="{% static 'img/wind-image.png' %}" width="48" height="48" class="d-inline-block align-top" alt="wind-image">Zephyr Tuition</h1>
+<p class="strapline">Making education a breeze</p>
+<div class="col-lg-10 offset-lg-1">
+    <div class="row message">
+        {% if messages %}
+            {% for message in messages %}
+                <p><i class="fa fa-exclamation-circle fa-lg" aria-hidden="true"></i>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="col-md-10 offset-md-1">
+        <img class="main-page-img" src="{% static 'img/tutoring-students.jpeg' %}" width="100%" alt="tutoring-students">
+    </div>
+    <div class="col-12 page-info">
+        <p>
+        At Zephyr Tuition our goal is to ensure students who struggle, or need pushing further, are 
+        achieving the best they can in order to eventually obtain the grades they deserve. In a 
+        climate where testing via examination is the standard, we aim to help students, not only 
+        with their studies, but with their mental health and strategies for coping with the increased 
+        workload we see in schools today. If you feel your child would benefit from the help that our 
+        outstanding team can offer, do not hesitate to <a class="page-links" href="{% url 'contact' %}">contact us </a> 
+        to book a free assessment. Alternatively, find out more <a class="page-links" href="{% url 'about' %}">about us</a> 
+        to see if we are a right fit for you and your child.
+        </p>
+    </div>
+</div>
 {% endblock %}

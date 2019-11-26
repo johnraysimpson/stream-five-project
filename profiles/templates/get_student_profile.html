@@ -8,16 +8,40 @@
 <div class="col-lg-10 offset-lg-1">
     <h3>Personal Information</h3>
     <div class="col-12">
-        <p><b>First name: </b>{{ student.first_name }}</p>
-        <p><b>Last name: </b>{{ student.last_name }}</p>
-        <p><b>Date of birth: </b>{{ student.date_of_birth }}</p>
-        <p><b>Year: </b>{{ year_group }}</p>
-        <p><b>Price per lesson: </b>£{{ student.price_per_lesson }}</p>
-        {% if student.notes %}
-            {% if user.is_staff or user.is_tutor %}
-                <p><b>Notes: </b>{{ student.notes }}</p>
-            {% endif %}
-        {% endif %}
+        <div class="table-content">
+            <table>
+                <tr>
+                    <td><b>First name: </b></td>
+                    <td>{{ student.first_name }}</td>
+                </tr>
+                <tr>
+                    <td><b>Last name: </b></td>
+                    <td>{{ student.last_name }}</td>
+                </tr>
+                <tr>
+                    <td><b>Date of birth: </b></td>
+                    <td>{{ student.date_of_birth }}</td>
+                </tr>
+                <tr>
+                    <td><b>Year Group: </b></td>
+                    <td>{{ year_group }}</td>
+                </tr>
+                {% if user.is_staff %}
+                    <tr>
+                        <td><b>Price per lesson: </b></td>
+                        <td>£{{ student.price_per_lesson }}</td>
+                    </tr>
+                {% endif %}
+                {% if student.notes %}
+                    {% if user.is_staff or user.is_tutor %}
+                    <tr>
+                        <td><b>Notes: </b></td>
+                        <td>{{ student.notes }}</td>
+                    </tr>
+                    {% endif %}
+                {% endif %}
+            </table>
+        </div>
     </div>
     {% if user.is_staff %}
         <div class="col-12 button-spacing">
@@ -38,8 +62,18 @@
         {% elif user.is_parent %}
             <p><a href="{% url 'parentuser:parent_profile' %}">{{ parent }}</a> - {{ student.relationship }}</p>
         {% elif user.is_tutor %}
-            <p>{{ parent }} - {{ student.relationship }}</p>
-            <p>Telephone: {{ parent.telephone }}</p>
+            <div class="table-content">
+                <table>
+                    <tr>
+                        <td><b>{{ student.relationship }}: </b></td>
+                        <td>{{ parent }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Telephone: </b></td>
+                        <td>{{ parent.telephone }}</td>
+                    </tr>
+                </table>
+            </div>
         {% endif %}
     </div>
 </div>

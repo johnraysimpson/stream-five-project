@@ -17,6 +17,7 @@ body {
 h2, h3, h4, h5, h6 {
     font-family: 'McLaren', sans-serif;
     margin: 20px 0px;
+    color: #607182;
 }
 
 .company-name > h4 {
@@ -38,8 +39,7 @@ h1 {
     border-top: 2px solid #b5b7b9;
 }
 
-.message > p {
-    /*background-color: #e3f2fd;*/
+.message > p, .paid-lesson {
     padding: 1px 3px;
     border-radius: 5px;
     border: 2px solid #58b161;
@@ -153,15 +153,12 @@ thead > tr > th {
 
 .table {
     border: 2px solid #b5b7b9;
+    margin-bottom: 20px;
 }
 
 .table thead th {
     border-bottom: 2px solid #b5b7b9;
 }
-
-/*ul {*/
-/*    list-style-type: none;*/
-/*}*/
 
 .form-style {
     margin-bottom: 20px;
@@ -218,6 +215,7 @@ thead > tr > th {
 
 .address-info > p {
     margin-bottom: 5px;
+    font-weight: bold;
 }
 
 
@@ -243,10 +241,78 @@ thead > tr > th {
     padding-left: 20px;
 }
 
-.table thead th {
+.earnings-table thead th {
     min-width: 7.5em;
 }
 
+.tutor-profile-notice {
+    font-style: italic;
+}
+
+.small-screen-links > a {
+    display: block;
+}
+
+.pagination {
+    margin-bottom: 20px;
+}
+
+.strapline {
+    font-style: italic;
+    font-weight: bold;
+    color: #607182;
+    text-align: center;
+    font-size: 20px;
+}
+
+.main-page-img {
+    border-radius: 30px;
+    margin-bottom: 20px;
+}
+
+.page-info {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.subject-img {
+    margin-bottom: 20px;
+}
+
+.centre-information {
+    margin-bottom: 20px;
+}
+
+.unpaid-table > thead > tr > th {
+    background-color: #ff6060;
+    border: 2px solid #909090;
+}
+
+.unpaid-table > tbody > tr > td {
+    background-color: #ffc6c6;
+    border-top: 1px solid #909090;
+}
+
+.unpaid-table {
+    border: 2px solid #909090;
+}
+
+.payment-table > table > tbody > tr > td > p {
+    margin-bottom: 0;
+}
+
+.lesson-details {
+    vertical-align: top;
+}
+
+.table-content > table > tbody > tr > td {
+    padding-bottom: 10px;
+}
+
+.cancel-lesson-button {
+    margin-left: 10px;
+}
 
 @media only screen and (min-width: 992px) {
     .dashboard-box {
@@ -272,6 +338,11 @@ thead > tr > th {
     .search-text {
         display: none;
     }
+    
+    .small-screen-links > a > button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
 }
 
 @media only screen and (min-width: 768px) {
@@ -282,5 +353,10 @@ thead > tr > th {
     
     .search-name {
     margin: 10px 0px 0px 0px;
+    }
+    
+    .small-screen-links > a > button {
+        width: 40%;
+        margin-bottom: 10px;
     }
 }
