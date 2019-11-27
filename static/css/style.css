@@ -103,6 +103,22 @@ h1 {
     border-color: #939a9e;
 }
 
+.btn-success:hover {
+    background-color: #4abb64;
+}
+
+.btn-warning:hover {
+    background-color: #ffd659;
+}
+
+.btn-danger:hover {
+    background-color: #f54c5c;
+}
+
+.btn-info:hover {
+    background-color: #40b7ca;
+}
+
 .dropdown-menu {
         background-color: #e3f2fd;
         border: none;
@@ -191,10 +207,6 @@ thead > tr > th {
 
 #hint_id_new_password1 > ul {
     display: none;
-}
-
-.btn-success:hover {
-    background-color: #4abb64;
 }
 
 .search-button {
