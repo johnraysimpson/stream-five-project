@@ -316,6 +316,10 @@ thead > tr > th {
     margin-left: 10px;
 }
 
+.button-link:hover {
+    text-decoration: none;
+}
+
 .newtooltip {
 	display: none;
 	position: absolute;
