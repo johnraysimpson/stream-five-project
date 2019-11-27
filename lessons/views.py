@@ -278,16 +278,19 @@ def get_student_lessons_view(request):
     for lesson in future_lessons_list:
         for student in students:
             if student in lesson.student_set.all():
-                for payment in advanced_payments:
-                    if payment.lesson_id != lesson.id and payment.student_id != student.id:
-                        updated_future_lessons_list.append((lesson, 'unpaid', student))
-                    while list(filter(lambda a: a == (lesson, 'unpaid', student), updated_future_lessons_list)).count((lesson, 'unpaid', student)) > 1:
-                        updated_future_lessons_list.remove((lesson, 'unpaid', student))
-                for payment in advanced_payments:
-                    if payment.lesson_id == lesson.id and payment.student_id == student.id:
-                        updated_future_lessons_list.append((lesson, 'paid', student))
-                        while list(filter(lambda a: a == (lesson, 'unpaid', student), updated_future_lessons_list)).count((lesson, 'unpaid', student)) > 0:
+                if advanced_payments:
+                    for payment in advanced_payments:
+                        if payment.lesson_id != lesson.id and payment.student_id != student.id:
+                            updated_future_lessons_list.append((lesson, 'unpaid', student))
+                        while list(filter(lambda a: a == (lesson, 'unpaid', student), updated_future_lessons_list)).count((lesson, 'unpaid', student)) > 1:
                             updated_future_lessons_list.remove((lesson, 'unpaid', student))
+                    for payment in advanced_payments:
+                        if payment.lesson_id == lesson.id and payment.student_id == student.id:
+                            updated_future_lessons_list.append((lesson, 'paid', student))
+                            while list(filter(lambda a: a == (lesson, 'unpaid', student), updated_future_lessons_list)).count((lesson, 'unpaid', student)) > 0:
+                                updated_future_lessons_list.remove((lesson, 'unpaid', student))
+                else:
+                    updated_future_lessons_list.append((lesson, 'unpaid', student))
                         
     print(updated_future_lessons_list)
     
