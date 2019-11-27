@@ -94,6 +94,7 @@ class TutorProfileForm(forms.ModelForm):
 class StudentForm(forms.ModelForm):
     """Form for creating a student either from a parent profile or after a parent profile has been created"""
     date_of_birth = forms.DateField(
+        label='Date of birth (DD/MM/YYYY)',
         widget=forms.DateInput(format='%d/%m/%Y'),
         input_formats=('%d/%m/%Y', )
         )

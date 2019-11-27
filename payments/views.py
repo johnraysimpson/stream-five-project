@@ -128,7 +128,7 @@ def intake_view(request, request_date):
 def whole_intake_view(request, request_date):
     view_date = datetime.strptime(request_date, "%Y-%m-%d")
     view_month = view_date.month
-    intake_month = intake_period(view_month)
+    intake_month = intake_period(view_date)
     next_month = get_next_month(view_date, view_month)
     last_month = get_last_month(view_date, view_month)
     current_month_name = view_date.strftime("%B")
