@@ -72,7 +72,7 @@ def first_password_change(request):
             if request.user.is_parent:
                 return redirect('parentuser:dashboard')
             elif request.user.is_tutor:
-                return redirect('tutor:dashboard')
+                return redirect('tutoruser:dashboard')
         else:
             messages.error(request, 'Please correct the error below.')
     else:

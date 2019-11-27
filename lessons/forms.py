@@ -52,7 +52,7 @@ class LessonForm(forms.ModelForm):
 class LessonOccurrenceForm(LessonForm):
     """Form that includes occurrence field to TutorSessionForm"""
     OCCURRENCE_CHOICES = [('one_off', 'One Off'), ('weekly', 'Weekly')]
-    occurrence = occurrence_choices()
+    occurrence = forms.ChoiceField(choices=OCCURRENCE_CHOICES, widget=forms.RadioSelect())
     class Meta(LessonForm.Meta):
         fields = LessonForm.Meta.fields + ('occurrence', )
         

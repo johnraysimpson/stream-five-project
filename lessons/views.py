@@ -233,7 +233,8 @@ def get_lessons_view(request, mondays_date):
         if view_date.weekday() == 0:
             sundays_date = view_date + timedelta(days=6)
             this_weeks_lessons = Lesson.objects.filter(date__gte=mondays_date,
-                                                                date__lt=sundays_date)
+                                                                date__lt=sundays_date,
+                                                                centre=request.user.centre)
             days_of_the_week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
             next_week = (view_date + timedelta(days=7)).date
             previous_week = (view_date - timedelta(days=7)).date
