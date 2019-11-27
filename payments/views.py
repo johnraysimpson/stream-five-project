@@ -188,6 +188,7 @@ def make_payment_view(request, parent_id, student_id, lesson_id):
     parent = get_object_or_404(ParentProfile, id=parent_id)
     student = get_object_or_404(Student, id=student_id)
     lesson = get_object_or_404(Lesson, id=lesson_id)
+    payment_exists = Payment.objects.filter(parent_id=parent.id, student_id=student.id, lesson_id=lesson.id)
     if request.user == parent.user and student.parent == parent and lesson in student.lessons.all():
         if request.method == 'POST':
             payment_form = MakePaymentForm(request.POST)
@@ -219,7 +220,7 @@ def make_payment_view(request, parent_id, student_id, lesson_id):
                 messages.error(request, "We were unable to take payment with that card")
         else:
             payment_form = MakePaymentForm()
-        return render(request, 'make_payment.html', {'payment_form': payment_form, 'parent': parent, 'lesson': lesson, 'student': student, 'publishable': settings.STRIPE_PUBLISHABLE})
+        return render(request, 'make_payment.html', {'payment_form': payment_form, 'parent': parent, 'lesson': lesson, 'student': student, 'payment_exists': payment_exists, 'publishable': settings.STRIPE_PUBLISHABLE})
     else:
         return redirect('/oops/')
         

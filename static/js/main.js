@@ -4,7 +4,7 @@ $(document).ready(function() {
     content_background = $('.content');
     content_background.css({"min-height":vHeight});
         
-    $(".alert").children().children().prepend(`<i class="fa fa-exclamation-circle fa-lg" aria-hidden="true"></i>`)  
+    $(".alert").children().children().prepend(`<i class="fa fa-exclamation-circle fa-lg" aria-hidden="true"></i>`)
     
     var days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     

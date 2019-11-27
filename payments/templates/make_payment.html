@@ -20,50 +20,52 @@
 
 <h1>Make Payment</h1>
 <div class="col-lg-10 offset-lg-1">
-    <h3>Purchase Details</h3>
-    <div class="col-12">
-        <div class="table-content payment-table">
-            <table>
-                <tr>
-                    <td><b>Payment by: </b></td>
-                    <td>{{ parent }}</td>
-                </tr>
-                <tr>
-                    <td><b>Student: </b></td>
-                    <td>{{ student }}</td>
-                </tr>
-                <tr>
-                    <td class="lesson-details"><b>Lesson details: </b></td>
-                    <td>
-                        <p>{{ lesson.subject }}</p>
-                        <p>{{ lesson.day.capitalize }}</p>
-                        <p>{{ lesson.date }}</p>
-                        <p>{{ lesson.time }}</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>Payment Amount: </b></td>
-                    <td>£{{ student.price_per_lesson }}</td>
-                </tr>
-            </table>
+    {% if payment_exists %}
+        <p>This lesson has already been paid for.</p>
+    {% else %}
+        <h3>Purchase Details</h3>
+        <div class="col-12">
+            <div class="table-content payment-table">
+                <table>
+                    <tr>
+                        <td><b>Payment by: </b></td>
+                        <td>{{ parent }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Student: </b></td>
+                        <td>{{ student }}</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-details"><b>Lesson details: </b></td>
+                        <td>
+                            <p>{{ lesson.subject }}</p>
+                            <p>{{ lesson.day.capitalize }}</p>
+                            <p>{{ lesson.date }}</p>
+                            <p>{{ lesson.time }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Payment Amount: </b></td>
+                        <td>£{{ student.price_per_lesson }}</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-    </div>
-    <h3>Payment Details</h3>
-    <form role="form" method="post" id="payment-form">
-    
-        <div id="credit-card-errors">
-            <div id="stripe-error-message"></div>
-        </div>
-    
-        <div>
-            {{ payment_form|crispy }}
-        </div>
-    
-        {% csrf_token %}
-        <div class="button-spacing">
-            <button type="submit" class="btn btn-success"><i class="fa fa-credit-card button-icon" aria-hidden="true"></i>Make Payment</button>
-        </div>
-    </form>
-
+        <h3>Payment Details</h3>
+        <form role="form" method="post" id="payment-form">
+            <div id="credit-card-errors">
+                <div id="stripe-error-message"></div>
+            </div>
+            <div>
+                {{ payment_form|crispy }}
+            </div>
+        
+            {% csrf_token %}
+            <div class="button-spacing">
+                <button type="submit" class="btn btn-success"><i class="fa fa-credit-card button-icon" aria-hidden="true"></i>Make Payment</button>
+            </div>
+        </form>
+    {% endif %}
+</div>
 {% endblock %}
 

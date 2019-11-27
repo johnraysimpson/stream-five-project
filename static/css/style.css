@@ -48,7 +48,8 @@ h1 {
 }
 
 .message > p > i,
-.alert > ul > li > i {
+.alert > ul > li > i,
+#stripe-error-message > i {
     margin-right: 4px;    
 }
 
@@ -140,6 +141,12 @@ h1 {
     border: 2px solid #d64646;
     color: #d64646;
     font-weight: 500;
+}
+
+#stripe-error-message {
+    color: #d64646;
+    margin-bottom: 5px;
+    font-weight: 600;
 }
 
 th > p {
