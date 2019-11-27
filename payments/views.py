@@ -86,6 +86,7 @@ def intake_view(request, request_date):
     next_month = get_next_month(view_date, view_month)
     last_month = get_last_month(view_date, view_month)
     current_month_name = view_date.strftime("%B")
+    current_year = view_date.strftime("%Y")
     payments = Payment.objects.filter(date_paid__gte=intake_month[0], date_paid__lt=intake_month[1], centre_name=request.user.centre.centre_name)
     rounded_intake = get_intake(payments)
     
@@ -116,6 +117,7 @@ def intake_view(request, request_date):
     
     return render(request, 'get_intake.html', {"current_month_name": current_month_name, 
                                                 'payments': payments, 
+                                                'current_year': current_year,
                                                 'rounded_intake': rounded_intake, 
                                                 'last_month': last_month, 
                                                 'next_month': next_month,
@@ -130,6 +132,7 @@ def whole_intake_view(request, request_date):
     next_month = get_next_month(view_date, view_month)
     last_month = get_last_month(view_date, view_month)
     current_month_name = view_date.strftime("%B")
+    current_year = view_date.strftime("%Y")
     payments = Payment.objects.filter(date_paid__gte=intake_month[0], date_paid__lt=intake_month[1])
     rounded_intake = get_intake(payments)
     
@@ -160,6 +163,7 @@ def whole_intake_view(request, request_date):
                         
     return render(request, 'get_intake.html', {"current_month_name": current_month_name, 
                                                 'payments': payments, 
+                                                'current_year': current_year,
                                                 'rounded_intake': rounded_intake, 
                                                 'last_month': last_month, 
                                                 'next_month': next_month, 

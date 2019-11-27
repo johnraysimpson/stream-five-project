@@ -41,8 +41,12 @@
         </div>
     </div>
 {% endif %}
-<h3>{{ current_month_name }}</h3>
-<h3>£{{ rounded_intake }}</h3>
+<div class="col-12">
+    <h3>{{ current_month_name }} {{ current_year }}</h3>
+    <div class="float-right">
+        <h3><b>Total: </b>£{{ rounded_intake }}</h3>
+    </div>
+</div>
 <div class="col-12 table-responsive">
     <table class="table money-table">
         <thead>
