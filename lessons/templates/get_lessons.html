@@ -13,38 +13,56 @@
     {% for day in days_of_the_week %}
         <h2>{{ day.capitalize }}</h2>
         <div class="row col-12">
-            {% for lesson in lessons %}
-                {% if lesson.day == day %}
-                <div class="col-md-4 col-lg-3">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                              <th scope="col">{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }} - {{ lesson.subject.capitalize }} <p>{{ lesson.time }}</p></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                              <th scope="row">Students</th>
-                            </tr>
-                            {% for student in lesson.student_set.all %}
-                            <tr>
-                              <td scope="row">{{ student.first_name }} {{ student.last_name }}</td>
-                            </tr>
-                            {% endfor %}
-                            <tr class="text-right">
-                                <td scope="row">
-                                    <a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">
-                                        <button class="btn btn-primary">
-                                            <i class="fa fa-pencil button-icon" aria-hidden="true"></i>View/Edit Lesson
-                                        </button>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                {% endif %}
-            {% endfor %}
+            <div id="day-wrapper-{{ day }}" class="row col-12">
+                {% for lesson in lessons %}
+                    {% if lesson.day == day %}
+                    <div class="col-md-4 col-lg-3">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                  <th scope="col">{{ lesson.tutor.first_name }} {{ lesson.tutor.last_name }} - {{ lesson.subject.capitalize }} <p>{{ lesson.time }}</p></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  <th scope="row">Students</th>
+                                </tr>
+                                {% for student in lesson.student_set.all %}
+                                <tr>
+                                    <td scope="row masterTooltip">
+                                        <a class="page-links masterTooltip" title="Parent: {{ student.parent }}<br>
+                                        Telephone: {{ student.parent.telephone }}<br>DOB: {{ student.date_of_birth|date:'d F Y' }}<br>
+                                        Price: {{ student.price_per_lesson }}<br>
+                                        Notes:<br>
+                                        {{ student.notes }}"  
+                                        href="{% url 'staffuser:student_profile' student_id=student.id %}">
+                                            {{ student.first_name }} {{ student.last_name }}
+                                        </a>
+                                        
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                <tr class="text-right">
+                                    <td scope="row">
+                                        <a href="{% url 'staffuser:get_lesson_detail' lesson_id=lesson.id %}">
+                                            <button class="btn btn-primary">
+                                                <i class="fa fa-pencil button-icon" aria-hidden="true"></i>View/Edit Lesson
+                                            </button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-12" id="show-day-button-{{ day }}">
+                <button class="btn btn-info"><i class="fa fa-caret-down button-icon" aria-hidden="true"></i>Show Lessons</button>
+            </div>
+            <div class="col-12" id="hide-day-button-{{ day }}">
+                <button class="btn btn-info"><i class="fa fa-caret-up button-icon" aria-hidden="true"></i>Hide Lessons</button>
+            </div>
         </div>
     {% endfor %}
     <div class="row col-12">
@@ -59,5 +77,6 @@
             </a></p>
         </div>
     </div>
+    
     {% endif %}
 {% endblock %}

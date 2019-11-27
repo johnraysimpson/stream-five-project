@@ -316,6 +316,19 @@ thead > tr > th {
     margin-left: 10px;
 }
 
+.newtooltip {
+	display: none;
+	position: absolute;
+	border: 1px solid #b5b7b9;
+	background-color: #f5f5f5;
+	border-radius: 5px;
+	padding: 10px;
+	color: #000;
+	font-size: 14px;
+	text-align: left;
+	width: 200px;
+}
+
 @media only screen and (min-width: 992px) {
     .dashboard-box {
         border-radius: 20px;

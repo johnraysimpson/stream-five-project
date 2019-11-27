@@ -8,27 +8,38 @@
 {% if unpaid_lessons %}
 <div class="col-12">
     <h2>Unpaid Lessons</h2>
+    <p>{{ unpaid_lessons|length }} lessons need action.</p>
 </div>
-    {% for unpaid_lesson in unpaid_lessons %}
-        <div class="col-12 intake-unpaid">
-                <table class="table unpaid-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">{{ unpaid_lesson.1 }}</th>
-                            <th scope="col">{{ unpaid_lesson.2.subject }} - {{ unpaid_lesson.2.day.capitalize }}</th>
-                            <th scope="col">{{ unpaid_lesson.2.date }} - {{ unpaid_lesson.2.time }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                          <td scope="row"><b>Parent: </b>{{ unpaid_lesson.0 }}</td>
-                          <td scope="row"><b>Telephone: </b>{{ unpaid_lesson.0.telephone }}</td>
-                          <td scope="row"><b>Amount Owed: </b>{{ unpaid_lesson.1.price_per_lesson }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-    {% endfor %}
+    <div class="row col-12">
+        <div id="unpaid-wrapper" class="row col-12">
+            {% for unpaid_lesson in unpaid_lessons %}
+                <div class="col-12 intake-unpaid">
+                        <table class="table unpaid-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ unpaid_lesson.1 }}</th>
+                                    <th scope="col">{{ unpaid_lesson.2.subject }} - {{ unpaid_lesson.2.day.capitalize }}</th>
+                                    <th scope="col">{{ unpaid_lesson.2.date }} - {{ unpaid_lesson.2.time }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  <td scope="row"><b>Parent: </b>{{ unpaid_lesson.0 }}</td>
+                                  <td scope="row"><b>Telephone: </b>{{ unpaid_lesson.0.telephone }}</td>
+                                  <td scope="row"><b>Amount Owed: </b>£{{ unpaid_lesson.1.price_per_lesson }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+            {% endfor %}
+        </div>
+        <div class="col-12" id="show-unpaid-button">
+            <button class="btn btn-info"><i class="fa fa-caret-down button-icon" aria-hidden="true"></i>Show Unpaid Lessons</button>
+        </div>
+        <div class="col-12" id="hide-unpaid-button">
+            <button class="btn btn-info"><i class="fa fa-caret-up button-icon" aria-hidden="true"></i>Hide Unpaid Lessons</button>
+        </div>
+    </div>
 {% endif %}
 <h3>{{ current_month_name }}</h3>
 <h3>£{{ rounded_intake }}</h3>

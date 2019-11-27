@@ -21,7 +21,16 @@
                     </tr>
                     {% for student in lesson.student_set.all %}
                     <tr>
-                      <td scope="row"><a class="page-links" href="{% url 'tutoruser:student_profile' student_id=student.id %}">{{ student.first_name }} {{ student.last_name }}</a></td>
+                        <td scope="row">
+                            <a class="page-links masterTooltip" title="Parent: {{ student.parent }}<br>
+                                        Telephone: {{ student.parent.telephone }}<br>DOB: {{ student.date_of_birth|date:'d F Y' }}<br>
+                                        Price: {{ student.price_per_lesson }}<br>
+                                        Notes:<br>
+                                        {{ student.notes }}"
+                            href="{% url 'tutoruser:student_profile' student_id=student.id %}">
+                            {{ student.first_name }} {{ student.last_name }}
+                            </a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

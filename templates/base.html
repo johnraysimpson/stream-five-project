@@ -87,16 +87,5 @@
         </div>
     </footer>
 </body>
-<script>
-    $(document).ready(function() {
-            
-        var vHeight = $(window).height() - (34 + $('.footer').height());
-        content_background = $('.content');
-        content_background.css({"min-height":vHeight});
-            
-        $(".alert").children().children().prepend(`<i class="fa fa-exclamation-circle fa-lg" aria-hidden="true"></i>`)  
-        
-        
-        });
-</script>
+<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
 </html>

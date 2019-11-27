@@ -7,7 +7,6 @@ def tutor_test(user):
     """Check to test if the current user is a tutor"""
     return user.is_tutor
 
-# Create your views here.
 @login_required
 @user_passes_test(tutor_test, redirect_field_name=None, login_url='/oops/')
 def tutor_dashboard_view(request):
