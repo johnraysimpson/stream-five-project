@@ -277,13 +277,16 @@ def get_student_lessons_view(request):
     updated_future_lessons_list = []
     for lesson in future_lessons_list:
         for student in students:
-            for payment in advanced_payments:
-                if payment.lesson_id != lesson.id and payment.student_id != student.id:
-                    updated_future_lessons_list.append((lesson, 'unpaid', student))
-            for payment in advanced_payments:
-                if payment.lesson_id == lesson.id and payment.student_id == student.id:
-                    updated_future_lessons_list.append((lesson, 'paid', student))
-                    updated_future_lessons_list.remove((lesson, 'unpaid', student))
+            if student in lesson.student_set.all():
+                for payment in advanced_payments:
+                    if payment.lesson_id != lesson.id and payment.student_id != student.id:
+                        updated_future_lessons_list.append((lesson, 'unpaid', student))
+                for payment in advanced_payments:
+                    if payment.lesson_id == lesson.id and payment.student_id == student.id:
+                        updated_future_lessons_list.append((lesson, 'paid', student))
+                        updated_future_lessons_list.remove((lesson, 'unpaid', student))
+                        
+    print(updated_future_lessons_list)
     
     paginator = Paginator(updated_future_lessons_list, 10)
     page = request.GET.get('page')
