@@ -101,10 +101,10 @@ Tutor User features
 ### Features left to implement
 
 * More validation
-    *I feel that more validation could have been put in with passwords, such as making sure it has a capital letter etc.
-    *At the moment you can add a student to two lessons that run at the same time. More validation could make this less easy to happen.
+    * I feel that more validation could have been put in with passwords, such as making sure it has a capital letter etc.
+    * At the moment you can add a student to two lessons that run at the same time. More validation could make this less easy to happen.
 * Concise python code
-    *I fear that the loading times for some requests are too long, for reasons including the amount of records in the database and the code is asking too much. For example, the `get_student_lessons_view` in `lessons/views.py` works, but could probably be made shorter. It appears to timeout when loading in the development running of the site, but seems to be okay on Heroku and I hope it isn’t a problem when being reviewed.
+    * I fear that the loading times for some requests are too long, for reasons including the amount of records in the database and the code is asking too much. For example, the `get_student_lessons_view` in `lessons/views.py` works, but could probably be made shorter. It appears to timeout when loading in the development running of the site, but seems to be okay on Heroku and I hope it isn’t a problem when being reviewed.
 * More styling
     * Although I do have styling and I believe the colour scheme and fonts are well used, I think more styling could have been included to ensure the site looks and feels great. With the sheer amount of pages I had to style unfortunately the time needed for this escape me.
     * The `crispy_forms` library I included seems quite useful in terms of integration with `Bootstrap4`. Grid features can be added, among other things, but with the number of forms I had made time had escaped me.
