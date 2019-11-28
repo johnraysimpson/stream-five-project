@@ -50,7 +50,7 @@ Parent users can:
 
 I feel that for this type of business it was necessary to give the admin and staff users the majority of control on the website, whereas the role of the tutor and parent users are to view information and pay for services. All users are able to change their password or request a password reset if they can’t remember it.
 
-Wireframes and mockups can be found in the wireframes, mockups and tests folder of this project.
+Intial concepts of wireframes and mockups can be found in the `wireframes mockups and tests` folder of this project.
 
 ## Features
 
@@ -133,7 +133,7 @@ Tutor User features
 
 ## Testing
 
-I would have liked to have used the automatic testing system that Django provides, which I also attempted to do. However, with the amount of code I needed to test I kept getting lost, often thinking “well how do I test this?”. This is something I would like to look further into in the future, for the time being you can find an extensive list of manual tests I performed in the wireframes, mockups and tests folder. This also includes some rationale behind why certain variables were made.
+I would have liked to have used the automatic testing system that Django provides, which I also attempted to do. However, with the amount of code I needed to test I kept getting lost, often thinking “well how do I test this?”. This is something I would like to look further into in the future, for the time being you can find an extensive list of manual tests I performed in the `wireframes mockups and tests` folder. This also includes some rationale behind why certain variables were made.
 
 ## Deployment
 
