@@ -25,14 +25,14 @@ def login_view(request):
             login_form = UserLoginForm(request.POST)
             if login_form.is_valid():
                 try:
-                    user = User.objects.get(email=login_form.cleaned_data['email'])
+                    user = User.objects.get(email=login_form.cleaned_data['email'].lower())
                 except User.DoesNotExist:
                     user = None
                     login_form.add_error(None, "Your username or password is incorrect.")
                 if user:
                     if user.is_active:
                         try:
-                            user = auth.authenticate(email=request.POST['email'],
+                            user = auth.authenticate(email=request.POST['email'].lower(),
                                             password=request.POST['password'])
                             auth.login(user=user, request=request)
                             messages.success(request, "You have successfully logged in")

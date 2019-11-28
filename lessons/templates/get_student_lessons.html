@@ -67,7 +67,7 @@
                                             {% if lesson.1 == 'paid' %}
                                                     <span class="paid-lesson"><i class="fa fa-check-square-o button-icon" aria-hidden="true"></i>Lesson paid</span>
                                                 {% elif lesson.1 == 'unpaid' %}
-                                                    <a class="button-link" href="{% url 'parentuser:make_payment' parent_id=student.parent.id student_id=student.id lesson_id=lesson.0.id %}">
+                                                    <a class="button-link pay-for-lesson" href="{% url 'parentuser:make_payment' parent_id=student.parent.id student_id=student.id lesson_id=lesson.0.id %}">
                                                         <button class="btn btn-success">
                                                             <i class="fa fa-credit-card button-icon" aria-hidden="true"></i>Pay for Lesson
                                                         </button>

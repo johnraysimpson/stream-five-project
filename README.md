@@ -133,7 +133,7 @@ Tutor User features
 
 ## Testing
 
-I would have liked to have used the automatic testing system that Django provides, which I also attempted to do. However, with the amount of code I needed to test I kept getting lost, often thinking “well how do I test this?”. This is something I would like to look further into in the future, for the time being you can find an extensive list of manual tests I performed in the wireframes, mockups and tests folder.
+I would have liked to have used the automatic testing system that Django provides, which I also attempted to do. However, with the amount of code I needed to test I kept getting lost, often thinking “well how do I test this?”. This is something I would like to look further into in the future, for the time being you can find an extensive list of manual tests I performed in the wireframes, mockups and tests folder. This also includes some rationale behind why certain variables were made.
 
 ## Deployment
 

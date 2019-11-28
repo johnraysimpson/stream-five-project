@@ -382,6 +382,10 @@ thead > tr > th {
         width: 100%;
         margin-bottom: 10px;
     }
+    
+    .paid-lesson, .pay-for-lesson {
+        margin-bottom: 5px;
+    }
 }
 
 @media only screen and (min-width: 768px) {
