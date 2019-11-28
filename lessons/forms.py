@@ -2,7 +2,7 @@ from django import forms
 from .models import Lesson
 from profiles.models import TutorProfile, Student
 import datetime
-from tempus_dominus.widgets import DatePicker, TimePicker
+from tempus_dominus.widgets import DatePicker
 
 def occurrence_choices():
     """Function to generate how often a lesson is required"""
@@ -71,14 +71,14 @@ class StudentToLessonForm(forms.ModelForm):
         
 class LessonToStudentForm(forms.ModelForm):
     """Form for relating a student and a lesson via the student"""
-    DAY_CHOICES = [('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday')]
-    SUBJECT_CHOICES = [('Maths', 'Maths'), ('English', 'English'), ('Science', 'Science')]
+    DAY_CHOICES = [('', 'Choose Day'), ('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday')]
+    SUBJECT_CHOICES = [('', 'Choose Subject'), ('Maths', 'Maths'), ('English', 'English'), ('Science', 'Science')]
     tutor = forms.ModelChoiceField(queryset=TutorProfile.objects.all(), empty_label="Choose Tutor", required=True)
     day = forms.ChoiceField(choices=DAY_CHOICES)
     subject = forms.ChoiceField(choices=SUBJECT_CHOICES)
     time = forms.TimeField(label="Time (24 hour)",widget=forms.TextInput(attrs={'type': 'time'}))
-    date = forms.DateField(label="Start date", widget=forms.TextInput(attrs={'type': 'date'},))
+    date = forms.DateField(label="Start date", input_formats=['%d/%m/%Y'], widget=DatePicker(options={'format': 'DD/MM/YYYY', }, attrs={'input_group': False, 'autocomplete': 'off'}))
     occurrence = occurrence_choices()
     class Meta():
         model = Student
-        fields = ('tutor', 'day', 'subject', 'date', 'time', 'occurrence')
+        fields = ('tutor', 'subject',  'day', 'date', 'time', 'occurrence')
