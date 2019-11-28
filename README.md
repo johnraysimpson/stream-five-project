@@ -149,6 +149,7 @@ The environment variables are in heroku so the app can only be seen there, these
 The last two variables would require a Stripe account to be used.
 
 To run the code locally these values would need to be added to an `env.py` file at the top level in this format:
+
 `import os`
 
 `os.environ.setdefault('VARIABLE', 'VALUE')`
