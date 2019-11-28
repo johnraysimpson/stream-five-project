@@ -15,7 +15,7 @@
     </div>
     <h3>Personal Information</h3>
     <div class="col-12">
-        <div class="table-content">
+        <div class="table-content table-responsive">
             <table>
                 <tr>
                     <td><b>First name: </b></td>
@@ -69,7 +69,7 @@
         {% elif user.is_parent %}
             <p><a class="page-links" href="{% url 'parentuser:parent_profile' %}">{{ parent }}</a> - {{ student.relationship }}</p>
         {% elif user.is_tutor %}
-            <div class="table-content">
+            <div class="table-content table-responsive">
                 <table>
                     <tr>
                         <td><b>{{ student.relationship }}: </b></td>

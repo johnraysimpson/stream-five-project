@@ -258,6 +258,7 @@ thead > tr > th {
 
 .table-content > table > tbody > tr > td:nth-child(even) {
     padding-left: 20px;
+    word-wrap: break-word;
 }
 
 .money-table thead th {
